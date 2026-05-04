@@ -1,0 +1,68 @@
+# Manifeste des sources de données mobilisées par l'Observatoire de la souveraineté culturelle numérique.
+# Chaque entrée décrit un tableau ISQ attendu dans data/raw/, son URL permanente, sa classification,
+# et la fonction d'extraction qui le transforme en JSON normalisé.
+#
+# Convention de nommage : on accepte les noms tels qu'ils sont téléchargés de l'ISQ ; le pipeline
+# repère les fichiers via un motif `file_pattern` (glob). Si plusieurs fichiers correspondent,
+# le plus récent (selon mtime) est retenu, et le ledger trace lequel a été utilisé.
+#
+# Les URL sont indicatives : elles pointent vers les fiches ISQ correspondantes. Le pipeline ne
+# les utilise pas pour télécharger automatiquement (l'accès est manuel, par dépôt dans data/raw/).
+
+sources:
+
+  part_qc:
+    label: "Part des interprètes du Québec dans la consommation d'enregistrements musicaux"
+    file_pattern: "Part des interprètes*.xlsx"
+    isq_url: "https://statistique.quebec.ca/fr/produit/tableau/part-interpretes-quebec-consommation-enregistrements-musicaux"
+    classification: "OCCQ — données hebdomadaires"
+    extractor: extract_part_qc
+    axe_tdb: ["consommation"]
+
+  volume_musique:
+    label: "Consommation d'enregistrements musicaux selon le type de produit"
+    file_pattern: "Consommation d'enregistrements musicaux*.xlsx"
+    isq_url: "https://statistique.quebec.ca/fr/produit/tableau/consommation-enregistrements-musicaux-type-produit"
+    classification: "OCCQ — données hebdomadaires"
+    extractor: extract_volume_musique
+    axe_tdb: ["consommation", "presence"]
+
+  cinema_pays:
+    label: "Résultats d'exploitation des établissements cinématographiques selon le pays d'origine des films"
+    file_pattern: "Résultats d'exploitation des établissements*pays d'origine*.xlsx"
+    isq_url: "https://statistique.quebec.ca/fr/produit/tableau/resultats-exploitation-cinemas-pays-origine"
+    classification: "OCCQ — données hebdomadaires"
+    extractor: extract_cinema_pays
+    axe_tdb: ["consommation"]
+
+  palmares_top20:
+    label: "Palmarès des enregistrements musicaux"
+    file_pattern: "Palmarès des enregistrements*.xlsx"
+    isq_url: "https://statistique.quebec.ca/fr/produit/tableau/palmares-enregistrements-musicaux"
+    classification: "OCCQ — cumulatif annuel"
+    extractor: extract_palmares
+    axe_tdb: ["decouvrabilite"]
+
+  evolution_stats:
+    label: "Évolution de statistiques clés de la culture et des communications"
+    file_pattern: "Évolution de statistiques clés*.xlsx"
+    isq_url: "https://statistique.quebec.ca/fr/produit/tableau/evolution-statistiques-cles-culture-communications"
+    classification: "OCCQ — séries annuelles 2002-2025"
+    extractor: extract_evolution
+    axe_tdb: ["presence", "ecosysteme"]
+
+  emplois_eerh:
+    label: "Emplois salariés dans certaines industries de la culture et des communications (EERH)"
+    file_pattern: "Emplois salariés*.xlsx"
+    isq_url: "https://statistique.quebec.ca/fr/produit/tableau/2576"
+    classification: "SCIAN 2022 — désaisonnalisé, MM3"
+    extractor: extract_emplois_eerh
+    axe_tdb: ["ecosysteme"]
+    notes: "Tableau 2576. Note méthodologique 2009 : exclut travailleurs autonomes, T4 obligatoire."
+
+# Configuration du tableau de bord
+dashboard:
+  title: "Souveraineté culturelle numérique au Québec"
+  subtitle: "Tableau de bord empirique au regard de la Loi 109"
+  template: "templates/dashboard.html.tmpl"
+  output: "outputs/dashboard.html"

@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.venv/
+venv/
+*.egg-info/
+
+# Système
+.DS_Store
+Thumbs.db
+*.swp
+
+# Données générées (régénérables, ne pas versionner)
+data/processed/
+outputs/
+!outputs/.gitkeep
+
+# Sources brutes : à versionner avec discernement
+# Les fichiers .xlsx ISQ ne sont pas redistribués depuis ce dépôt.
+# data/raw/*.xlsx
