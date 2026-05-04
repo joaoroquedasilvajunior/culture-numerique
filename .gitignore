@@ -17,6 +17,10 @@ data/processed/
 outputs/
 !outputs/.gitkeep
 
-# Sources brutes : à versionner avec discernement
-# Les fichiers .xlsx ISQ ne sont pas redistribués depuis ce dépôt.
-# data/raw/*.xlsx
+# Sources brutes (.xlsx) : par défaut, le pipeline les lit depuis ../Données Québec/.
+# Si tu changes raw_data_dir dans sources.yaml pour pointer vers data/raw/, les fichiers
+# téléchargés depuis l'ISQ s'y trouveront — par défaut on ne les versionne pas pour éviter
+# des questions de licence et de poids du dépôt. Le ledger fige la version utilisée.
+data/raw/*.xlsx
+data/raw/*.xls
+data/raw/*.csv

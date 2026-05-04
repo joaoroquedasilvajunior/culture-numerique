@@ -15,13 +15,17 @@ import pytest
 REPO_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO_ROOT))
 
+import yaml
+
 from src import extract
-from src.pipeline import find_source_file
+from src.pipeline import find_source_file, _resolve_raw_dir
 
 
 @pytest.fixture
 def raw_dir():
-    return REPO_ROOT / 'data' / 'raw'
+    """Lit le dossier configuré dans sources.yaml — s'aligne sur la config réelle."""
+    config = yaml.safe_load((REPO_ROOT / 'sources.yaml').read_text(encoding='utf-8'))
+    return _resolve_raw_dir(REPO_ROOT, config)
 
 
 def test_part_qc_streaming(raw_dir):

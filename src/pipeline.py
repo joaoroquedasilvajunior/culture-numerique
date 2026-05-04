@@ -49,15 +49,35 @@ def find_source_file(raw_dir: Path, pattern: str) -> Path | None:
     return candidates[0] if candidates else None
 
 
+def _resolve_raw_dir(repo_root: Path, config: dict) -> Path:
+    """Résout le dossier des données brutes selon la config.
+    - Si `raw_data_dir` est défini dans sources.yaml et est un chemin absolu, on le prend tel quel.
+    - Sinon (relatif), on le résout par rapport à la racine du dépôt.
+    - Sinon (absent), fallback sur data/raw/.
+    """
+    raw = config.get('raw_data_dir', 'data/raw')
+    p = Path(raw)
+    if not p.is_absolute():
+        p = (repo_root / p).resolve()
+    return p
+
+
 def run(repo_root: Path | str = '.', verbose: bool = True) -> dict:
     """Exécute le pipeline complet et retourne le record du build."""
     repo_root = Path(repo_root).resolve()
     config = yaml.safe_load((repo_root / 'sources.yaml').read_text(encoding='utf-8'))
-    raw_dir = repo_root / 'data' / 'raw'
+    raw_dir = _resolve_raw_dir(repo_root, config)
     processed_dir = repo_root / 'data' / 'processed'
     outputs_dir = repo_root / 'outputs'
     processed_dir.mkdir(parents=True, exist_ok=True)
     outputs_dir.mkdir(parents=True, exist_ok=True)
+
+    if not raw_dir.exists():
+        raise PipelineError(
+            f"Le dossier des données brutes est introuvable : {raw_dir}\n"
+            f"Vérifier `raw_data_dir` dans sources.yaml.")
+    if verbose:
+        print(f"  Source des données brutes : {raw_dir}\n")
 
     sources_used = []
     errors = []

@@ -10,12 +10,29 @@ Pipeline reproductible qui transforme les tableaux statistiques de l'**Institut 
 # 1. Installer les dépendances
 pip install -r requirements.txt
 
-# 2. Déposer les fichiers .xlsx ISQ dans data/raw/
-#    Voir data/raw/README.md pour la liste des fichiers attendus.
+# 2. Déposer les fichiers .xlsx ISQ dans le dossier configuré (par défaut : ../Données Québec/).
+#    Voir sources.yaml pour les motifs de fichiers attendus, et la section « Organisation des
+#    données » ci-dessous pour le choix du dossier source.
 
 # 3. Lancer le pipeline
 python build.py
 ```
+
+## Organisation des données
+
+Par défaut, le pipeline lit les fichiers ISQ depuis `../Données Québec/` — un dossier qui se trouve
+au-dessus du dépôt. C'est le mode recommandé : tu télécharges les .xlsx ISQ dans ce dossier
+(qui sert aussi pour d'autres usages de ton projet), et le pipeline les y trouve. Pas de duplication,
+pas de divergence, pas de fichier ISQ versionné dans le dépôt.
+
+Pour basculer en mode self-contained (toutes les sources dans le dépôt), édite `sources.yaml` :
+
+```yaml
+raw_data_dir: "data/raw"
+```
+
+et dépose tes .xlsx dans `data/raw/`. Le `.gitignore` continue à exclure les .xlsx pour éviter
+de redistribuer les données ISQ par mégarde — à toi de décider si tu veux les versionner ou pas.
 
 Le tableau de bord est généré dans `outputs/dashboard.html` ; le journal d'audit dans `outputs/ledger.json` ; les JSON intermédiaires dans `data/processed/`.
 

@@ -1,5 +1,5 @@
 # Manifeste des sources de données mobilisées par l'Observatoire de la souveraineté culturelle numérique.
-# Chaque entrée décrit un tableau ISQ attendu dans data/raw/, son URL permanente, sa classification,
+# Chaque entrée décrit un tableau ISQ attendu, son URL permanente, sa classification,
 # et la fonction d'extraction qui le transforme en JSON normalisé.
 #
 # Convention de nommage : on accepte les noms tels qu'ils sont téléchargés de l'ISQ ; le pipeline
@@ -7,7 +7,14 @@
 # le plus récent (selon mtime) est retenu, et le ledger trace lequel a été utilisé.
 #
 # Les URL sont indicatives : elles pointent vers les fiches ISQ correspondantes. Le pipeline ne
-# les utilise pas pour télécharger automatiquement (l'accès est manuel, par dépôt dans data/raw/).
+# les utilise pas pour télécharger automatiquement (l'accès est manuel).
+
+# Dossier où le pipeline cherche les fichiers .xlsx ISQ. Chemin relatif à la racine du dépôt,
+# ou absolu. Par défaut : ../Données Québec/ (un dossier au-dessus du dépôt) — c'est l'organisation
+# recommandée : tu télécharges les fichiers ISQ dans Données Québec/, le pipeline les y trouve,
+# pas de duplication, pas de divergence.
+# Pour un setup self-contained classique, mettre simplement : raw_data_dir: "data/raw"
+raw_data_dir: "../Données Québec"
 
 sources:
 

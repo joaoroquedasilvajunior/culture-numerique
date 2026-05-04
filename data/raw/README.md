@@ -1,6 +1,14 @@
 # Dossier `data/raw/`
 
-Déposer ici les fichiers .xlsx téléchargés depuis l'Institut de la statistique du Québec (ISQ) et l'Observatoire de la culture et des communications du Québec (OCCQ).
+> **Par défaut, ce dossier n'est pas utilisé.** Le pipeline lit les fichiers ISQ depuis le dossier
+> `../Données Québec/` (un cran au-dessus du dépôt), comme configuré dans `sources.yaml`
+> (`raw_data_dir: "../Données Québec"`).
+>
+> Pour rebasculer le pipeline vers `data/raw/` (mode self-contained classique), modifie cette ligne
+> dans `sources.yaml` : `raw_data_dir: "data/raw"`.
+
+Si tu utilises ce dossier, dépose-y les fichiers .xlsx téléchargés depuis l'Institut de la statistique
+du Québec (ISQ) et l'Observatoire de la culture et des communications du Québec (OCCQ).
 
 **Conserver le nom de fichier d'origine** — le pipeline retrouve chaque fichier via un motif glob défini dans `sources.yaml`. Si plusieurs fichiers correspondent au même motif (par exemple deux versions successives), le plus récent (selon `mtime`) est retenu et le ledger trace lequel a été utilisé.
 
