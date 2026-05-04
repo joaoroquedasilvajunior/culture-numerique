@@ -67,6 +67,33 @@ sources:
     axe_tdb: ["ecosysteme"]
     notes: "Tableau 2576. Note méthodologique 2009 : exclut travailleurs autonomes, T4 obligatoire."
 
+  ventes_livres:
+    label: "Variations mensuelles et annuelles des ventes de livres neufs"
+    file_pattern: "Variations mensuelles*ventes de livres*.xlsx"
+    isq_url: "https://statistique.quebec.ca/fr/produit/tableau/variations-ventes-livres-neufs"
+    classification: "OCCQ — données mensuelles, ventes finales, $ courants"
+    extractor: extract_ventes_livres
+    axe_tdb: ["consommation", "ecosysteme"]
+    notes: "Hiérarchie : Ventes totales → Éditeurs / Distributeurs / Librairies → sous-catégories par type de librairie."
+
+  etablissements:
+    label: "Nombre d'établissements culturels de certains types"
+    file_pattern: "Nombre d*établissements culturels*.xlsx"
+    isq_url: "https://statistique.quebec.ca/fr/produit/tableau/nombre-etablissements-culturels"
+    classification: "OCCQ — séries annuelles 2004-2024 ; SCACCQ"
+    extractor: extract_etablissements
+    axe_tdb: ["presence", "ecosysteme"]
+    notes: "Salles de spectacle, institutions muséales, centres d'artistes, lieux d'interprétation, etc."
+
+  indicateurs_cinema:
+    label: "Indicateurs des résultats d'exploitation des établissements cinématographiques (depuis 1975)"
+    file_pattern: "Indicateurs des résultats d'exploitation*.xlsx"
+    isq_url: "https://statistique.quebec.ca/fr/produit/tableau/indicateurs-cinemas-quebec"
+    classification: "OCCQ — séries annuelles 1975-"
+    extractor: extract_indicateurs_cinema
+    axe_tdb: ["presence", "consommation"]
+    notes: "Projections, assistance, recettes, prix d'entrée moyen, entrées par habitant, etc."
+
 # Configuration du tableau de bord
 dashboard:
   title: "Souveraineté culturelle numérique au Québec"

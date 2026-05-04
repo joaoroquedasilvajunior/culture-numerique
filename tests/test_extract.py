@@ -95,3 +95,42 @@ def test_emplois_5162_growth(raw_dir):
     data = extract.extract_emplois_eerh(f)
     rec = next(r for r in data if r['scian'] == '5162')
     assert rec['variation_pct'] > 30.0
+
+
+def test_ventes_livres_total(raw_dir):
+    """Ventes totales de livres en juin 2025 = 52 653 039 $ ; cumul YTD ≈ 299 M $."""
+    f = find_source_file(raw_dir, 'Variations mensuelles*ventes de livres*.xlsx')
+    assert f is not None, "Fichier ventes de livres manquant dans Données Québec/"
+    data = extract.extract_ventes_livres(f)
+    total = next(L for L in data['lignes'] if L['libelle'] == 'Ventes totales')
+    assert total['mois_courant'] == 52653039.0
+    assert total['cumul_ytd'] == 299387622.0
+    assert 'Juin' in data['periode']
+
+
+def test_etablissements_count(raw_dir):
+    """Le tableau couvre 2004-2024 (21 années) et liste >= 15 indicateurs."""
+    f = find_source_file(raw_dir, 'Nombre d*établissements culturels*.xlsx')
+    assert f is not None, "Fichier établissements culturels manquant"
+    data = extract.extract_etablissements(f)
+    assert data['annees'][0] == 2004
+    assert data['annees'][-1] >= 2023
+    assert len(data['indicateurs']) >= 15
+    # Salles de spectacles : indicateur clé qui doit avoir des valeurs
+    salles = next((i for i in data['indicateurs'] if i['libelle'].startswith('Salles')), None)
+    assert salles is not None
+    assert any(p['valeur'] for p in salles['serie'])
+
+
+def test_indicateurs_cinema_serie_longue(raw_dir):
+    """Les indicateurs cinéma remontent à 1975 ; 13 indicateurs au moins."""
+    f = find_source_file(raw_dir, "Indicateurs des résultats d'exploitation*.xlsx")
+    assert f is not None, "Fichier indicateurs cinéma manquant"
+    data = extract.extract_indicateurs_cinema(f)
+    assert data['annees'][0] == 1975
+    assert data['annees'][-1] >= 2023
+    assert len(data['indicateurs']) >= 10
+    # Assistance 1975 : référence absolue, ~20 M
+    assistance = next(i for i in data['indicateurs'] if i['libelle'] == 'Assistance')
+    val_1975 = next(p['valeur'] for p in assistance['serie'] if p['annee'] == 1975)
+    assert val_1975 == 20107000.0

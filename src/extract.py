@@ -310,6 +310,134 @@ def extract_emplois_eerh(path: Path) -> list[dict]:
     return out
 
 
+def extract_ventes_livres(path: Path) -> dict:
+    """
+    Tableau « Variations mensuelles et annuelles des ventes de livres neufs »
+    Layout : A=libellé (hiérarchique avec \\xa0), B=mois courant ($), D=var mois-1 %,
+             F=var an-1 mois %, H=cumul YTD ($), J=var cumul an-1 %.
+    Le mois et l'année du dépôt sont en R3 et R4.
+    """
+    wb = load_workbook(path, data_only=True)
+    ws = wb['Tableau']
+    annee = ws.cell(row=3, column=1).value or ''
+    mois = ws.cell(row=4, column=1).value or ''
+    periode = f"{mois} {annee}".strip()
+
+    lignes = []
+    for row in ws.iter_rows(min_row=8, max_row=40, values_only=True):
+        label_raw = row[0]
+        if not label_raw or not str(label_raw).strip():
+            continue
+        niveau = _hierarchy_level(label_raw)
+        label = _clean_label(label_raw)
+        # Sauter les lignes purement structurelles (sans valeur)
+        if all(_to_num(row[c]) is None for c in (1, 3, 5, 7, 9)):
+            # Ligne de section (parent sans données propres) — la garder comme groupe
+            lignes.append({
+                'libelle': label,
+                'niveau': niveau,
+                'is_groupe': True,
+                'mois_courant': None,
+                'var_mois_prec_pct': None,
+                'var_an_prec_mois_pct': None,
+                'cumul_ytd': None,
+                'var_cumul_an_prec_pct': None,
+            })
+            continue
+        lignes.append({
+            'libelle': label,
+            'niveau': niveau,
+            'is_groupe': False,
+            'mois_courant': _to_num(row[1]),
+            'var_mois_prec_pct': _to_num(row[3]),
+            'var_an_prec_mois_pct': _to_num(row[5]),
+            'cumul_ytd': _to_num(row[7]),
+            'var_cumul_an_prec_pct': _to_num(row[9]),
+        })
+    return {'periode': periode, 'unite_monetaire': '$ courants', 'lignes': lignes}
+
+
+def extract_etablissements(path: Path) -> dict:
+    """
+    Tableau « Nombre d'établissements culturels de certains types »
+    Layout : A=libellé hiérarchique, B/D/F/... = années (2004-2024).
+    Header année en R4 sous la forme '2004 (ou 2004-2005)'.
+    """
+    wb = load_workbook(path, data_only=True)
+    ws = wb['Tableau']
+
+    # Trouver les colonnes-années (R4)
+    annees, year_cols = [], []
+    for c in ws[4]:
+        v = c.value
+        if v and re.match(r'\s*\d{4}', str(v)):
+            try:
+                yr = int(str(v).strip().split()[0])
+                annees.append(yr)
+                year_cols.append(c.column)
+            except (ValueError, IndexError):
+                pass
+
+    indicateurs = []
+    for row in ws.iter_rows(min_row=6, max_row=42, values_only=True):
+        label_raw = row[0]
+        if not label_raw or not str(label_raw).strip():
+            continue
+        niveau = _hierarchy_level(label_raw)
+        label = _clean_label(label_raw)
+        serie = []
+        for yr, col in zip(annees, year_cols):
+            val = _to_num(row[col - 1]) if (col - 1) < len(row) else None
+            serie.append({'annee': yr, 'valeur': val})
+        indicateurs.append({
+            'libelle': label,
+            'niveau': niveau,
+            'serie': serie,
+        })
+    return {'annees': annees, 'indicateurs': indicateurs}
+
+
+def extract_indicateurs_cinema(path: Path) -> dict:
+    """
+    Tableau « Indicateurs des résultats d'exploitation cinémas, données annuelles » (depuis 1975)
+    Layout : A=indicateur, B=unité, C/E/G/... = années à partir de 1975.
+    """
+    wb = load_workbook(path, data_only=True)
+    ws = wb['Tableau']
+
+    # Header R4 : C=1975, E=1976, ...
+    annees, year_cols = [], []
+    for c in ws[4]:
+        v = c.value
+        if v and isinstance(v, (int, float)) and 1900 < v < 2100:
+            annees.append(int(v))
+            year_cols.append(c.column)
+        elif v and re.match(r'^\d{4}$', str(v).strip()):
+            annees.append(int(str(v).strip()))
+            year_cols.append(c.column)
+
+    indicateurs = []
+    for row in ws.iter_rows(min_row=6, max_row=42, values_only=True):
+        label_raw = row[0]
+        if not label_raw or not str(label_raw).strip():
+            continue
+        label = _clean_label(label_raw)
+        unite = str(row[1]).strip() if row[1] else ''
+        serie = []
+        for yr, col in zip(annees, year_cols):
+            val = _to_num(row[col - 1]) if (col - 1) < len(row) else None
+            serie.append({'annee': yr, 'valeur': val})
+        # Filtrer les lignes purement vides
+        if all(p['valeur'] is None for p in serie):
+            continue
+        indicateurs.append({
+            'libelle': label,
+            'unite': unite,
+            'serie': serie,
+        })
+    return {'annees': annees, 'indicateurs': indicateurs}
+
+
 # ---------- Registry ----------
 
 EXTRACTORS = {
@@ -319,4 +447,7 @@ EXTRACTORS = {
     'extract_palmares': extract_palmares,
     'extract_evolution': extract_evolution,
     'extract_emplois_eerh': extract_emplois_eerh,
+    'extract_ventes_livres': extract_ventes_livres,
+    'extract_etablissements': extract_etablissements,
+    'extract_indicateurs_cinema': extract_indicateurs_cinema,
 }
