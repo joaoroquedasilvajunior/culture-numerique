@@ -25,7 +25,7 @@ en sont tirées.
 
 Le tableau de bord est publié via GitHub Pages :
 
-**https://joaoroquedasilvajunior.github.io/culture-num-rique/**
+**https://joaoroquedasilvajunior.github.io/culture-numerique/**
 
 Activation : dans le dépôt GitHub, *Settings → Pages → Source : Deploy from a branch*,
 puis branche `main` et dossier `/docs`.
