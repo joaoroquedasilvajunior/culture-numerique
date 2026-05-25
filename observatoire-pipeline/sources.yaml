@@ -76,6 +76,15 @@ sources:
     axe_tdb: ["consommation", "ecosysteme"]
     notes: "Hiérarchie : Ventes totales → Éditeurs / Distributeurs / Librairies → sous-catégories par type de librairie."
 
+  ventes_categorie:
+    label: "Ventes de livres neufs selon la catégorie de points de vente, données mensuelles"
+    file_pattern: "Ventes de livres neufs*points de vente*.xlsx"
+    isq_url: "https://statistique.quebec.ca/fr/produit/tableau/2341"
+    classification: "OCCQ — données mensuelles, $ courants, ventes finales"
+    extractor: extract_ventes_categorie
+    axe_tdb: ["consommation", "ecosysteme"]
+    notes: "Série mensuelle ventilée par catégorie de points de vente : éditeurs, distributeurs, librairies (agréées / à succursales / indépendantes), grande diffusion. Tableau ISQ 2341."
+
   etablissements:
     label: "Nombre d'établissements culturels de certains types"
     file_pattern: "Nombre d*établissements culturels*.xlsx"

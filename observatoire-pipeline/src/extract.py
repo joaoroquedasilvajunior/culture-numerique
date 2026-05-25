@@ -357,6 +357,59 @@ def extract_ventes_livres(path: Path) -> dict:
     return {'periode': periode, 'unite_monetaire': '$ courants', 'lignes': lignes}
 
 
+def extract_ventes_categorie(path: Path) -> dict:
+    """
+    Tableau « Ventes de livres neufs selon la catégorie de points de vente,
+    données mensuelles » (ISQ tableau 2341).
+    Layout : A=libellé hiérarchique ; colonnes B.. = mois ($), dernière = Cumulatif.
+    R3 = année, R4 = portée géographique, R6 = en-têtes de colonnes.
+    """
+    wb = load_workbook(path, data_only=True)
+    ws = wb['Tableau']
+    annee = ws.cell(row=3, column=1).value or ''
+    portee = ws.cell(row=4, column=1).value or ''
+
+    # En-têtes de colonnes (R6) : Janvier, Février, ..., Cumulatif
+    headers = []
+    for c in range(2, (ws.max_column or 2) + 1):
+        v = ws.cell(row=6, column=c).value
+        if v is None or str(v).strip() == '':
+            break
+        headers.append(str(v).strip())
+    has_cumul = bool(headers) and headers[-1].lower().startswith('cumul')
+    mois = headers[:-1] if has_cumul else headers
+    n_mois = len(mois)
+
+    lignes = []
+    for row in ws.iter_rows(min_row=8, max_row=60, values_only=True):
+        label_raw = row[0]
+        if label_raw is None or not str(label_raw).strip():
+            if lignes:            # ligne vide après les données -> fin du tableau
+                break
+            continue
+        if str(label_raw).startswith('\n') or str(label_raw).lstrip().startswith('Notes'):
+            break                 # bloc de notes -> fin du tableau
+        valeurs = [_to_num(row[1 + i]) for i in range(n_mois)]
+        cumul = _to_num(row[1 + n_mois]) if has_cumul else None
+        lignes.append({
+            'libelle': _clean_label(label_raw),
+            'niveau': _hierarchy_level(label_raw),
+            'is_groupe': all(v is None for v in valeurs) and cumul is None,
+            'valeurs': valeurs,
+            'cumul': cumul,
+        })
+
+    periode = f"Janvier à {mois[-1]} {annee}".strip() if mois else str(annee).strip()
+    return {
+        'periode': periode,
+        'annee': annee,
+        'portee': str(portee).strip(),
+        'mois': mois,
+        'unite_monetaire': '$ courants',
+        'lignes': lignes,
+    }
+
+
 def extract_etablissements(path: Path) -> dict:
     """
     Tableau « Nombre d'établissements culturels de certains types »
@@ -448,6 +501,7 @@ EXTRACTORS = {
     'extract_evolution': extract_evolution,
     'extract_emplois_eerh': extract_emplois_eerh,
     'extract_ventes_livres': extract_ventes_livres,
+    'extract_ventes_categorie': extract_ventes_categorie,
     'extract_etablissements': extract_etablissements,
     'extract_indicateurs_cinema': extract_indicateurs_cinema,
 }

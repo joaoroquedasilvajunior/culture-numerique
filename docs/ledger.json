@@ -1,5 +1,5 @@
 {
-  "build_iso": "2026-05-25T18:47:48.987938+00:00",
+  "build_iso": "2026-05-25T20:23:34.203147+00:00",
   "pipeline_version": "1.0.0",
   "sources_used": [
     {
@@ -64,6 +64,15 @@
       "mtime_iso": "2026-05-25T14:28:53.751387+00:00",
       "source_key": "ventes_livres",
       "label": "Variations mensuelles et annuelles des ventes de livres neufs"
+    },
+    {
+      "path": "/sessions/great-brave-ramanujan/mnt/Culture Québec en donnée/Données Québec/Ventes de livres neufs selon la catégorie de points de vente, données mensuelles, Québec .xlsx",
+      "name": "Ventes de livres neufs selon la catégorie de points de vente, données mensuelles, Québec .xlsx",
+      "sha256": "30e500decbb7156f87e84d0cbc180d4fc4798f78a1576fe99fa8381fc79d5df7",
+      "size_bytes": 11186,
+      "mtime_iso": "2026-05-25T20:03:47.293458+00:00",
+      "source_key": "ventes_categorie",
+      "label": "Ventes de livres neufs selon la catégorie de points de vente, données mensuelles"
     },
     {
       "path": "/sessions/great-brave-ramanujan/mnt/Culture Québec en donnée/Données Québec/Nombre d’établissements culturels de certains types.xlsx",

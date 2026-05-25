@@ -109,6 +109,21 @@ def test_ventes_livres_total(raw_dir):
     assert 'Septembre' in data['periode']
 
 
+def test_ventes_categorie(raw_dir):
+    """Ventes de livres par catégorie de points de vente — cumul 2025 = 542 612 980 $.
+    Source : ISQ, tableau 2341, mise à jour 25 mai 2026."""
+    f = find_source_file(raw_dir, 'Ventes de livres neufs*points de vente*.xlsx')
+    assert f is not None, "Fichier ventes par catégorie de points de vente manquant"
+    data = extract.extract_ventes_categorie(f)
+    total = next(L for L in data['lignes'] if L['libelle'] == 'Ventes totales')
+    assert total['cumul'] == 542612980.0
+    assert total['valeurs'][7] == 112351737.0  # Août — pic de la rentrée scolaire
+    assert len(data['mois']) == 9
+    assert data['mois'][0] == 'Janvier' and data['mois'][-1] == 'Septembre'
+    agreees = next(L for L in data['lignes'] if L['libelle'] == 'Librairies agréées (A)')
+    assert agreees['cumul'] == 258349841.0
+
+
 def test_etablissements_count(raw_dir):
     """Le tableau couvre 2004-2024 (21 années) et liste >= 15 indicateurs."""
     f = find_source_file(raw_dir, 'Nombre d*établissements culturels*.xlsx')

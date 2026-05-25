@@ -671,6 +671,19 @@ a{color:inherit;text-decoration:none}
         <div class="card-head"><div><div class="card-title">Détail : assistance et part par pays d'origine — YTD 2026</div><div class="card-sub">Tableau de référence</div></div></div>
         <div style="overflow-x:auto"><table class="tbl"><thead><tr><th></th><th>Pays d'origine</th><th class="num">Assistance YTD</th><th class="pct">Part %</th><th class="pct">Var. vs 2025</th></tr></thead><tbody id="tbl_cine"></tbody></table></div>
       </div>
+
+      <h3 style="margin:28px 0 16px;font-family:'Nunito',sans-serif;font-size:15px;color:var(--cb-300);font-weight:700">Livres : ventes par catégorie de points de vente</h3>
+
+      <div class="card">
+        <div class="card-head">
+          <div>
+            <div class="card-title">Ventes mensuelles de livres neufs par canal — 2025</div>
+            <div class="card-sub">ISQ tableau 2341 · millions de dollars courants · ventes finales</div>
+          </div>
+        </div>
+        <div class="card-body"><div class="chart-wrap"><canvas id="chart_ventes_livres"></canvas></div></div>
+        <div class="card-foot" id="foot_ventes_livres"></div>
+      </div>
     </section>
 
     <!-- ÉCOSYSTÈME -->
@@ -987,6 +1000,47 @@ spark('spark4', [0, -2, -4, -7, -10, -11.6], C.bo);
       <td class="pct ${cls}">${v != null ? sign + v.toFixed(1) + ' %' : '—'}</td>`;
     tbody.appendChild(tr);
   });
+})();
+
+// === CHART 9: Ventes de livres par catégorie de points de vente ===
+(function(){
+  const v = D.ventes_categorie;
+  const el = document.getElementById('chart_ventes_livres');
+  if (!v || !v.lignes || !el) return;
+  const find = lbl => v.lignes.find(L => L.libelle === lbl);
+  const cats = [
+    { lbl: 'Librairies (A+B ou C+D)',                   nom: 'Librairies',       col: C.bb },
+    { lbl: 'Éditeurs - marché de la vente finale',      nom: 'Éditeurs',         col: C.cb700 },
+    { lbl: 'Distributeurs - marché de la vente finale', nom: 'Distributeurs',    col: C.sr400 },
+    { lbl: 'Grande diffusion',                          nom: 'Grande diffusion', col: C.hb },
+  ];
+  const datasets = cats.map(c => {
+    const L = find(c.lbl);
+    return { label: c.nom,
+      data: L ? L.valeurs.map(x => x == null ? 0 : x / 1e6) : [],
+      backgroundColor: c.col, borderRadius: 4, borderSkipped: false };
+  });
+  new Chart(el, {
+    type: 'bar',
+    data: { labels: v.mois, datasets },
+    options: { responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { position: 'bottom', labels: { boxWidth: 12, padding: 12, font: { size: 11 }, usePointStyle: true }},
+        tooltip: { callbacks: { label: c => c.dataset.label + ' : ' + c.parsed.y.toLocaleString('fr-CA', {maximumFractionDigits: 1}) + ' M$' }}},
+      scales: {
+        x: { stacked: true, grid: { display: false }},
+        y: { stacked: true, grid: { color: '#f0f4f8' }, ticks: { callback: val => val + ' M$' }}}}
+  });
+  const tot = find('Ventes totales'), agr = find('Librairies agréées (A)');
+  const foot = document.getElementById('foot_ventes_livres');
+  if (foot && tot && tot.cumul) {
+    let txt = 'Cumul 2025 : ' + (tot.cumul / 1e6).toLocaleString('fr-CA', {maximumFractionDigits: 0}) + ' M$.';
+    if (agr && agr.cumul) {
+      txt += ' Les librairies agréées par le MCC en captent '
+        + (agr.cumul / tot.cumul * 100).toLocaleString('fr-CA', {maximumFractionDigits: 1}) + ' %.';
+    }
+    foot.textContent = txt;
+  }
 })();
 
 // === CHART 8: Emplois EERH ===
