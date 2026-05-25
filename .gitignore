@@ -1,26 +1,44 @@
-# Python
+# Observatoire de la souveraineté culturelle numérique — .gitignore (racine)
+
+# --- Fichiers système ---
+.DS_Store
+Thumbs.db
+*.swp
+*.tmp
+.~lock.*#
+
+# --- Python (régénérable) ---
 __pycache__/
 *.py[cod]
-*$py.class
 .pytest_cache/
+pytest-cache-files-*/
 .venv/
 venv/
 *.egg-info/
 
-# Système
-.DS_Store
-Thumbs.db
-*.swp
+# --- Sorties régénérables du pipeline ---
+# Le tableau de bord publié est figé dans docs/ ; ces dossiers se reconstruisent
+# avec `python build.py`.
+observatoire-pipeline/data/processed/
+observatoire-pipeline/data/raw/
+observatoire-pipeline/outputs/
 
-# Données générées (régénérables, ne pas versionner)
-data/processed/
-outputs/
-!outputs/.gitkeep
+# --- Données brutes ISQ et documents tiers — NON versionnés ---
+# Raison : licence (réutilisation de données et de publications publiques) et
+# poids du dépôt. Le journal d'audit docs/ledger.json fige le nom, la taille et
+# l'empreinte SHA-256 de chaque fichier ISQ utilisé pour générer le tableau de bord.
+# Note : le motif joker tolère les deux normalisations Unicode du nom de dossier
+# « Données Québec » (NFC composé / NFD décomposé macOS).
+Donn*es Qu*bec/
+Données Québec/
+*.xlsx
+*.xls
 
-# Sources brutes (.xlsx) : par défaut, le pipeline les lit depuis ../Données Québec/.
-# Si tu changes raw_data_dir dans sources.yaml pour pointer vers data/raw/, les fichiers
-# téléchargés depuis l'ISQ s'y trouveront — par défaut on ne les versionne pas pour éviter
-# des questions de licence et de poids du dépôt. Le ledger fige la version utilisée.
-data/raw/*.xlsx
-data/raw/*.xls
-data/raw/*.csv
+# --- Sauvegarde locale de l'historique git du pipeline (non publiée) ---
+*.bundle
+
+# --- Fichiers de travail temporaires ---
+observatoire-pipeline/_mv*
+
+# Nom de dossier en octets exacts (NFD macOS) :
+Données Québec/

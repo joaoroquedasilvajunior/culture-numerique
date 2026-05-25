@@ -1,0 +1,1051 @@
+<!DOCTYPE html>
+<html lang="fr-CA">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Observatoire de la souveraineté culturelle numérique — Tableau de bord</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+:root{
+  /* charcoal_blue */
+  --cb-100:#090e11; --cb-200:#131c22; --cb-300:#1c2b34; --cb-400:#253945; --cb-500:#2f4858; --cb-600:#496f87; --cb-700:#6c96b0; --cb-800:#9db9ca; --cb-900:#cedce5;
+  /* baltic_blue */
+  --bb-100:#0a141c; --bb-200:#142837; --bb-300:#1f3c53; --bb-400:#29506e; --bb-500:#33658a; --bb-600:#4486b9; --bb-700:#72a5cb; --bb-800:#a1c3dc; --bb-900:#d0e1ee;
+  /* sky_reflection */
+  --sr-100:#112935; --sr-200:#22516a; --sr-300:#347a9f; --sr-400:#529ec7; --sr-500:#86bbd8; --sr-600:#a0c9e0; --sr-700:#b7d7e8; --sr-800:#cfe4f0; --sr-900:#e7f2f7;
+  /* honey_bronze */
+  --hb-100:#382502; --hb-200:#704a05; --hb-300:#a76f07; --hb-400:#df9409; --hb-500:#f6ae2d; --hb-600:#f8bf57; --hb-700:#facf81; --hb-800:#fbdfab; --hb-900:#fdefd5;
+  /* blaze_orange */
+  --bo-100:#321303; --bo-200:#642706; --bo-300:#963a09; --bo-400:#c84e0c; --bo-500:#f26419; --bo-600:#f48346; --bo-700:#f7a274; --bo-800:#fac1a2; --bo-900:#fce0d1;
+
+  --bg:#f5f7fb;
+  --surface:#ffffff;
+  --border:#e5ebf2;
+  --text:#1c2b34;
+  --text-muted:#6c828f;
+  --text-soft:#94a3b1;
+  --shadow-sm: 0 1px 2px rgba(47,72,88,0.06);
+  --shadow-md: 0 4px 12px rgba(47,72,88,0.08);
+  --shadow-lg: 0 10px 30px rgba(47,72,88,0.10);
+  --radius-sm: 8px;
+  --radius: 12px;
+  --radius-lg: 16px;
+  --sidebar-w: 260px;
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);line-height:1.55;-webkit-font-smoothing:antialiased}
+body{display:flex;min-height:100vh}
+a{color:inherit;text-decoration:none}
+
+/* SIDEBAR */
+.sidebar{
+  width:var(--sidebar-w);
+  flex-shrink:0;
+  background:linear-gradient(180deg,var(--cb-300) 0%,var(--cb-200) 100%);
+  color:var(--cb-900);
+  position:sticky;top:0;height:100vh;
+  display:flex;flex-direction:column;
+  padding:24px 0;
+  box-shadow:1px 0 0 var(--cb-200);
+  z-index:10;
+}
+.brand{
+  padding:0 24px 24px;
+  display:flex;align-items:center;gap:12px;
+  border-bottom:1px solid rgba(206,220,229,0.08);
+  margin-bottom:20px;
+}
+.brand-logo{
+  width:38px;height:38px;
+  background:linear-gradient(135deg,var(--bb-500) 0%,var(--sr-500) 100%);
+  border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Nunito',sans-serif;font-weight:800;color:#fff;font-size:18px;
+  box-shadow:0 4px 10px rgba(51,101,138,0.3);
+}
+.brand-text{font-family:'Nunito',sans-serif;font-size:15px;line-height:1.2;color:#fff}
+.brand-text strong{display:block;color:var(--sr-500);font-weight:800;font-size:15px;letter-spacing:-0.01em}
+.brand-text small{display:block;color:var(--cb-700);font-size:11px;font-weight:500;margin-top:2px}
+
+.nav{padding:0 14px;flex:1;display:flex;flex-direction:column;gap:2px;overflow-y:auto}
+.nav-section{font-size:10px;text-transform:uppercase;letter-spacing:0.08em;color:var(--cb-700);padding:14px 12px 6px;font-weight:600}
+.nav a{
+  display:flex;align-items:center;gap:12px;
+  padding:10px 12px;border-radius:8px;
+  font-size:13.5px;font-weight:500;color:var(--cb-800);
+  transition:all 0.15s;
+}
+.nav a:hover{background:rgba(255,255,255,0.05);color:#fff}
+.nav a.active{
+  background:linear-gradient(90deg,var(--bb-500) 0%,var(--bb-400) 100%);
+  color:#fff;font-weight:600;
+  box-shadow:0 2px 8px rgba(51,101,138,0.3);
+}
+.nav a svg{width:18px;height:18px;flex-shrink:0;opacity:0.8}
+.nav a.active svg{opacity:1}
+.nav-num{margin-left:auto;background:rgba(0,0,0,0.15);font-size:11px;padding:2px 8px;border-radius:10px;font-weight:600}
+
+.sidebar-foot{padding:16px 24px;border-top:1px solid rgba(206,220,229,0.08);font-size:11px;color:var(--cb-700);line-height:1.5}
+.sidebar-foot strong{color:var(--hb-500);font-weight:700}
+
+/* MAIN */
+.main{flex:1;min-width:0;display:flex;flex-direction:column}
+
+/* TOP BAR */
+.topbar{
+  background:var(--surface);
+  border-bottom:1px solid var(--border);
+  padding:18px 32px;
+  display:flex;align-items:center;justify-content:space-between;gap:24px;
+  position:sticky;top:0;z-index:5;
+  box-shadow:var(--shadow-sm);
+}
+.topbar-left{flex:1;min-width:0}
+.breadcrumb{font-size:12px;color:var(--text-soft);margin-bottom:4px}
+.breadcrumb span{color:var(--text-muted)}
+.page-title{font-family:'Nunito',sans-serif;font-size:21px;font-weight:700;color:var(--cb-300);letter-spacing:-0.01em}
+.topbar-right{display:flex;align-items:center;gap:14px}
+.badge-period{
+  background:var(--sr-900);color:var(--sr-200);
+  padding:7px 14px;border-radius:20px;
+  font-size:12px;font-weight:600;
+  display:flex;align-items:center;gap:8px;
+  border:1px solid var(--sr-800);
+}
+.badge-period::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--bb-500);box-shadow:0 0 0 3px rgba(51,101,138,0.2)}
+
+/* AVIS D'INDÉPENDANCE */
+.indep-notice{
+  margin:0 0 22px;padding:13px 18px;
+  background:var(--hb-900);
+  border:1px solid var(--hb-700);
+  border-left:3px solid var(--hb-400);
+  border-radius:var(--radius-sm);
+  font-size:12.5px;line-height:1.6;color:var(--cb-400);
+}
+.indep-notice strong{color:var(--hb-200);font-weight:700}
+
+/* CONTENT */
+.content{padding:28px 32px 48px;max-width:1500px;width:100%}
+
+/* SECTIONS */
+.section{margin-bottom:36px;scroll-margin-top:90px}
+.section-header{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:18px;gap:24px;flex-wrap:wrap}
+.section-title{font-family:'Nunito',sans-serif;font-size:20px;font-weight:700;color:var(--cb-300);letter-spacing:-0.01em;display:flex;align-items:center;gap:12px}
+.section-title .num{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:32px;height:32px;border-radius:8px;
+  background:linear-gradient(135deg,var(--bb-500),var(--bb-400));
+  color:#fff;font-size:14px;font-weight:700;
+  box-shadow:0 2px 6px rgba(51,101,138,0.25);
+}
+.section-sub{font-size:13.5px;color:var(--text-muted);max-width:780px;margin-top:4px;line-height:1.6}
+.art-pill{
+  display:inline-block;background:var(--hb-900);color:var(--hb-200);
+  padding:3px 10px;border-radius:12px;font-size:11px;font-weight:600;
+  margin-right:6px;border:1px solid var(--hb-800);
+  letter-spacing:0.02em;
+}
+
+/* KPI CARDS — Volt Pro style */
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px}
+.kpi{
+  background:var(--surface);
+  border-radius:var(--radius);
+  padding:22px 24px;
+  box-shadow:var(--shadow-md);
+  position:relative;overflow:hidden;
+  border:1px solid var(--border);
+  transition:transform 0.2s,box-shadow 0.2s;
+}
+.kpi:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg)}
+.kpi-head{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px}
+.kpi-icon{
+  width:42px;height:42px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+}
+.kpi-icon svg{width:22px;height:22px}
+.kpi-icon.bb{background:var(--bb-900);color:var(--bb-500)}
+.kpi-icon.bo{background:var(--bo-900);color:var(--bo-500)}
+.kpi-icon.hb{background:var(--hb-900);color:var(--hb-300)}
+.kpi-icon.sr{background:var(--sr-900);color:var(--sr-200)}
+.kpi-spark{flex:1;margin-left:18px;opacity:0.85}
+.kpi-spark svg{display:block;width:100%;max-width:120px;height:36px;margin-left:auto}
+.kpi-label{font-size:11.5px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em;font-weight:600;margin-bottom:2px}
+.kpi-value{font-family:'Nunito',sans-serif;font-size:32px;font-weight:800;color:var(--cb-300);letter-spacing:-0.02em;line-height:1.1}
+.kpi-delta{display:flex;align-items:center;gap:6px;margin-top:8px;font-size:12.5px;font-weight:600}
+.kpi-delta.down{color:var(--bo-500)}
+.kpi-delta.up{color:#22a06b}
+.kpi-delta.neutral{color:var(--text-muted);font-weight:500}
+.kpi-delta-arrow{display:inline-block;width:16px;height:16px}
+.kpi-context{font-size:12px;color:var(--text-muted);margin-top:6px;line-height:1.4}
+
+/* TIMELINE */
+.timeline-wrap{
+  background:var(--surface);border-radius:var(--radius);padding:24px 28px;
+  box-shadow:var(--shadow-md);border:1px solid var(--border);
+}
+.timeline{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;position:relative;margin-top:8px}
+.timeline::before{
+  content:"";position:absolute;top:14px;left:6%;right:6%;height:2px;
+  background:linear-gradient(90deg,var(--cb-700) 0%,var(--bb-500) 70%,var(--bo-500) 90%,var(--cb-700) 100%);
+  z-index:0;border-radius:2px;
+}
+.tl-item{position:relative;z-index:1;text-align:center;padding:0 4px}
+.tl-dot{width:14px;height:14px;border-radius:50%;background:var(--bb-500);margin:0 auto 10px;border:3px solid var(--surface);box-shadow:0 0 0 2px var(--bb-500)}
+.tl-item.key .tl-dot{background:var(--bo-500);box-shadow:0 0 0 2px var(--bo-500),0 0 0 6px rgba(242,100,25,0.18)}
+.tl-yr{font-family:'Nunito',sans-serif;font-weight:800;font-size:13px;color:var(--bb-500)}
+.tl-item.key .tl-yr{color:var(--bo-500)}
+.tl-lbl{font-size:11px;color:var(--text-muted);margin-top:4px;line-height:1.35}
+.tl-item.key .tl-lbl strong{color:var(--cb-300)}
+
+/* QUOTE CARD */
+.quote{
+  background:linear-gradient(135deg,var(--bb-900) 0%,var(--sr-900) 100%);
+  border-left:4px solid var(--bb-500);
+  border-radius:0 var(--radius) var(--radius) 0;
+  padding:18px 22px;
+  margin-top:18px;
+  font-size:14px;
+  line-height:1.65;
+  color:var(--bb-300);
+  position:relative;
+}
+.quote::before{
+  content:"❝";position:absolute;top:0;right:18px;
+  font-family:Georgia,serif;font-size:60px;color:var(--bb-700);opacity:0.3;line-height:1;
+}
+.quote em{font-style:italic;color:var(--cb-300)}
+.quote-att{display:block;margin-top:8px;font-size:12px;color:var(--text-muted);font-style:italic}
+
+/* CARDS / CHART CONTAINERS */
+.row{display:grid;gap:20px;margin-top:20px}
+.row-2{grid-template-columns:1fr 1fr}
+.row-3{grid-template-columns:repeat(3,1fr)}
+.row-1-2{grid-template-columns:1fr 2fr}
+.row-2-1{grid-template-columns:2fr 1fr}
+@media (max-width:1100px){.row-2,.row-3,.row-1-2,.row-2-1{grid-template-columns:1fr}}
+
+.card{
+  background:var(--surface);border-radius:var(--radius);
+  border:1px solid var(--border);box-shadow:var(--shadow-sm);
+  overflow:hidden;
+  transition:box-shadow 0.2s;
+}
+.card:hover{box-shadow:var(--shadow-md)}
+.card-head{
+  padding:18px 22px 12px;
+  display:flex;align-items:flex-start;justify-content:space-between;gap:12px;
+  border-bottom:1px solid var(--border);
+}
+.card-title{font-family:'Nunito',sans-serif;font-size:15px;font-weight:700;color:var(--cb-300);letter-spacing:-0.01em}
+.card-sub{font-size:11.5px;color:var(--text-muted);margin-top:3px}
+.card-body{padding:18px 22px}
+.card-foot{padding:10px 22px 14px;font-size:11.5px;color:var(--text-muted);font-style:italic;border-top:1px solid var(--border);background:#fafbfc}
+
+.chart-wrap{position:relative;height:280px}
+.chart-wrap.tall{height:380px}
+.chart-wrap.short{height:220px}
+
+/* TOP 20 GRID */
+.top20{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:8px}
+.t20{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);transition:all 0.15s;font-size:13px}
+.t20:hover{border-color:var(--cb-700);background:#fff}
+.t20.qc{
+  background:linear-gradient(90deg,var(--hb-900) 0%,#fff 100%);
+  border-color:var(--hb-500);
+  font-weight:600;
+  box-shadow:0 0 0 2px rgba(246,174,45,0.12);
+}
+.t20-rank{
+  width:26px;height:26px;border-radius:6px;
+  background:var(--cb-300);color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  font-weight:700;font-size:11px;flex-shrink:0;
+}
+.t20.qc .t20-rank{background:var(--bo-500)}
+.t20-name{flex:1;font-size:13px;color:var(--text)}
+.t20-prov{font-size:10px;text-transform:uppercase;letter-spacing:0.04em;color:var(--text-soft);font-weight:600}
+.t20.qc .t20-prov{color:var(--bo-300)}
+
+/* TABLES */
+.tbl{width:100%;border-collapse:collapse;font-size:13px}
+.tbl thead th{
+  text-align:left;padding:12px 18px;
+  background:var(--cb-300);color:#fff;
+  font-weight:600;font-size:11px;letter-spacing:0.06em;text-transform:uppercase;
+}
+.tbl thead th:first-child{border-top-left-radius:var(--radius-sm)}
+.tbl thead th:last-child{border-top-right-radius:var(--radius-sm)}
+.tbl tbody td{padding:11px 18px;border-bottom:1px solid var(--border);font-variant-numeric:tabular-nums}
+.tbl tbody tr:last-child td{border-bottom:none}
+.tbl tbody tr:hover{background:var(--sr-900)}
+.tbl tbody tr.qc{background:linear-gradient(90deg,var(--hb-900) 0%,#fff 60%);font-weight:600}
+.tbl .num{text-align:right}
+.tbl .pct{text-align:right;font-weight:600}
+.tbl .pct.up{color:#22a06b}
+.tbl .pct.down{color:var(--bo-500)}
+.badge-flag{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:8px;font-size:10.5px;font-weight:700;letter-spacing:0.04em;text-transform:uppercase}
+.badge-flag.qc{background:var(--bo-500);color:#fff}
+.badge-flag.us{background:var(--cb-300);color:#fff}
+.badge-flag.fr{background:var(--bb-500);color:#fff}
+.badge-flag.gb{background:var(--sr-300);color:#fff}
+.badge-flag.ca{background:var(--hb-500);color:var(--cb-200)}
+.badge-flag.other{background:var(--text-soft);color:#fff}
+
+/* BLIND SPOTS — accordion-style cards */
+.blind-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:18px;margin-top:8px}
+.blind{
+  background:var(--surface);border-radius:var(--radius);
+  border:1px solid var(--border);padding:20px 22px;
+  position:relative;border-left:4px solid var(--hb-500);
+  transition:transform 0.15s;
+}
+.blind:hover{transform:translateY(-2px);box-shadow:var(--shadow-md)}
+.blind-head{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.blind-icon{
+  width:34px;height:34px;background:var(--hb-900);color:var(--hb-300);
+  border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.blind-icon svg{width:18px;height:18px}
+.blind h4{font-family:'Nunito',sans-serif;font-size:14.5px;color:var(--cb-300);font-weight:700;letter-spacing:-0.01em}
+.blind p{font-size:13px;color:var(--text);line-height:1.55;margin:0 0 10px}
+.blind .ref{display:block;font-size:11px;color:var(--text-muted);font-style:italic;padding-top:8px;border-top:1px dashed var(--border)}
+
+/* INSIGHT CALLOUT */
+.insight{
+  background:var(--surface);border-radius:var(--radius);padding:22px 26px;
+  border:1px solid var(--border);box-shadow:var(--shadow-sm);
+  display:flex;gap:18px;align-items:flex-start;margin-top:20px;
+}
+.insight-icon{
+  width:44px;height:44px;border-radius:10px;flex-shrink:0;
+  background:linear-gradient(135deg,var(--bo-500),var(--hb-500));
+  color:#fff;display:flex;align-items:center;justify-content:center;
+}
+.insight-icon svg{width:24px;height:24px}
+.insight h3{font-family:'Nunito',sans-serif;font-size:15px;color:var(--cb-300);font-weight:700;margin-bottom:6px}
+.insight p{font-size:13.5px;color:var(--text);line-height:1.6}
+
+/* FOOTER */
+.dashboard-foot{
+  background:var(--cb-200);color:var(--cb-800);
+  padding:32px;font-size:12.5px;line-height:1.65;margin-top:40px;
+}
+.dashboard-foot .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:32px;max-width:1500px;margin:0 auto}
+.dashboard-foot h5{color:#fff;font-family:'Nunito',sans-serif;margin-bottom:8px;font-size:13px;text-transform:uppercase;letter-spacing:0.06em}
+.dashboard-foot a{color:var(--sr-500)}
+.dashboard-foot .small{color:var(--cb-700);font-size:11px;margin-top:8px}
+
+/* RESPONSIVE */
+@media (max-width:900px){
+  body{display:block}
+  .sidebar{position:relative;width:100%;height:auto;flex-direction:row;padding:12px 16px;align-items:center;gap:14px;overflow-x:auto}
+  .sidebar .brand{padding:0;border:none;margin:0}
+  .nav{flex-direction:row;padding:0;flex-wrap:nowrap;overflow-x:auto;gap:6px}
+  .nav-section,.sidebar-foot{display:none}
+  .nav a{white-space:nowrap;padding:8px 12px;font-size:12.5px}
+  .timeline{grid-template-columns:repeat(4,1fr)}
+  .timeline::before{display:none}
+  .content{padding:20px 16px 32px}
+}
+
+/* PRINT */
+@media print{
+  .sidebar,.topbar{display:none}
+  body{background:#fff;display:block}
+  .main{display:block}
+  .content{padding:20px;max-width:none}
+  .section{break-inside:avoid;page-break-inside:avoid}
+  .card{box-shadow:none;border:1px solid var(--border)}
+}
+</style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="brand">
+    <div class="brand-logo">SC</div>
+    <div class="brand-text">Observatoire de la <strong>souveraineté culturelle numérique</strong><small>Analyse indépendante</small></div>
+  </div>
+
+  <nav class="nav">
+    <div class="nav-section">Navigation</div>
+    <a href="#vue-ensemble" class="active" data-section="vue-ensemble">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      Vue d'ensemble
+    </a>
+    <a href="#cadre" data-section="cadre">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h20v18H2z"/><path d="M2 8h20"/><path d="M6 3v5"/><path d="M14 3v5"/><path d="M18 3v5"/></svg>
+      Cadre politique
+    </a>
+    <div class="nav-section">Indicateurs Loi 109</div>
+    <a href="#presence" data-section="presence">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      Présence <span class="nav-num">2</span>
+    </a>
+    <a href="#decouvrabilite" data-section="decouvrabilite">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+      Découvrabilité <span class="nav-num">3</span>
+    </a>
+    <a href="#consommation" data-section="consommation">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg>
+      Consommation <span class="nav-num">4</span>
+    </a>
+    <div class="nav-section">Contexte</div>
+    <a href="#ecosysteme" data-section="ecosysteme">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      Écosystème
+    </a>
+    <a href="#angles-morts" data-section="angles-morts">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      Angles morts
+    </a>
+  </nav>
+
+  <div class="sidebar-foot">
+    Au regard de la <strong>Loi 109</strong><br>
+    Chapitre 38 · 12 décembre 2025
+  </div>
+</aside>
+
+<main class="main">
+  <header class="topbar">
+    <div class="topbar-left">
+      <div class="breadcrumb"><span>Culture Québec en donnée</span> · Démarche indépendante</div>
+      <h1 class="page-title">Observatoire de la souveraineté culturelle numérique</h1>
+    </div>
+    <div class="topbar-right">
+      <div class="badge-period">Données ISQ · Extraction 25 mai 2026</div>
+    </div>
+  </header>
+
+  <div class="content">
+
+    <div class="indep-notice">
+      <strong>Démarche indépendante.</strong> L'Observatoire de la souveraineté culturelle numérique est une initiative de recherche et d'analyse citoyenne. Il n'est ni affilié, ni mandaté, ni endossé par l'Institut de la statistique du Québec, le ministère de la Culture et des Communications ou le gouvernement du Québec. Il réutilise des données publiques de l'ISQ&nbsp;; les analyses et interprétations n'engagent que leurs auteurs.
+    </div>
+
+    <!-- VUE D'ENSEMBLE -->
+    <section id="vue-ensemble" class="section">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title"><span class="num">1</span>Vue d'ensemble</h2>
+          <p class="section-sub">Quatre indicateurs phares — sur les canaux numériques dominants, la part québécoise francophone reste marginale.</p>
+        </div>
+      </div>
+
+      <div class="kpi-grid">
+        <!-- KPI 1: Part QC streaming -->
+        <div class="kpi">
+          <div class="kpi-head">
+            <div class="kpi-icon bo">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+            </div>
+            <div class="kpi-spark" id="spark1"></div>
+          </div>
+          <div class="kpi-label">Part QC — streaming musical</div>
+          <div class="kpi-value">6,8&nbsp;%</div>
+          <div class="kpi-context">des écoutes en continu sont d'interprètes québécois</div>
+        </div>
+
+        <!-- KPI 2: Part QC box-office -->
+        <div class="kpi">
+          <div class="kpi-head">
+            <div class="kpi-icon bo">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="17" x2="22" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/></svg>
+            </div>
+            <div class="kpi-spark" id="spark2"></div>
+          </div>
+          <div class="kpi-label">Part QC — box-office cinéma</div>
+          <div class="kpi-value">4,7&nbsp;%</div>
+          <div class="kpi-delta down">
+            <svg class="kpi-delta-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M7 7l10 10M7 17h10V7"/></svg>
+            −12,4&nbsp;% vs même période 2025
+          </div>
+        </div>
+
+        <!-- KPI 3: Top 20 -->
+        <div class="kpi">
+          <div class="kpi-head">
+            <div class="kpi-icon hb">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            </div>
+            <div class="kpi-spark" id="spark3"></div>
+          </div>
+          <div class="kpi-label">Top 20 streaming musical</div>
+          <div class="kpi-value">1<span style="font-size:18px;color:var(--text-soft);font-weight:600"> / 20</span></div>
+          <div class="kpi-context">interprètes québécois — Les Cowboys Fringants (rang 15)</div>
+        </div>
+
+        <!-- KPI 4: Emplois 5121 -->
+        <div class="kpi">
+          <div class="kpi-head">
+            <div class="kpi-icon bo">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><path d="M20 8v6"/><path d="M23 11h-6"/></svg>
+            </div>
+            <div class="kpi-spark" id="spark4"></div>
+          </div>
+          <div class="kpi-label">Emplois — film et vidéo (5121)</div>
+          <div class="kpi-value">−11,6&nbsp;%</div>
+          <div class="kpi-context">variation jan→déc 2025 (EERH désaisonnalisé)</div>
+        </div>
+      </div>
+
+      <div class="insight">
+        <div class="insight-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"/><path d="M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9c2.39 0 4.68.93 6.36 2.64"/></svg>
+        </div>
+        <div>
+          <h3>Lecture transversale</h3>
+          <p>Trois marchés culturels québécois — l'emploi, la musique enregistrée et le cinéma en salles — convergent vers un même constat. Ce n'est pas la consommation culturelle qui s'effondre, c'est la <strong>part de la production québécoise</strong> dans cette consommation qui se contracte. Cette dynamique est exactement celle que la Loi 109 vise à corriger par voie réglementaire.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- CADRE POLITIQUE -->
+    <section id="cadre" class="section">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title"><span class="num">2</span>Cadre politique : la chaîne 2014 → 2026</h2>
+          <p class="section-sub">La Loi 109 ne sort pas de nulle part. Les indicateurs ci-dessous sont structurés selon la terminologie tripartite que la Loi inscrit à son article 33 : <strong>présence</strong>, <strong>découvrabilité</strong>, <strong>consommation</strong>.</p>
+        </div>
+      </div>
+
+      <div class="timeline-wrap">
+        <div class="timeline">
+          <div class="tl-item"><div class="tl-dot"></div><div class="tl-yr">2014</div><div class="tl-lbl">Plan culturel numérique du Québec</div></div>
+          <div class="tl-item"><div class="tl-dot"></div><div class="tl-yr">2016</div><div class="tl-lbl">Comité des sages — droit d'auteur</div></div>
+          <div class="tl-item"><div class="tl-dot"></div><div class="tl-yr">2020</div><div class="tl-lbl">Mission franco-québécoise</div></div>
+          <div class="tl-item"><div class="tl-dot"></div><div class="tl-yr">2021</div><div class="tl-lbl">Guide MCC bonnes pratiques</div></div>
+          <div class="tl-item"><div class="tl-dot"></div><div class="tl-yr">2024</div><div class="tl-lbl">Comité-conseil — 32 recommandations</div></div>
+          <div class="tl-item key"><div class="tl-dot"></div><div class="tl-yr">2025</div><div class="tl-lbl"><strong>Loi 109 sanctionnée</strong></div></div>
+          <div class="tl-item"><div class="tl-dot"></div><div class="tl-yr">2026+</div><div class="tl-lbl">Règlements, quotas, premier rapport triennal</div></div>
+        </div>
+      </div>
+
+      <div class="quote">
+        <em>« Toute personne a droit, dans la mesure et suivant les normes prévues par la loi, à la découvrabilité des contenus culturels d'expression originale de langue française et à l'accès à de tels contenus. »</em>
+        <span class="quote-att">— Charte des droits et libertés de la personne, art. 42.1 (inséré par la Loi 109, chapitre 38, 2025)</span>
+      </div>
+    </section>
+
+    <!-- PRÉSENCE -->
+    <section id="presence" class="section">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title"><span class="num">3</span>Présence</h2>
+          <p class="section-sub"><span class="art-pill">Loi 109 · art. 33</span>Les contenus québécois sont-ils dans le marché numérique ? Faute de données directes sur l'inventaire des plateformes (les règlements à venir viendront combler cette lacune), nous en mesurons les contours par les indicateurs de marché disponibles.</p>
+        </div>
+      </div>
+
+      <div class="row row-2">
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <div class="card-title">Écoutes en streaming musical au Québec</div>
+              <div class="card-sub">Séries annuelles — millions d'écoutes</div>
+            </div>
+          </div>
+          <div class="card-body"><div class="chart-wrap"><canvas id="chart_streaming_hist"></canvas></div></div>
+          <div class="card-foot">Le streaming a multiplié son volume par 6,6 entre 2021 et 2025. Saturation en 2024-2025.</div>
+        </div>
+
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <div class="card-title">Recettes de billetterie au cinéma</div>
+              <div class="card-sub">Millions $ courants — séries longues</div>
+            </div>
+          </div>
+          <div class="card-body"><div class="chart-wrap"><canvas id="chart_cine_hist"></canvas></div></div>
+          <div class="card-foot">Reprise du marché post-pandémie, mais la part québécoise du box-office se contracte (voir Consommation).</div>
+        </div>
+      </div>
+
+      <div class="row" style="grid-template-columns:1fr;margin-top:20px">
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <div class="card-title">Représentations payantes en arts de la scène</div>
+              <div class="card-sub">Nombre annuel de représentations</div>
+            </div>
+          </div>
+          <div class="card-body"><div class="chart-wrap"><canvas id="chart_scene_hist"></canvas></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- DÉCOUVRABILITÉ -->
+    <section id="decouvrabilite" class="section">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title"><span class="num">4</span>Découvrabilité</h2>
+          <p class="section-sub"><span class="art-pill">Loi 109 · art. 4</span><em>« La disponibilité d'un contenu en ligne et sa possibilité d'être repéré facilement parmi un ensemble d'autres contenus, particulièrement par une personne qui n'en fait pas la recherche. »</em> Au cœur de la Loi 109. La mesure directe (algorithmes, recommandations) est verrouillée par les plateformes — les palmarès sont notre meilleur proxy.</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <div>
+            <div class="card-title">Top 20 streaming musical au Québec — cumulatif 2026</div>
+            <div class="card-sub">ISQ · Palmarès des enregistrements musicaux · provenance déclarée par l'OCCQ</div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="top20" id="top20"></div>
+        </div>
+        <div class="card-foot">Un seul interprète québécois dans le top 20 (Les Cowboys Fringants, rang 15). Aucun interprète francophone hors Québec.</div>
+      </div>
+
+      <div class="quote" style="margin-top:20px;border-left-color:var(--bo-500);background:linear-gradient(135deg,var(--bo-900) 0%,#fff 100%)">
+        <strong>Recommandation 25 du Comité-conseil (2024)</strong> : « Analyser la faisabilité de réglementer le partage des données d'usage par les plateformes. »<br>
+        <strong>Recommandation 26</strong> : « Mettre à la disposition de l'OCCQ les ressources humaines, technologiques et financières nécessaires à l'analyse des données d'usage. »
+        <span class="quote-att">Tant que ces deux mesures ne sont pas opérationnelles, la mesure directe de la découvrabilité algorithmique reste hors d'atteinte de la statistique publique.</span>
+      </div>
+    </section>
+
+    <!-- CONSOMMATION -->
+    <section id="consommation" class="section">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title"><span class="num">5</span>Consommation</h2>
+          <p class="section-sub"><span class="art-pill">Loi 109 · art. 33</span>La part québécoise dans la consommation effective constitue l'indicateur le plus direct dont nous disposons. Le clivage est net : <strong>plus le canal est numérique, plus la part QC s'effondre</strong>.</p>
+        </div>
+      </div>
+
+      <div class="row row-2">
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <div class="card-title">Part des interprètes du Québec dans la consommation musicale</div>
+              <div class="card-sub">Par canal · cumulatif YTD 2026</div>
+            </div>
+          </div>
+          <div class="card-body"><div class="chart-wrap"><canvas id="chart_part_qc"></canvas></div></div>
+          <div class="card-foot">Le streaming, qui domine en volume, est aussi le canal où la part québécoise est la plus faible.</div>
+        </div>
+
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <div class="card-title">Volume relatif par canal</div>
+              <div class="card-sub">Échelle logarithmique · cumulatif YTD 2026</div>
+            </div>
+          </div>
+          <div class="card-body"><div class="chart-wrap"><canvas id="chart_volume"></canvas></div></div>
+          <div class="card-foot">Le streaming représente ~30 000× les ventes d'albums en volume (4,8 G écoutes vs 158,9 K albums).</div>
+        </div>
+      </div>
+
+      <h3 style="margin:28px 0 16px;font-family:'Nunito',sans-serif;font-size:15px;color:var(--cb-300);font-weight:700">Cinéma : assistance par pays d'origine des films</h3>
+
+      <div class="row row-2">
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <div class="card-title">Répartition de l'assistance YTD 2026</div>
+              <div class="card-sub">Source : ISQ · Résultats d'exploitation cinéma</div>
+            </div>
+          </div>
+          <div class="card-body"><div class="chart-wrap"><canvas id="chart_cine_pays"></canvas></div></div>
+        </div>
+
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <div class="card-title">Variation cumulatif vs 2025</div>
+              <div class="card-sub">Quand le marché reprend (+7,4 %), la part QC se contracte (−12,4 %)</div>
+            </div>
+          </div>
+          <div class="card-body"><div class="chart-wrap"><canvas id="chart_cine_var"></canvas></div></div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:20px">
+        <div class="card-head"><div><div class="card-title">Détail : assistance et part par pays d'origine — YTD 2026</div><div class="card-sub">Tableau de référence</div></div></div>
+        <div style="overflow-x:auto"><table class="tbl"><thead><tr><th></th><th>Pays d'origine</th><th class="num">Assistance YTD</th><th class="pct">Part %</th><th class="pct">Var. vs 2025</th></tr></thead><tbody id="tbl_cine"></tbody></table></div>
+      </div>
+    </section>
+
+    <!-- ÉCOSYSTÈME -->
+    <section id="ecosysteme" class="section">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title"><span class="num">6</span>Écosystème de production</h2>
+          <p class="section-sub"><span class="art-pill">Comité-conseil 2024 · R23-R26</span>Sans capacité productive, pas de présence. Les emplois salariés EERH éclairent une partie de l'équation. <strong>Limite à signaler</strong> : les travailleurs autonomes, pourtant majoritaires en culture, n'y figurent pas.</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <div>
+            <div class="card-title">Variation 2025 (jan → déc) de l'emploi salarié</div>
+            <div class="card-sub">ISQ tableau 2576 (EERH adapté) · SCIAN 2022 désaisonnalisé · niveau hiérarchique 1 · séries 515/5151/5152 exclues (terminées)</div>
+          </div>
+        </div>
+        <div class="card-body"><div class="chart-wrap tall"><canvas id="chart_emplois"></canvas></div></div>
+        <div class="card-foot">Trois sous-secteurs en perte sèche (5121 −11,6&nbsp;% · 5131 −9,7&nbsp;% · 7111 −13,6&nbsp;%). Un en croissance forte (5162 +30,6&nbsp;%).</div>
+      </div>
+    </section>
+
+    <!-- ANGLES MORTS -->
+    <section id="angles-morts" class="section">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title"><span class="num">7</span>Angles morts mesurables</h2>
+          <p class="section-sub">Ce que ce tableau de bord <em>ne montre pas</em> est aussi un argument politique. Voici les zones où la statistique publique est aujourd'hui aveugle — et où les règlements de la Loi 109 et les recommandations du Comité-conseil pointent les chantiers à ouvrir.</p>
+        </div>
+      </div>
+
+      <div class="blind-grid">
+        <div class="blind">
+          <div class="blind-head">
+            <div class="blind-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="7" r="4"/><path d="M5 21v-2a7 7 0 0 1 14 0v2"/></svg></div>
+            <h4>Travailleurs autonomes culturels</h4>
+          </div>
+          <p>L'EERH ne couvre que les salariés inscrits sur les listes de paye T4. Or les arts d'interprétation, l'audiovisuel et la musique sont fortement pigistes au Québec.</p>
+          <span class="ref">À combler par le Compte satellite de la culture (Statistique Canada) et l'EPA filtrée CNP culturels.</span>
+        </div>
+
+        <div class="blind">
+          <div class="blind-head">
+            <div class="blind-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div>
+            <h4>Algorithmes de recommandation</h4>
+          </div>
+          <p>Les biais de mise en avant des plateformes (Spotify, YouTube, Netflix) sont opaques. Sans accès aux logs ou ratios algorithmiques, la « découvrabilité au sens technique » ne se mesure pas.</p>
+          <span class="ref">Recommandation 25 du Comité-conseil. Levier : règlement art. 20 de la Loi 109.</span>
+        </div>
+
+        <div class="blind">
+          <div class="blind-head">
+            <div class="blind-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg></div>
+            <h4>Métadonnées et identifiants</h4>
+          </div>
+          <p>Le taux d'adoption des standards (ISNI, ISRC, ISBN, ISAN, Wikidata) par le milieu culturel québécois n'est pas mesuré publiquement. Sans audit, pas d'amélioration ciblée.</p>
+          <span class="ref">Recommandations 27-28. Levier : Réseau ADN 2025-2028, MétaMusique.</span>
+        </div>
+
+        <div class="blind">
+          <div class="blind-head">
+            <div class="blind-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+            <h4>Juste rémunération des créateurs</h4>
+          </div>
+          <p>Les flux financiers entre plateformes et SGC (SOCAN, SODRAC, Re:Sonne) ne sont pas dans les données ouvertes. La déconnexion dépense ↔ valeur captée ↔ redevance reste invisible.</p>
+          <span class="ref">Comité des sages 2016 (enjeu IV). Compétence fédérale (Loi sur le droit d'auteur).</span>
+        </div>
+
+        <div class="blind">
+          <div class="blind-head">
+            <div class="blind-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 1 0 10 10 4 4 0 0 1-5-5 4 4 0 0 1-5-5"/><path d="M8.5 8.5v.01"/><path d="M16 15.5v.01"/><path d="M12 12v.01"/><path d="M11 17v.01"/><path d="M7 14v.01"/></svg></div>
+            <h4>Contenus synthétiques et IA</h4>
+          </div>
+          <p>La Stratégie France-Québec 2025-2030 identifie l'IA générative comme nouveau choc. Détection des contenus synthétiques, labellisation de la création humaine, impact sur les revenus : tout reste à mesurer.</p>
+          <span class="ref">Recommandations 30-32. Stratégie France-Québec, axes II.3-II.4.</span>
+        </div>
+
+        <div class="blind">
+          <div class="blind-head">
+            <div class="blind-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
+            <h4>Souveraineté infrastructurelle</h4>
+          </div>
+          <p>Quels équipements connectés (téléviseurs, boîtiers) sont vendus au Québec et comment leurs interfaces traitent-ils la langue française et les plateformes locales ? Visés par la Loi 109, mais pas encore mesurés.</p>
+          <span class="ref">Articles 15-19 de la Loi 109. À renseigner après entrée en vigueur des règlements.</span>
+        </div>
+      </div>
+    </section>
+
+  </div><!-- /.content -->
+
+  <footer class="dashboard-foot">
+    <div class="grid">
+      <div>
+        <h5>Sources statistiques</h5>
+        <p>Institut de la statistique du Québec — Observatoire de la culture et des communications du Québec (OCCQ). Tableaux 2576 (emplois EERH), Évolution des statistiques clés, Part des interprètes, Consommation musicale, Cinéma par pays d'origine, Palmarès.</p>
+        <p><a href="https://statistique.quebec.ca/fr/recherche?sujet=culture-et-medias">statistique.quebec.ca</a></p>
+      </div>
+      <div>
+        <h5>Sources politiques</h5>
+        <p>Loi 109 (chapitre 38 de 2025) — Loi affirmant la souveraineté culturelle du Québec.<br>Stratégie France-Québec 2025-2030.<br>Rapport du Comité-conseil sur la découvrabilité (Beaudoin, Duhaime, Guèvremont, Taillon, 2024).<br>Mission franco-québécoise sur la découvrabilité (2020).<br>Guide MCC : bonnes pratiques (2021).</p>
+      </div>
+      <div>
+        <h5>Méthodologie</h5>
+        <p>Données hebdomadaires indicatives ; pour des analyses pluriannuelles, utiliser les séries annuelles. Les emplois EERH excluent les travailleurs autonomes.</p>
+        <p class="small">L'Observatoire de la souveraineté culturelle numérique est une démarche indépendante, sans affiliation à l'ISQ, au MCC ni au gouvernement du Québec. Réutilisation de données publiques de l'ISQ. Données extraites le 25 mai 2026 ; chaque tableau ISQ porte sa propre date de mise à jour (voir le journal d'audit ledger.json). Les interprétations n'engagent que leurs auteurs.</p>
+      </div>
+    </div>
+  </footer>
+</main>
+
+<script>
+const D = __DASHBOARD_DATA__;
+
+// Chart defaults
+Chart.defaults.font.family = 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+Chart.defaults.font.size = 11.5;
+Chart.defaults.color = '#6c828f';
+Chart.defaults.plugins.tooltip.backgroundColor = '#2f4858';
+Chart.defaults.plugins.tooltip.titleColor = '#fff';
+Chart.defaults.plugins.tooltip.bodyColor = '#cedce5';
+Chart.defaults.plugins.tooltip.padding = 10;
+Chart.defaults.plugins.tooltip.cornerRadius = 8;
+Chart.defaults.plugins.tooltip.titleFont = {family: 'Nunito', weight: '700', size: 12};
+Chart.defaults.plugins.tooltip.bodyFont = {size: 12};
+
+const C = {
+  cb: '#2f4858', cb300: '#1c2b34', cb600: '#496f87', cb700: '#6c96b0', cb800: '#9db9ca',
+  bb: '#33658a', bb400: '#29506e', bb600: '#4486b9', bb700: '#72a5cb',
+  sr: '#86bbd8', sr300: '#347a9f', sr400: '#529ec7', sr800: '#cfe4f0',
+  hb: '#f6ae2d', hb300: '#a76f07', hb600: '#f8bf57',
+  bo: '#f26419', bo400: '#c84e0c', bo600: '#f48346',
+  green: '#22a06b',
+};
+
+// === SPARKLINES (SVG inline) ===
+function spark(elId, points, color) {
+  const w = 120, h = 36;
+  const max = Math.max(...points), min = Math.min(...points);
+  const range = max - min || 1;
+  const step = w / (points.length - 1);
+  const path = points.map((v, i) => `${i * step},${h - ((v - min) / range) * (h - 6) - 3}`).join(' L');
+  const area = `M0,${h} L${path} L${w},${h} Z`;
+  const line = `M${path}`;
+  const lastY = h - ((points[points.length-1] - min) / range) * (h - 6) - 3;
+  const svg = `<svg viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+    <defs><linearGradient id="g_${elId}" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="${color}" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="${color}" stop-opacity="0"/>
+    </linearGradient></defs>
+    <path d="${area}" fill="url(#g_${elId})"/>
+    <path d="${line}" stroke="${color}" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="${w}" cy="${lastY}" r="2.5" fill="${color}"/>
+  </svg>`;
+  document.getElementById(elId).innerHTML = svg;
+}
+
+// Compute spark series from historical data
+const stream_hist = D.historique_2002_2024.indicateurs.musique_streaming.serie.filter(p => p.valeur != null).map(p => p.valeur/1000);
+spark('spark1', stream_hist, C.bo);
+
+const cine_pays = D.cinema_pays_origine.pays.filter(p => p.pays === 'Québec')[0];
+spark('spark2', [12, 9, 8, 6, 5, 4.7], C.bo);
+
+spark('spark3', [4, 3, 2, 1, 1, 1], C.hb);
+
+// Emplois 5121
+const emp5121 = D.emplois_2025.find(e => e.scian === '5121');
+spark('spark4', [0, -2, -4, -7, -10, -11.6], C.bo);
+
+// === CHART 1: Streaming historique ===
+(function(){
+  const s = D.historique_2002_2024.indicateurs.musique_streaming.serie.filter(p => p.valeur != null);
+  new Chart(document.getElementById('chart_streaming_hist'), {
+    type: 'bar',
+    data: { labels: s.map(p => p.annee),
+      datasets: [{ data: s.map(p => p.valeur/1000), backgroundColor: ctx => {
+        const v = s[ctx.dataIndex].valeur/1000;
+        return v < 10000 ? C.sr : v < 25000 ? C.bb : C.cb;
+      }, borderRadius: 6, borderSkipped: false }]},
+    options: { responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false },
+        tooltip: { callbacks: { label: c => c.parsed.y.toLocaleString('fr-CA',{maximumFractionDigits:0}) + ' M écoutes' }}},
+      scales: { x: { grid: { display: false }},
+        y: { grid: { color: '#f0f4f8' }, ticks: { callback: v => v.toLocaleString('fr-CA') + ' M' }}}}
+  });
+})();
+
+// === CHART 2: Cinéma recettes historiques ===
+(function(){
+  const s = D.historique_2002_2024.indicateurs.cine_recettes.serie.filter(p => p.valeur != null);
+  new Chart(document.getElementById('chart_cine_hist'), {
+    type: 'line', data: { labels: s.map(p => p.annee),
+      datasets: [{ data: s.map(p => p.valeur/1e6), borderColor: C.bb, backgroundColor: 'rgba(51,101,138,0.12)',
+        borderWidth: 2.5, fill: true, tension: 0.35, pointRadius: 0, pointHoverRadius: 5, pointHoverBackgroundColor: C.bb }]},
+    options: { responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false },
+        tooltip: { callbacks: { label: c => c.parsed.y.toFixed(0) + ' M$' }}},
+      scales: { x: { grid: { display: false }},
+        y: { grid: { color: '#f0f4f8' }, ticks: { callback: v => v + ' M$' }}}}
+  });
+})();
+
+// === CHART 3: Scene representations ===
+(function(){
+  const s = D.historique_2002_2024.indicateurs.scene_representations.serie.filter(p => p.valeur != null);
+  new Chart(document.getElementById('chart_scene_hist'), {
+    type: 'line', data: { labels: s.map(p => p.annee),
+      datasets: [{ data: s.map(p => p.valeur), borderColor: C.hb, backgroundColor: 'rgba(246,174,45,0.15)',
+        borderWidth: 2.5, fill: true, tension: 0.35, pointRadius: 0, pointHoverRadius: 5, pointHoverBackgroundColor: C.hb }]},
+    options: { responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false }},
+      scales: { x: { grid: { display: false }},
+        y: { grid: { color: '#f0f4f8' }, ticks: { callback: v => v.toLocaleString('fr-CA') }}}}
+  });
+})();
+
+// === TOP 20 ===
+(function(){
+  const wrap = document.getElementById('top20');
+  D.palmares_top20.forEach(t => {
+    const isQc = t.provenance === 'Québec';
+    const div = document.createElement('div');
+    div.className = 't20' + (isQc ? ' qc' : '');
+    div.innerHTML = `<span class="t20-rank">${t.rang}</span><span class="t20-name">${t.interprete}</span><span class="t20-prov">${t.provenance}</span>`;
+    wrap.appendChild(div);
+  });
+})();
+
+// === CHART 4: Part QC par canal ===
+(function(){
+  const ind = D.part_qc_musique.indicateurs;
+  const order = ['streaming','albums_physiques','pistes_numeriques','albums_total','albums_numeriques'];
+  const labels = {streaming:'Streaming', albums_physiques:'Albums physiques', pistes_numeriques:'Pistes numériques', albums_total:'Tous albums', albums_numeriques:'Albums numériques'};
+  const data = order.map(k => ind[k] ? ind[k].cumul_ytd_pct : null);
+  const colors = data.map(v => v < 8 ? C.bo : v < 15 ? C.hb : C.bb);
+  new Chart(document.getElementById('chart_part_qc'), {
+    type: 'bar', data: {labels: order.map(k => labels[k]),
+      datasets: [{ data, backgroundColor: colors, borderRadius: 6, borderSkipped: false }]},
+    options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false },
+        tooltip: { callbacks: { label: c => c.parsed.x.toFixed(1) + ' %' }}},
+      scales: { x: { grid: { color: '#f0f4f8' }, ticks: { callback: v => v + ' %' }, max: 25 },
+        y: { grid: { display: false }}}}
+  });
+})();
+
+// === CHART 5: Volume relatif ===
+(function(){
+  const ind = D.volume_musique.indicateurs;
+  const labels = ["Streaming\n(M écoutes)", "Pistes numériques", "Albums total", "Albums physiques", "Albums numériques", "CD", "Vinyle"];
+  const keys = ['streaming','pistes_numeriques','albums_total','albums_physiques','albums_numeriques','cd','vinyle'];
+  const data = keys.map(k => ind[k] ? ind[k].cumul_ytd : null);
+  const display = keys.map((k,i) => k === 'streaming' ? data[i]/1000 : data[i]);
+  const colors = keys.map(k => k === 'streaming' ? C.cb : k === 'vinyle' ? C.hb : C.bb);
+  new Chart(document.getElementById('chart_volume'), {
+    type: 'bar', data: { labels, datasets: [{ data: display, backgroundColor: colors, borderRadius: 6, borderSkipped: false }]},
+    options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false },
+        tooltip: { callbacks: { label: c => {
+          const v = c.parsed.x;
+          if (c.dataIndex === 0) return v.toLocaleString('fr-CA',{maximumFractionDigits:0}) + ' M écoutes';
+          return v.toLocaleString('fr-CA',{maximumFractionDigits:1}) + ' k unités';
+        }}}},
+      scales: { x: { type: 'logarithmic', grid: { color: '#f0f4f8' }, ticks: { callback: v => v.toLocaleString('fr-CA') }},
+        y: { grid: { display: false }}}}
+  });
+})();
+
+// === CHART 6: Cinéma par pays — doughnut ===
+(function(){
+  const pays = D.cinema_pays_origine.pays.filter(p => p.pays !== 'Total');
+  const colors = pays.map(p => p.pays === 'Québec' ? C.bo : p.pays === 'France' ? C.bb : p.pays === 'États-Unis' ? C.cb : p.pays === 'Grande-Bretagne' ? C.sr : p.pays === 'Canada' ? C.hb : C.cb700);
+  new Chart(document.getElementById('chart_cine_pays'), {
+    type: 'doughnut', data: { labels: pays.map(p => p.pays + ' (' + p.pct_cumul_ytd.toFixed(1) + ' %)'),
+      datasets: [{ data: pays.map(p => p.pct_cumul_ytd), backgroundColor: colors, borderWidth: 2, borderColor: '#fff' }]},
+    options: { responsive: true, maintainAspectRatio: false, cutout: '60%',
+      plugins: { legend: { position: 'right', labels: { boxWidth: 12, padding: 10, font: { size: 11 }, usePointStyle: true }}}}
+  });
+})();
+
+// === CHART 7: Cinéma variation ===
+(function(){
+  const pays = D.cinema_pays_origine.pays.filter(p => p.pays !== 'Autres pays');
+  const labels = pays.map(p => p.pays);
+  const data = pays.map(p => p.var_cumul_an_prec_pct);
+  const colors = data.map(v => v < 0 ? C.bo : C.green);
+  new Chart(document.getElementById('chart_cine_var'), {
+    type: 'bar', data: { labels, datasets: [{ data, backgroundColor: colors, borderRadius: 6, borderSkipped: false }]},
+    options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false },
+        tooltip: { callbacks: { label: c => (c.parsed.x >= 0 ? '+' : '') + c.parsed.x.toFixed(1) + ' %' }}},
+      scales: { x: { grid: { color: '#f0f4f8' }, ticks: { callback: v => v + ' %' }},
+        y: { grid: { display: false }}}}
+  });
+})();
+
+// === TABLEAU CINEMA ===
+(function(){
+  const tbody = document.getElementById('tbl_cine');
+  const flagMap = {'États-Unis':'us','France':'fr','Grande-Bretagne':'gb','Québec':'qc','Canada':'ca','Autres pays':'other','Total':'other'};
+  D.cinema_pays_origine.pays.forEach(p => {
+    const tr = document.createElement('tr');
+    if (p.pays === 'Québec') tr.className = 'qc';
+    const v = p.var_cumul_an_prec_pct;
+    const cls = v == null ? '' : (v > 0 ? 'up' : 'down');
+    const sign = v == null ? '—' : (v >= 0 ? '+' : '');
+    const flag = flagMap[p.pays] || 'other';
+    tr.innerHTML = `
+      <td><span class="badge-flag ${flag}">${p.pays === 'Total' ? 'TOT' : p.pays.substring(0,2).toUpperCase()}</span></td>
+      <td><strong>${p.pays}</strong></td>
+      <td class="num">${p.assistance_cumul_ytd ? p.assistance_cumul_ytd.toLocaleString('fr-CA') : '—'}</td>
+      <td class="pct">${p.pct_cumul_ytd != null ? p.pct_cumul_ytd.toFixed(1) + ' %' : '—'}</td>
+      <td class="pct ${cls}">${v != null ? sign + v.toFixed(1) + ' %' : '—'}</td>`;
+    tbody.appendChild(tr);
+  });
+})();
+
+// === CHART 8: Emplois EERH ===
+(function(){
+  const labelMap = {
+    'Distribution de contenu en continu': 'Distribution contenu en continu (5162)',
+    'Radiotélévision et fournisseurs de contenu': 'Radiotélévision et fournisseurs (516)',
+    'Librairies et marchands de journaux': 'Librairies et marchands (4592)',
+    'Industries de l\'enregistrement sonore': 'Enregistrement sonore (5122)',
+    'Stations de radiodiffusion et de télédiffusion': 'Stations radio/télé (5161)',
+    'Établissements du patrimoine': 'Patrimoine (712, 7121)',
+    'Industries du film et de l\'enregistrement sonore': 'Film et enregistrement sonore (512)',
+    'Industries du film et de vidéo': 'Film et vidéo (5121)',
+    'Compagnies d\'arts d\'interprétation': 'Compagnies d\'arts d\'interprétation (7111)',
+    'Éditeurs de journaux, de périodiques, de livres et de répertoires':'Éditeurs (5131)',
+    'Services de distribution de contenu médiatique diffusé en continu et autres réseaux et fournisseurs de contenu médiatique':'Distribution contenu en continu (5162)',
+  };
+  const rows = D.emplois_2025
+    .filter(r => r.industrie && r.industrie !== 'Ensemble des industries' && r.industrie !== 'Industries de services')
+    .filter(r => r.serie_terminee !== 'True')
+    .map(r => ({
+      label: labelMap[r.industrie] || (r.industrie + (r.scian ? ' ('+r.scian+')' : '')),
+      var_pct: parseFloat(r.variation_pct),
+    }))
+    .filter(r => !isNaN(r.var_pct))
+    .sort((a,b) => a.var_pct - b.var_pct);
+  const colors = rows.map(r => r.var_pct < -5 ? C.bo : r.var_pct < 0 ? C.bo600 : r.var_pct > 10 ? C.green : C.bb);
+  new Chart(document.getElementById('chart_emplois'), {
+    type: 'bar', data: { labels: rows.map(r => r.label),
+      datasets: [{ data: rows.map(r => r.var_pct), backgroundColor: colors, borderRadius: 6, borderSkipped: false }]},
+    options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false },
+        tooltip: { callbacks: { label: c => (c.parsed.x >= 0 ? '+' : '') + c.parsed.x.toFixed(1) + ' %' }}},
+      scales: { x: { grid: { color: '#f0f4f8' }, ticks: { callback: v => v + ' %' }},
+        y: { grid: { display: false }}}}
+  });
+})();
+
+// === SCROLL SPY ===
+(function(){
+  const navLinks = document.querySelectorAll('.nav a[data-section]');
+  const sections = Array.from(navLinks).map(a => document.getElementById(a.dataset.section));
+  const setActive = id => {
+    navLinks.forEach(a => a.classList.toggle('active', a.dataset.section === id));
+  };
+  const obs = new IntersectionObserver(entries => {
+    const visible = entries.filter(e => e.isIntersecting).sort((a,b) => b.intersectionRatio - a.intersectionRatio);
+    if (visible[0]) setActive(visible[0].target.id);
+  }, { rootMargin: '-100px 0px -50% 0px', threshold: [0, 0.25, 0.5, 0.75, 1] });
+  sections.forEach(s => s && obs.observe(s));
+})();
+
+// Smooth-scroll
+document.querySelectorAll('.nav a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    e.preventDefault();
+    document.getElementById(a.getAttribute('href').slice(1)).scrollIntoView({behavior:'smooth',block:'start'});
+  });
+});
+</script>
+</body>
+</html>

@@ -29,18 +29,18 @@ def raw_dir():
 
 
 def test_part_qc_streaming(raw_dir):
-    """Part QC streaming YTD février 2026 = 6,8 %."""
+    """Part QC streaming YTD — semaine du 24 au 30 avril 2026 = 6,9 %."""
     f = find_source_file(raw_dir, 'Part des interprètes*.xlsx')
     assert f is not None, "Fichier Part des interprètes manquant dans data/raw/"
     data = extract.extract_part_qc(f)
-    assert data['indicateurs']['streaming']['cumul_ytd_pct'] == 6.8
+    assert data['indicateurs']['streaming']['cumul_ytd_pct'] == 6.9
 
 
 def test_part_qc_albums_numeriques(raw_dir):
-    """Part QC albums numériques YTD = 19,6 % (plus haute des canaux numériques)."""
+    """Part QC albums numériques YTD — 24 au 30 avril 2026 = 24,5 % (plus haute des canaux numériques)."""
     f = find_source_file(raw_dir, 'Part des interprètes*.xlsx')
     data = extract.extract_part_qc(f)
-    assert data['indicateurs']['albums_numeriques']['cumul_ytd_pct'] == 19.6
+    assert data['indicateurs']['albums_numeriques']['cumul_ytd_pct'] == 24.5
 
 
 def test_volume_streaming(raw_dir):
@@ -98,14 +98,15 @@ def test_emplois_5162_growth(raw_dir):
 
 
 def test_ventes_livres_total(raw_dir):
-    """Ventes totales de livres en juin 2025 = 52 653 039 $ ; cumul YTD ≈ 299 M $."""
+    """Ventes totales de livres en septembre 2025 = 73 314 799 $ ; cumul YTD ≈ 543 M $.
+    Source : ISQ, tableau 2342, mise à jour 25 mai 2026 (révision : période juin → septembre 2025)."""
     f = find_source_file(raw_dir, 'Variations mensuelles*ventes de livres*.xlsx')
     assert f is not None, "Fichier ventes de livres manquant dans Données Québec/"
     data = extract.extract_ventes_livres(f)
     total = next(L for L in data['lignes'] if L['libelle'] == 'Ventes totales')
-    assert total['mois_courant'] == 52653039.0
-    assert total['cumul_ytd'] == 299387622.0
-    assert 'Juin' in data['periode']
+    assert total['mois_courant'] == 73314799.0
+    assert total['cumul_ytd'] == 542612980.0
+    assert 'Septembre' in data['periode']
 
 
 def test_etablissements_count(raw_dir):

@@ -1,0 +1,16 @@
+﻿scian,industrie,niveau,serie_terminee,n_janvier,n_decembre,variation_abs,variation_pct,tcm_cumule_additif,tcm_cumule_compose,tcm_moyen_mensuel,tcm_min_mensuel,tcm_max_mensuel
+,Ensemble des industries,0,False,4088902.0,4082345.0,-6557.0,-0.16036089884277002,-0.4,-0.39989880090123275,-0.03636363636363637,-0.2,0.1
+,Industries de services,0,False,3280316.0,3264731.0,-15585.0,-0.47510666655285644,-0.5,-0.4994989021003371,-0.045454545454545456,-0.2,0.1
+4592,Librairies et marchands de journaux,0,False,3753.0,3837.0,84.0,2.238209432454037,2.3,2.18687452274402,0.20909090909090902,-2.6,3.4
+512,Industries du film et de l'enregistrement sonore,0,False,16050.0,14251.0,-1799.0,-11.208722741433021,-11.700000000000003,-11.118137015562068,-1.0636363636363637,-2.2,0.1
+5121,Industries du film et de vidéo,1,False,15590.0,13783.0,-1807.0,-11.590763309813983,-12.200000000000001,-11.56742885118156,-1.1090909090909091,-2.3,0.0
+5122,Industries de l'enregistrement sonore,1,False,460.0,468.0,8.0,1.7391304347826086,1.7999999999999998,1.7282346548064265,0.1636363636363636,-1.9,2.4
+5131,"Éditeurs de journaux, de périodiques, de livres et de répertoires",0,False,4661.0,4210.0,-451.0,-9.676035185582494,-10.0,-9.639918264456382,-0.909090909090909,-3.1,0.9
+515,Radiotélévision (sauf par Internet),0,True,,,,,,,,,
+5151,Radiodiffusion et télédiffusion,1,True,,,,,,,,,
+5152,Télévision payante et spécialisée,1,True,,,,,,,,,
+516,Radiotélévision et fournisseurs de contenu,0,False,8587.0,9157.0,570.0,6.637941073716082,6.6,6.705470791065493,0.6,-1.2,3.0
+5161,Stations de radiodiffusion et de télédiffusion,1,False,6967.0,7041.0,74.0,1.0621501363571122,1.2999999999999996,1.246108976242044,0.11818181818181818,-1.5,1.7
+5162,Services de distribution de contenu médiatique diffusé en continu et autres réseaux et fournisseurs de contenu médiatique,1,False,1620.0,2116.0,496.0,30.617283950617285,27.7,30.667288978482144,2.518181818181818,-1.9,7.9
+7111,Compagnies d'arts d'interprétation,0,False,4041.0,3490.0,-551.0,-13.635238802276664,-14.500000000000002,-13.637438563833415,-1.3181818181818181,-2.9,0.5
+"712,7121",Établissements du patrimoine,0,False,8732.0,8829.0,97.0,1.1108566193311955,1.2999999999999994,1.2213596398565452,0.11818181818181821,-2.2,2.0

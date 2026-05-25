@@ -1,0 +1,181 @@
+﻿scian,industrie,niveau,serie_terminee,annee,mois,mois_num,emplois_n,tcm_pct,note_valeur
+,Ensemble des industries,0,False,2025,Janvier,1,4088902.0,0.1,
+,Ensemble des industries,0,False,2025,Février,2,4094569.0,0.1,
+,Ensemble des industries,0,False,2025,Mars,3,4090961.0,-0.1,
+,Ensemble des industries,0,False,2025,Avril,4,4083929.0,-0.2,
+,Ensemble des industries,0,False,2025,Mai,5,4077171.0,-0.2,
+,Ensemble des industries,0,False,2025,Juin,6,4074159.0,-0.1,
+,Ensemble des industries,0,False,2025,Juillet,7,4074627.0,0.0,
+,Ensemble des industries,0,False,2025,Août,8,4077792.0,0.1,
+,Ensemble des industries,0,False,2025,Septembre,9,4082245.0,0.1,
+,Ensemble des industries,0,False,2025,Octobre,10,4084258.0,0.0,
+,Ensemble des industries,0,False,2025,Novembre,11,4084489.0,0.0,
+,Ensemble des industries,0,False,2025,Décembre,12,4082345.0,-0.1,
+,Industries de services,0,False,2025,Janvier,1,3280316.0,0.1,
+,Industries de services,0,False,2025,Février,2,3284014.0,0.1,
+,Industries de services,0,False,2025,Mars,3,3280678.0,-0.1,
+,Industries de services,0,False,2025,Avril,4,3273518.0,-0.2,
+,Industries de services,0,False,2025,Mai,5,3267573.0,-0.2,
+,Industries de services,0,False,2025,Juin,6,3264496.0,-0.1,
+,Industries de services,0,False,2025,Juillet,7,3265267.0,0.0,
+,Industries de services,0,False,2025,Août,8,3267131.0,0.1,
+,Industries de services,0,False,2025,Septembre,9,3270561.0,0.1,
+,Industries de services,0,False,2025,Octobre,10,3269850.0,0.0,
+,Industries de services,0,False,2025,Novembre,11,3267936.0,-0.1,
+,Industries de services,0,False,2025,Décembre,12,3264731.0,-0.1,
+4592,Librairies et marchands de journaux,0,False,2025,Janvier,1,3753.0,-0.1,
+4592,Librairies et marchands de journaux,0,False,2025,Février,2,3743.0,-0.3,
+4592,Librairies et marchands de journaux,0,False,2025,Mars,3,3743.0,0.0,
+4592,Librairies et marchands de journaux,0,False,2025,Avril,4,3746.0,0.1,
+4592,Librairies et marchands de journaux,0,False,2025,Mai,5,3769.0,0.6,
+4592,Librairies et marchands de journaux,0,False,2025,Juin,6,3799.0,0.8,
+4592,Librairies et marchands de journaux,0,False,2025,Juillet,7,3801.0,0.0,
+4592,Librairies et marchands de journaux,0,False,2025,Août,8,3731.0,-1.8,
+4592,Librairies et marchands de journaux,0,False,2025,Septembre,9,3635.0,-2.6,
+4592,Librairies et marchands de journaux,0,False,2025,Octobre,10,3632.0,-0.1,
+4592,Librairies et marchands de journaux,0,False,2025,Novembre,11,3756.0,3.4,
+4592,Librairies et marchands de journaux,0,False,2025,Décembre,12,3837.0,2.2,
+512,Industries du film et de l'enregistrement sonore,0,False,2025,Janvier,1,16050.0,-0.1,
+512,Industries du film et de l'enregistrement sonore,0,False,2025,Février,2,15811.0,-1.5,
+512,Industries du film et de l'enregistrement sonore,0,False,2025,Mars,3,15675.0,-0.9,
+512,Industries du film et de l'enregistrement sonore,0,False,2025,Avril,4,15355.0,-2.0,
+512,Industries du film et de l'enregistrement sonore,0,False,2025,Mai,5,15021.0,-2.2,
+512,Industries du film et de l'enregistrement sonore,0,False,2025,Juin,6,14883.0,-0.9,
+512,Industries du film et de l'enregistrement sonore,0,False,2025,Juillet,7,14723.0,-1.1,
+512,Industries du film et de l'enregistrement sonore,0,False,2025,Août,8,14598.0,-0.8,
+512,Industries du film et de l'enregistrement sonore,0,False,2025,Septembre,9,14387.0,-1.4,
+512,Industries du film et de l'enregistrement sonore,0,False,2025,Octobre,10,14304.0,-0.6,
+512,Industries du film et de l'enregistrement sonore,0,False,2025,Novembre,11,14312.0,0.1,
+512,Industries du film et de l'enregistrement sonore,0,False,2025,Décembre,12,14251.0,-0.4,
+5121,Industries du film et de vidéo,1,False,2025,Janvier,1,15590.0,-0.2,
+5121,Industries du film et de vidéo,1,False,2025,Février,2,15360.0,-1.5,
+5121,Industries du film et de vidéo,1,False,2025,Mars,3,15227.0,-0.9,
+5121,Industries du film et de vidéo,1,False,2025,Avril,4,14910.0,-2.1,
+5121,Industries du film et de vidéo,1,False,2025,Mai,5,14566.0,-2.3,
+5121,Industries du film et de vidéo,1,False,2025,Juin,6,14423.0,-1.0,
+5121,Industries du film et de vidéo,1,False,2025,Juillet,7,14260.0,-1.1,
+5121,Industries du film et de vidéo,1,False,2025,Août,8,14140.0,-0.8,
+5121,Industries du film et de vidéo,1,False,2025,Septembre,9,13925.0,-1.5,
+5121,Industries du film et de vidéo,1,False,2025,Octobre,10,13846.0,-0.6,
+5121,Industries du film et de vidéo,1,False,2025,Novembre,11,13845.0,0.0,
+5121,Industries du film et de vidéo,1,False,2025,Décembre,12,13783.0,-0.4,
+5122,Industries de l'enregistrement sonore,1,False,2025,Janvier,1,460.0,1.8,
+5122,Industries de l'enregistrement sonore,1,False,2025,Février,2,451.0,-1.9,
+5122,Industries de l'enregistrement sonore,1,False,2025,Mars,3,448.0,-0.8,
+5122,Industries de l'enregistrement sonore,1,False,2025,Avril,4,445.0,-0.6,
+5122,Industries de l'enregistrement sonore,1,False,2025,Mai,5,456.0,2.4,
+5122,Industries de l'enregistrement sonore,1,False,2025,Juin,6,460.0,1.0,
+5122,Industries de l'enregistrement sonore,1,False,2025,Juillet,7,463.0,0.6,
+5122,Industries de l'enregistrement sonore,1,False,2025,Août,8,459.0,-0.9,
+5122,Industries de l'enregistrement sonore,1,False,2025,Septembre,9,461.0,0.6,
+5122,Industries de l'enregistrement sonore,1,False,2025,Octobre,10,458.0,-0.7,
+5122,Industries de l'enregistrement sonore,1,False,2025,Novembre,11,467.0,2.0,
+5122,Industries de l'enregistrement sonore,1,False,2025,Décembre,12,468.0,0.1,
+5131,"Éditeurs de journaux, de périodiques, de livres et de répertoires",0,False,2025,Janvier,1,4661.0,0.6,
+5131,"Éditeurs de journaux, de périodiques, de livres et de répertoires",0,False,2025,Février,2,4662.0,0.0,
+5131,"Éditeurs de journaux, de périodiques, de livres et de répertoires",0,False,2025,Mars,3,4702.0,0.9,
+5131,"Éditeurs de journaux, de périodiques, de livres et de répertoires",0,False,2025,Avril,4,4682.0,-0.4,
+5131,"Éditeurs de journaux, de périodiques, de livres et de répertoires",0,False,2025,Mai,5,4693.0,0.2,
+5131,"Éditeurs de journaux, de périodiques, de livres et de répertoires",0,False,2025,Juin,6,4730.0,0.8,
+5131,"Éditeurs de journaux, de périodiques, de livres et de répertoires",0,False,2025,Juillet,7,4685.0,-0.9,
+5131,"Éditeurs de journaux, de périodiques, de livres et de répertoires",0,False,2025,Août,8,4613.0,-1.5,
+5131,"Éditeurs de journaux, de périodiques, de livres et de répertoires",0,False,2025,Septembre,9,4469.0,-3.1,
+5131,"Éditeurs de journaux, de périodiques, de livres et de répertoires",0,False,2025,Octobre,10,4404.0,-1.5,
+5131,"Éditeurs de journaux, de périodiques, de livres et de répertoires",0,False,2025,Novembre,11,4322.0,-1.9,
+5131,"Éditeurs de journaux, de périodiques, de livres et de répertoires",0,False,2025,Décembre,12,4210.0,-2.6,
+515,Radiotélévision (sauf par Internet),0,True,2025,Janvier,1,,,série terminée (SCIAN 2017)
+515,Radiotélévision (sauf par Internet),0,True,2025,Février,2,,,série terminée (SCIAN 2017)
+515,Radiotélévision (sauf par Internet),0,True,2025,Mars,3,,,série terminée (SCIAN 2017)
+515,Radiotélévision (sauf par Internet),0,True,2025,Avril,4,,,série terminée (SCIAN 2017)
+515,Radiotélévision (sauf par Internet),0,True,2025,Mai,5,,,série terminée (SCIAN 2017)
+515,Radiotélévision (sauf par Internet),0,True,2025,Juin,6,,,série terminée (SCIAN 2017)
+515,Radiotélévision (sauf par Internet),0,True,2025,Juillet,7,,,série terminée (SCIAN 2017)
+515,Radiotélévision (sauf par Internet),0,True,2025,Août,8,,,série terminée (SCIAN 2017)
+515,Radiotélévision (sauf par Internet),0,True,2025,Septembre,9,,,série terminée (SCIAN 2017)
+515,Radiotélévision (sauf par Internet),0,True,2025,Octobre,10,,,série terminée (SCIAN 2017)
+515,Radiotélévision (sauf par Internet),0,True,2025,Novembre,11,,,série terminée (SCIAN 2017)
+515,Radiotélévision (sauf par Internet),0,True,2025,Décembre,12,,,série terminée (SCIAN 2017)
+5151,Radiodiffusion et télédiffusion,1,True,2025,Janvier,1,,,série terminée (SCIAN 2017)
+5151,Radiodiffusion et télédiffusion,1,True,2025,Février,2,,,série terminée (SCIAN 2017)
+5151,Radiodiffusion et télédiffusion,1,True,2025,Mars,3,,,série terminée (SCIAN 2017)
+5151,Radiodiffusion et télédiffusion,1,True,2025,Avril,4,,,série terminée (SCIAN 2017)
+5151,Radiodiffusion et télédiffusion,1,True,2025,Mai,5,,,série terminée (SCIAN 2017)
+5151,Radiodiffusion et télédiffusion,1,True,2025,Juin,6,,,série terminée (SCIAN 2017)
+5151,Radiodiffusion et télédiffusion,1,True,2025,Juillet,7,,,série terminée (SCIAN 2017)
+5151,Radiodiffusion et télédiffusion,1,True,2025,Août,8,,,série terminée (SCIAN 2017)
+5151,Radiodiffusion et télédiffusion,1,True,2025,Septembre,9,,,série terminée (SCIAN 2017)
+5151,Radiodiffusion et télédiffusion,1,True,2025,Octobre,10,,,série terminée (SCIAN 2017)
+5151,Radiodiffusion et télédiffusion,1,True,2025,Novembre,11,,,série terminée (SCIAN 2017)
+5151,Radiodiffusion et télédiffusion,1,True,2025,Décembre,12,,,série terminée (SCIAN 2017)
+5152,Télévision payante et spécialisée,1,True,2025,Janvier,1,,,série terminée (SCIAN 2017)
+5152,Télévision payante et spécialisée,1,True,2025,Février,2,,,série terminée (SCIAN 2017)
+5152,Télévision payante et spécialisée,1,True,2025,Mars,3,,,série terminée (SCIAN 2017)
+5152,Télévision payante et spécialisée,1,True,2025,Avril,4,,,série terminée (SCIAN 2017)
+5152,Télévision payante et spécialisée,1,True,2025,Mai,5,,,série terminée (SCIAN 2017)
+5152,Télévision payante et spécialisée,1,True,2025,Juin,6,,,série terminée (SCIAN 2017)
+5152,Télévision payante et spécialisée,1,True,2025,Juillet,7,,,série terminée (SCIAN 2017)
+5152,Télévision payante et spécialisée,1,True,2025,Août,8,,,série terminée (SCIAN 2017)
+5152,Télévision payante et spécialisée,1,True,2025,Septembre,9,,,série terminée (SCIAN 2017)
+5152,Télévision payante et spécialisée,1,True,2025,Octobre,10,,,série terminée (SCIAN 2017)
+5152,Télévision payante et spécialisée,1,True,2025,Novembre,11,,,série terminée (SCIAN 2017)
+5152,Télévision payante et spécialisée,1,True,2025,Décembre,12,,,série terminée (SCIAN 2017)
+516,Radiotélévision et fournisseurs de contenu,0,False,2025,Janvier,1,8587.0,-0.3,
+516,Radiotélévision et fournisseurs de contenu,0,False,2025,Février,2,8482.0,-1.2,
+516,Radiotélévision et fournisseurs de contenu,0,False,2025,Mars,3,8379.0,-1.2,
+516,Radiotélévision et fournisseurs de contenu,0,False,2025,Avril,4,8360.0,-0.2,
+516,Radiotélévision et fournisseurs de contenu,0,False,2025,Mai,5,8479.0,1.4,
+516,Radiotélévision et fournisseurs de contenu,0,False,2025,Juin,6,8616.0,1.6,
+516,Radiotélévision et fournisseurs de contenu,0,False,2025,Juillet,7,8787.0,2.0,
+516,Radiotélévision et fournisseurs de contenu,0,False,2025,Août,8,8766.0,-0.2,
+516,Radiotélévision et fournisseurs de contenu,0,False,2025,Septembre,9,8761.0,-0.1,
+516,Radiotélévision et fournisseurs de contenu,0,False,2025,Octobre,10,8775.0,0.2,
+516,Radiotélévision et fournisseurs de contenu,0,False,2025,Novembre,11,9037.0,3.0,
+516,Radiotélévision et fournisseurs de contenu,0,False,2025,Décembre,12,9157.0,1.3,
+5161,Stations de radiodiffusion et de télédiffusion,1,False,2025,Janvier,1,6967.0,0.0,
+5161,Stations de radiodiffusion et de télédiffusion,1,False,2025,Février,2,6888.0,-1.1,
+5161,Stations de radiodiffusion et de télédiffusion,1,False,2025,Mars,3,6815.0,-1.1,
+5161,Stations de radiodiffusion et de télédiffusion,1,False,2025,Avril,4,6809.0,-0.1,
+5161,Stations de radiodiffusion et de télédiffusion,1,False,2025,Mai,5,6879.0,1.0,
+5161,Stations de radiodiffusion et de télédiffusion,1,False,2025,Juin,6,6958.0,1.2,
+5161,Stations de radiodiffusion et de télédiffusion,1,False,2025,Juillet,7,7061.0,1.5,
+5161,Stations de radiodiffusion et de télédiffusion,1,False,2025,Août,8,7040.0,-0.3,
+5161,Stations de radiodiffusion et de télédiffusion,1,False,2025,Septembre,9,7037.0,0.0,
+5161,Stations de radiodiffusion et de télédiffusion,1,False,2025,Octobre,10,6928.0,-1.5,
+5161,Stations de radiodiffusion et de télédiffusion,1,False,2025,Novembre,11,7044.0,1.7,
+5161,Stations de radiodiffusion et de télédiffusion,1,False,2025,Décembre,12,7041.0,0.0,
+5162,Services de distribution de contenu médiatique diffusé en continu et autres réseaux et fournisseurs de contenu médiatique,1,False,2025,Janvier,1,1620.0,-1.4,
+5162,Services de distribution de contenu médiatique diffusé en continu et autres réseaux et fournisseurs de contenu médiatique,1,False,2025,Février,2,1593.0,-1.6,
+5162,Services de distribution de contenu médiatique diffusé en continu et autres réseaux et fournisseurs de contenu médiatique,1,False,2025,Mars,3,1563.0,-1.9,
+5162,Services de distribution de contenu médiatique diffusé en continu et autres réseaux et fournisseurs de contenu médiatique,1,False,2025,Avril,4,1550.0,-0.8,
+5162,Services de distribution de contenu médiatique diffusé en continu et autres réseaux et fournisseurs de contenu médiatique,1,False,2025,Mai,5,1600.0,3.2,
+5162,Services de distribution de contenu médiatique diffusé en continu et autres réseaux et fournisseurs de contenu médiatique,1,False,2025,Juin,6,1658.0,3.6,
+5162,Services de distribution de contenu médiatique diffusé en continu et autres réseaux et fournisseurs de contenu médiatique,1,False,2025,Juillet,7,1726.0,4.1,
+5162,Services de distribution de contenu médiatique diffusé en continu et autres réseaux et fournisseurs de contenu médiatique,1,False,2025,Août,8,1725.0,0.0,
+5162,Services de distribution de contenu médiatique diffusé en continu et autres réseaux et fournisseurs de contenu médiatique,1,False,2025,Septembre,9,1724.0,-0.1,
+5162,Services de distribution de contenu médiatique diffusé en continu et autres réseaux et fournisseurs de contenu médiatique,1,False,2025,Octobre,10,1846.0,7.1,
+5162,Services de distribution de contenu médiatique diffusé en continu et autres réseaux et fournisseurs de contenu médiatique,1,False,2025,Novembre,11,1993.0,7.9,
+5162,Services de distribution de contenu médiatique diffusé en continu et autres réseaux et fournisseurs de contenu médiatique,1,False,2025,Décembre,12,2116.0,6.2,
+7111,Compagnies d'arts d'interprétation,0,False,2025,Janvier,1,4041.0,2.4,
+7111,Compagnies d'arts d'interprétation,0,False,2025,Février,2,4006.0,-0.9,
+7111,Compagnies d'arts d'interprétation,0,False,2025,Mars,3,4028.0,0.5,
+7111,Compagnies d'arts d'interprétation,0,False,2025,Avril,4,3953.0,-1.9,
+7111,Compagnies d'arts d'interprétation,0,False,2025,Mai,5,3927.0,-0.6,
+7111,Compagnies d'arts d'interprétation,0,False,2025,Juin,6,3864.0,-1.6,
+7111,Compagnies d'arts d'interprétation,0,False,2025,Juillet,7,3770.0,-2.4,
+7111,Compagnies d'arts d'interprétation,0,False,2025,Août,8,3660.0,-2.9,
+7111,Compagnies d'arts d'interprétation,0,False,2025,Septembre,9,3557.0,-2.8,
+7111,Compagnies d'arts d'interprétation,0,False,2025,Octobre,10,3539.0,-0.5,
+7111,Compagnies d'arts d'interprétation,0,False,2025,Novembre,11,3490.0,-1.4,
+7111,Compagnies d'arts d'interprétation,0,False,2025,Décembre,12,3490.0,0.0,
+"712,7121",Établissements du patrimoine,0,False,2025,Janvier,1,8732.0,0.4,
+"712,7121",Établissements du patrimoine,0,False,2025,Février,2,8741.0,0.1,
+"712,7121",Établissements du patrimoine,0,False,2025,Mars,3,8753.0,0.1,
+"712,7121",Établissements du patrimoine,0,False,2025,Avril,4,8735.0,-0.2,
+"712,7121",Établissements du patrimoine,0,False,2025,Mai,5,8884.0,1.7,
+"712,7121",Établissements du patrimoine,0,False,2025,Juin,6,8830.0,-0.6,
+"712,7121",Établissements du patrimoine,0,False,2025,Juillet,7,8670.0,-1.8,
+"712,7121",Établissements du patrimoine,0,False,2025,Août,8,8476.0,-2.2,
+"712,7121",Établissements du patrimoine,0,False,2025,Septembre,9,8541.0,0.8,
+"712,7121",Établissements du patrimoine,0,False,2025,Octobre,10,8710.0,2.0,
+"712,7121",Établissements du patrimoine,0,False,2025,Novembre,11,8741.0,0.4,
+"712,7121",Établissements du patrimoine,0,False,2025,Décembre,12,8829.0,1.0,
