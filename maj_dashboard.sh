@@ -125,7 +125,8 @@ mkdir -p "$DOCS_DIR"
 cp "$OUT_DIR/dashboard.html" "$DOCS_DIR/index.html"
 [ -f "$OUT_DIR/ledger.json" ]         && cp "$OUT_DIR/ledger.json"         "$DOCS_DIR/ledger.json"
 [ -f "$OUT_DIR/ledger_history.jsonl" ] && cp "$OUT_DIR/ledger_history.jsonl" "$DOCS_DIR/ledger_history.jsonl"
-echo "  docs/index.html mis à jour (+ journal d'audit)."
+[ -f "$OUT_DIR/reperes_2025.json" ]   && cp "$OUT_DIR/reperes_2025.json"   "$DOCS_DIR/reperes_2025.json"
+echo "  docs/index.html mis à jour (+ journal d'audit + repères dérivés)."
 
 # --- Étape 5/5 : commit git -------------------------------------------------
 echo

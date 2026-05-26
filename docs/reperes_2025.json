@@ -1,0 +1,123 @@
+{
+  "annee": 2025,
+  "date_calcul": "2026-05-26T08:44:12",
+  "protocole_version": "1.1.0",
+  "reperes": {
+    "r1_ecart_decouvrabilite": {
+      "ratio": 3.55,
+      "ecart_pts": 17.6,
+      "part_albums_numeriques_pct": 24.5,
+      "part_streaming_pct": 6.9,
+      "source": "ISQ tableau 4153",
+      "periode": "24 au 30 avril 2026",
+      "provisional": true,
+      "note": "Lecture YTD courante. Valeur 2025 à figer au 1ᵉʳ mars sur l'archive ISQ annuelle (tâche #26)."
+    },
+    "r2_profondeur_catalogue": {
+      "n20": 1,
+      "interpretes": [
+        "Les Cowboys Fringants"
+      ],
+      "rangs_quebecois": [
+        15
+      ],
+      "source": "ISQ — Palmarès des enregistrements musicaux (cumulatif annuel)",
+      "provisional": true
+    },
+    "r3_consommation_absolue": {
+      "canaux": {
+        "streaming_musique": {
+          "volume_total_k_ecoutes": 4829409.6,
+          "part_qc_pct": 6.9,
+          "consommation_qc_k_ecoutes": 333229.3,
+          "provisional": true
+        },
+        "albums_numeriques": {
+          "volume_total_unites": 39.5,
+          "part_qc_pct": 24.5,
+          "consommation_qc_unites": 10.0,
+          "provisional": true
+        },
+        "cinema": {
+          "part_qc_box_office_pct": 4.7,
+          "consommation_absolue_recettes_qc": null,
+          "status": "donnees_annuelles_a_venir",
+          "note": "Recettes totales annuelles requises pour C_film ; indicateurs_cinema est annuel mais cinema_pays est YTD — consolidation au 1ᵉʳ mars année+1."
+        }
+      },
+      "definition_operationnelle": "C_c = volume_total × part_QC (par canal)"
+    },
+    "r4_angle_mort": {
+      "a": 0.667,
+      "cellules_couvertes": 8,
+      "total": 12,
+      "matrice": {
+        "economique": {
+          "creation_production": {
+            "etat": "partiel",
+            "source": "Indicateurs des résultats d'exploitation des établissements cinématographiques (ISQ 2736) — composante production"
+          },
+          "diffusion_consommation": {
+            "etat": "plein",
+            "source": "Triade Loi 109 art. 33 — ISQ 4153 / 2620 / 2140 / 3059 / 2342 / 3171"
+          },
+          "preservation_transmission": {
+            "etat": "partiel",
+            "source": "Nombre d'établissements culturels (ISQ 929) — sous-ensemble institutions muséales"
+          }
+        },
+        "naturel": {
+          "creation_production": {
+            "etat": "absent",
+            "source": null
+          },
+          "diffusion_consommation": {
+            "etat": "absent",
+            "source": null
+          },
+          "preservation_transmission": {
+            "etat": "partiel",
+            "source": "Registre du patrimoine culturel (MCC) — couverture indirecte par inventaire patrimonial"
+          }
+        },
+        "humain": {
+          "creation_production": {
+            "etat": "partiel",
+            "source": "Emplois salariés EERH (ISQ 2576) — salariés seulement, autonomes invisibles à la statistique"
+          },
+          "diffusion_consommation": {
+            "etat": "partiel",
+            "source": "Emplois salariés EERH (ISQ 2576) — même limite que création-production"
+          },
+          "preservation_transmission": {
+            "etat": "partiel",
+            "source": "Statistiques des bibliothèques publiques du Québec (MCC / BAnQ) — proxy de transmission culturelle"
+          }
+        },
+        "social": {
+          "creation_production": {
+            "etat": "absent",
+            "source": null
+          },
+          "diffusion_consommation": {
+            "etat": "partiel",
+            "source": "Principaux indicateurs en culture par région (ISQ 4850) — proxy faible, ne couvre pas le capital social au sens strict"
+          },
+          "preservation_transmission": {
+            "etat": "absent",
+            "source": null
+          }
+        }
+      },
+      "regle_comptage": "Binaire : `plein` OU `partiel` ⇒ couverte. La qualité de la couverture (✓ vs ⚠) est documentée dans la matrice mais n'influe pas sur le numérateur. Conformément à la limite déjà reconnue par le protocole : « qualité non incluse ».",
+      "provisional": false,
+      "version_protocole": "1.1.0",
+      "date_gel": "2026-05-25"
+    },
+    "r5_volume_oeuvres": {
+      "status": "en_chantier",
+      "note": "Sources à identifier avant première mesure : ADISQ (musique), SODEC / Téléfilm Canada (cinéma), OCCQ / dépôt légal BAnQ (livre). La définition de « œuvre québécoise » sera alignée sur les conventions institutionnelles existantes (critères ADISQ ; grille SODEC de qualification du film québécois ; convention OCCQ de l'édition) plutôt qu'inventée pour le protocole.",
+      "provisional": null
+    }
+  }
+}

@@ -19,6 +19,7 @@ from pathlib import Path
 import yaml
 
 from . import extract
+from . import derive
 from .ledger import file_fingerprint, build_record, write_ledger
 from .render import render_dashboard
 
@@ -136,6 +137,25 @@ def run(repo_root: Path | str = '.', verbose: bool = True) -> dict:
     combined_path.write_text(json.dumps(combined, ensure_ascii=False, indent=2),
                              encoding='utf-8')
 
+    # Dériver les cinq repères (protocole v1.0.1) et persister dans outputs/.
+    # En cas d'erreur, on consigne sans interrompre le pipeline : les repères
+    # sont un livrable parallèle au dashboard, pas une dépendance amont.
+    try:
+        reperes = derive.derive_all(combined, annee=2025)
+        reperes_path = outputs_dir / 'reperes_2025.json'
+        reperes_path.write_text(json.dumps(reperes, ensure_ascii=False, indent=2),
+                                encoding='utf-8')
+        if verbose:
+            r4 = reperes['reperes']['r4_angle_mort']
+            print(f"  [✓] repères dérivés    : "
+                  f"A={r4['cellules_couvertes']}/{r4['total']}, "
+                  f"protocole v{reperes['protocole_version']}")
+    except Exception as e:
+        errors.append({'source': '__derive__', 'error': str(e)})
+        if verbose:
+            print(f"  [!] dérivation des repères : ERREUR — {e}")
+        reperes_path = None
+
     # Render dashboard HTML
     dashboard_cfg = config.get('dashboard', {})
     template = repo_root / dashboard_cfg.get('template', 'templates/dashboard.html.tmpl')
@@ -154,6 +174,8 @@ def run(repo_root: Path | str = '.', verbose: bool = True) -> dict:
     outputs_produced = [str(combined_path.relative_to(repo_root))]
     if rendered:
         outputs_produced.append(str(rendered.relative_to(repo_root)))
+    if reperes_path is not None:
+        outputs_produced.append(str(reperes_path.relative_to(repo_root)))
 
     record = build_record(sources_used, outputs_produced, errors)
     write_ledger(record, outputs_dir)

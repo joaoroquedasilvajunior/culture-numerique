@@ -38,6 +38,7 @@ tripartite Loi 109) : voir `observatoire-pipeline/README.md`.
   (écosystème culturel et créatif, lentille praxéologique, 4 capitaux, 3 étapes).
 - `Données Québec/` — fichiers .xlsx téléchargés de l'ISQ (sources du pipeline).
 - `Manifeste_observatoire_souverainete_culturelle.*` — posture éditoriale de l'Observatoire.
+- `Protocole_reperes_observatoire.md` — protocole gelé des 5 repères suivis (v1.0, 2026-05-25) ; définitions, sources, baseline 2025.
 
 ## Veille
 

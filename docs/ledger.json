@@ -1,9 +1,9 @@
 {
-  "build_iso": "2026-05-25T20:38:50.258841+00:00",
+  "build_iso": "2026-05-26T12:44:12.955170+00:00",
   "pipeline_version": "1.0.0",
   "sources_used": [
     {
-      "path": "/sessions/great-brave-ramanujan/mnt/Culture Québec en donnée/Données Québec/Part des interprètes du Québec dans la consommation d'enregistrements musicaux, données hebdomadaires.xlsx",
+      "path": "/Users/joaoroque/Documents/Claude/Projects/Culture Québec en donnée/Données Québec/Part des interprètes du Québec dans la consommation d'enregistrements musicaux, données hebdomadaires.xlsx",
       "name": "Part des interprètes du Québec dans la consommation d'enregistrements musicaux, données hebdomadaires.xlsx",
       "sha256": "b0a2392f86a71a5a54924352e4997d84a107c8c51e027debac8fe5adc3a76d7e",
       "size_bytes": 7370,
@@ -12,7 +12,7 @@
       "label": "Part des interprètes du Québec dans la consommation d'enregistrements musicaux"
     },
     {
-      "path": "/sessions/great-brave-ramanujan/mnt/Culture Québec en donnée/Données Québec/Consommation d'enregistrements musicaux selon le type de produit, données hebdomadaires, Québec.xlsx",
+      "path": "/Users/joaoroque/Documents/Claude/Projects/Culture Québec en donnée/Données Québec/Consommation d'enregistrements musicaux selon le type de produit, données hebdomadaires, Québec.xlsx",
       "name": "Consommation d'enregistrements musicaux selon le type de produit, données hebdomadaires, Québec.xlsx",
       "sha256": "4b59e9f2182d1d2dcb8d9409ac0d77da02d36ea5c45997ba779bcfbf6067bfa9",
       "size_bytes": 8088,
@@ -21,7 +21,7 @@
       "label": "Consommation d'enregistrements musicaux selon le type de produit"
     },
     {
-      "path": "/sessions/great-brave-ramanujan/mnt/Culture Québec en donnée/Données Québec/Résultats d'exploitation des établissements cinématographiques selon le pays d'origine des films, données hebdomadaires, Québec.xlsx",
+      "path": "/Users/joaoroque/Documents/Claude/Projects/Culture Québec en donnée/Données Québec/Résultats d'exploitation des établissements cinématographiques selon le pays d'origine des films, données hebdomadaires, Québec.xlsx",
       "name": "Résultats d'exploitation des établissements cinématographiques selon le pays d'origine des films, données hebdomadaires, Québec.xlsx",
       "sha256": "3d6f499887c70cc6ad488bd88effb27a4791c115a3c8f948a1d74f80dd8e8acc",
       "size_bytes": 9232,
@@ -30,7 +30,7 @@
       "label": "Résultats d'exploitation des établissements cinématographiques selon le pays d'origine des films"
     },
     {
-      "path": "/sessions/great-brave-ramanujan/mnt/Culture Québec en donnée/Données Québec/Palmarès des enregistrements musicaux, Québec.xlsx",
+      "path": "/Users/joaoroque/Documents/Claude/Projects/Culture Québec en donnée/Données Québec/Palmarès des enregistrements musicaux, Québec.xlsx",
       "name": "Palmarès des enregistrements musicaux, Québec.xlsx",
       "sha256": "9319b3151d4767eced6901e452bb3fbc33c3cabe65fc077d3df2e0361e69c0cb",
       "size_bytes": 7068,
@@ -39,7 +39,7 @@
       "label": "Palmarès des enregistrements musicaux"
     },
     {
-      "path": "/sessions/great-brave-ramanujan/mnt/Culture Québec en donnée/Données Québec/Évolution de statistiques clés de la culture et des communications, Québec.xlsx",
+      "path": "/Users/joaoroque/Documents/Claude/Projects/Culture Québec en donnée/Données Québec/Évolution de statistiques clés de la culture et des communications, Québec.xlsx",
       "name": "Évolution de statistiques clés de la culture et des communications, Québec.xlsx",
       "sha256": "8687697d2829e4c11bdedba11eb387c9be6989f508aa2dd95912ef5b6908a240",
       "size_bytes": 24733,
@@ -48,7 +48,7 @@
       "label": "Évolution de statistiques clés de la culture et des communications"
     },
     {
-      "path": "/sessions/great-brave-ramanujan/mnt/Culture Québec en donnée/Données Québec/Emplois salariés dans certaines industries de la culture et des communications selon l'Enquête sur l'emploi.xlsx",
+      "path": "/Users/joaoroque/Documents/Claude/Projects/Culture Québec en donnée/Données Québec/Emplois salariés dans certaines industries de la culture et des communications selon l'Enquête sur l'emploi.xlsx",
       "name": "Emplois salariés dans certaines industries de la culture et des communications selon l'Enquête sur l'emploi.xlsx",
       "sha256": "efc0bdf434924d94ca39a00f01f95e23ed7c43e568d3991c2761d4c20e5025f9",
       "size_bytes": 13667,
@@ -57,7 +57,7 @@
       "label": "Emplois salariés dans certaines industries de la culture et des communications (EERH)"
     },
     {
-      "path": "/sessions/great-brave-ramanujan/mnt/Culture Québec en donnée/Données Québec/Variations mensuelles et annuelles des ventes de livres neufs, Québec.xlsx",
+      "path": "/Users/joaoroque/Documents/Claude/Projects/Culture Québec en donnée/Données Québec/Variations mensuelles et annuelles des ventes de livres neufs, Québec.xlsx",
       "name": "Variations mensuelles et annuelles des ventes de livres neufs, Québec.xlsx",
       "sha256": "b576e9cd81f6f3781d132f7455891c128a13ac9a71df75d1a587325576576e62",
       "size_bytes": 9220,
@@ -66,7 +66,7 @@
       "label": "Variations mensuelles et annuelles des ventes de livres neufs"
     },
     {
-      "path": "/sessions/great-brave-ramanujan/mnt/Culture Québec en donnée/Données Québec/Ventes de livres neufs selon la catégorie de points de vente, données mensuelles, Québec .xlsx",
+      "path": "/Users/joaoroque/Documents/Claude/Projects/Culture Québec en donnée/Données Québec/Ventes de livres neufs selon la catégorie de points de vente, données mensuelles, Québec .xlsx",
       "name": "Ventes de livres neufs selon la catégorie de points de vente, données mensuelles, Québec .xlsx",
       "sha256": "30e500decbb7156f87e84d0cbc180d4fc4798f78a1576fe99fa8381fc79d5df7",
       "size_bytes": 11186,
@@ -75,7 +75,7 @@
       "label": "Ventes de livres neufs selon la catégorie de points de vente, données mensuelles"
     },
     {
-      "path": "/sessions/great-brave-ramanujan/mnt/Culture Québec en donnée/Données Québec/Nombre d’établissements culturels de certains types.xlsx",
+      "path": "/Users/joaoroque/Documents/Claude/Projects/Culture Québec en donnée/Données Québec/Nombre d’établissements culturels de certains types.xlsx",
       "name": "Nombre d’établissements culturels de certains types.xlsx",
       "sha256": "b5500dcee4bae18128f5381c16c356c2e71614abfc8c2e90e2e073a5ca4f9dad",
       "size_bytes": 13192,
@@ -84,7 +84,7 @@
       "label": "Nombre d'établissements culturels de certains types"
     },
     {
-      "path": "/sessions/great-brave-ramanujan/mnt/Culture Québec en donnée/Données Québec/Indicateurs des résultats d'exploitation des établissements cinématographiques, Québec.xlsx",
+      "path": "/Users/joaoroque/Documents/Claude/Projects/Culture Québec en donnée/Données Québec/Indicateurs des résultats d'exploitation des établissements cinématographiques, Québec.xlsx",
       "name": "Indicateurs des résultats d'exploitation des établissements cinématographiques, Québec.xlsx",
       "sha256": "978cbf99166dd332fba1d3a245bc29bc8027b40981bcb1232dc381fcf14043cd",
       "size_bytes": 21581,
@@ -95,7 +95,8 @@
   ],
   "outputs_produced": [
     "data/processed/dashboard_data.json",
-    "outputs/dashboard.html"
+    "outputs/dashboard.html",
+    "outputs/reperes_2025.json"
   ],
   "errors": []
 }

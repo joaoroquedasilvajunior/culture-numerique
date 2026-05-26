@@ -20,6 +20,7 @@ sources:
 
   part_qc:
     label: "Part des interprètes du Québec dans la consommation d'enregistrements musicaux"
+    isq_table_id: "4153"
     file_pattern: "Part des interprètes*.xlsx"
     isq_url: "https://statistique.quebec.ca/fr/produit/tableau/part-interpretes-quebec-consommation-enregistrements-musicaux"
     classification: "OCCQ — données hebdomadaires"
@@ -28,6 +29,7 @@ sources:
 
   volume_musique:
     label: "Consommation d'enregistrements musicaux selon le type de produit"
+    isq_table_id: "2140"
     file_pattern: "Consommation d'enregistrements musicaux*.xlsx"
     isq_url: "https://statistique.quebec.ca/fr/produit/tableau/consommation-enregistrements-musicaux-type-produit"
     classification: "OCCQ — données hebdomadaires"
@@ -36,6 +38,7 @@ sources:
 
   cinema_pays:
     label: "Résultats d'exploitation des établissements cinématographiques selon le pays d'origine des films"
+    isq_table_id: "3059"
     file_pattern: "Résultats d'exploitation des établissements*pays d'origine*.xlsx"
     isq_url: "https://statistique.quebec.ca/fr/produit/tableau/resultats-exploitation-cinemas-pays-origine"
     classification: "OCCQ — données hebdomadaires"
@@ -44,6 +47,7 @@ sources:
 
   palmares_top20:
     label: "Palmarès des enregistrements musicaux"
+    isq_table_id: "2620"
     file_pattern: "Palmarès des enregistrements*.xlsx"
     isq_url: "https://statistique.quebec.ca/fr/produit/tableau/palmares-enregistrements-musicaux"
     classification: "OCCQ — cumulatif annuel"
@@ -52,6 +56,7 @@ sources:
 
   evolution_stats:
     label: "Évolution de statistiques clés de la culture et des communications"
+    isq_table_id: "3171"
     file_pattern: "Évolution de statistiques clés*.xlsx"
     isq_url: "https://statistique.quebec.ca/fr/produit/tableau/evolution-statistiques-cles-culture-communications"
     classification: "OCCQ — séries annuelles 2002-2025"
@@ -60,6 +65,7 @@ sources:
 
   emplois_eerh:
     label: "Emplois salariés dans certaines industries de la culture et des communications (EERH)"
+    isq_table_id: "2576"
     file_pattern: "Emplois salariés*.xlsx"
     isq_url: "https://statistique.quebec.ca/fr/produit/tableau/2576"
     classification: "SCIAN 2022 — désaisonnalisé, MM3"
@@ -69,6 +75,7 @@ sources:
 
   ventes_livres:
     label: "Variations mensuelles et annuelles des ventes de livres neufs"
+    isq_table_id: "2342"
     file_pattern: "Variations mensuelles*ventes de livres*.xlsx"
     isq_url: "https://statistique.quebec.ca/fr/produit/tableau/variations-ventes-livres-neufs"
     classification: "OCCQ — données mensuelles, ventes finales, $ courants"
@@ -87,6 +94,7 @@ sources:
 
   etablissements:
     label: "Nombre d'établissements culturels de certains types"
+    isq_table_id: "929"
     file_pattern: "Nombre d*établissements culturels*.xlsx"
     isq_url: "https://statistique.quebec.ca/fr/produit/tableau/nombre-etablissements-culturels"
     classification: "OCCQ — séries annuelles 2004-2024 ; SCACCQ"
@@ -96,6 +104,7 @@ sources:
 
   indicateurs_cinema:
     label: "Indicateurs des résultats d'exploitation des établissements cinématographiques (depuis 1975)"
+    isq_table_id: "2736"
     file_pattern: "Indicateurs des résultats d'exploitation*.xlsx"
     isq_url: "https://statistique.quebec.ca/fr/produit/tableau/indicateurs-cinemas-quebec"
     classification: "OCCQ — séries annuelles 1975-"
