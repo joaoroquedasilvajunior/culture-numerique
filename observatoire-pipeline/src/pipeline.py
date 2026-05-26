@@ -163,8 +163,15 @@ def run(repo_root: Path | str = '.', verbose: bool = True) -> dict:
 
     rendered = None
     if template.exists():
-        rendered = render_dashboard(_payload_for_dashboard(combined),
-                                    template, output_html)
+        # Le payload du dashboard inclut les repères dérivés sous la clé `reperes`,
+        # consommée par la section « Repères suivis » en tête du tableau de bord.
+        # Si la dérivation a échoué, on passe None — le template gère gracieusement
+        # l'absence de la clé (cards en statut « donnees_indisponibles »).
+        reperes_for_payload = locals().get('reperes')
+        rendered = render_dashboard(
+            _payload_for_dashboard(combined, reperes=reperes_for_payload),
+            template, output_html
+        )
         if verbose:
             print(f"  [✓] dashboard rendu : {output_html.relative_to(repo_root)}")
     else:
@@ -190,10 +197,13 @@ def run(repo_root: Path | str = '.', verbose: bool = True) -> dict:
     return record
 
 
-def _payload_for_dashboard(combined: dict) -> dict:
+def _payload_for_dashboard(combined: dict, reperes: dict | None = None) -> dict:
     """Adapte les clés au format attendu par le template HTML.
     Les clés JS du template sont historiquement : part_qc_musique, volume_musique,
     cinema_pays_origine, palmares_top20, historique_2002_2024, emplois_2025.
+
+    Si `reperes` est fourni (sortie de `derive.derive_all`), il est inscrit dans
+    le payload sous la clé `reperes`, consommée par la section dédiée du dashboard.
     """
     mapping = {
         'part_qc': 'part_qc_musique',
@@ -207,4 +217,6 @@ def _payload_for_dashboard(combined: dict) -> dict:
     for k, v in combined.items():
         target = mapping.get(k, k)
         payload[target] = v
+    if reperes is not None:
+        payload['reperes'] = reperes
     return payload

@@ -169,3 +169,36 @@ def test_derive_all_tolerant_aux_sources_manquantes():
     # R4 et R5 restent calculables, indépendants des sources extraites
     assert result['reperes']['r4_angle_mort']['cellules_couvertes'] == 8
     assert result['reperes']['r5_volume_oeuvres']['status'] == 'en_chantier'
+
+
+# === Intégration dériveur → payload du dashboard ============================
+
+def test_payload_for_dashboard_inclut_reperes(combined):
+    """_payload_for_dashboard porte les repères sous la clé `reperes`.
+
+    Vérifie que la section « Repères suivis » du dashboard reçoit bien les
+    valeurs calculées, et qu'elle peut être consommée par le JS du template.
+    """
+    from src.pipeline import _payload_for_dashboard
+    reperes = derive.derive_all(combined, annee=2025)
+    payload = _payload_for_dashboard(combined, reperes=reperes)
+
+    assert 'reperes' in payload
+    assert payload['reperes']['protocole_version'] == '1.1.0'
+    # R4 — la matrice gelée doit voyager intacte jusqu'au template
+    r4 = payload['reperes']['reperes']['r4_angle_mort']
+    assert r4['cellules_couvertes'] == 8
+    assert r4['total'] == 12
+    # R1 — les valeurs YTD doivent être disponibles
+    r1 = payload['reperes']['reperes']['r1_ecart_decouvrabilite']
+    assert r1['ratio'] == 3.55
+    assert r1['provisional'] is True
+
+
+def test_payload_for_dashboard_sans_reperes(combined):
+    """Si reperes=None, le payload reste compatible avec l'ancien template."""
+    from src.pipeline import _payload_for_dashboard
+    payload = _payload_for_dashboard(combined)
+    assert 'reperes' not in payload
+    # Les clés existantes doivent rester intactes
+    assert 'part_qc_musique' in payload
