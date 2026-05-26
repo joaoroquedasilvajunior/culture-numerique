@@ -1,0 +1,54 @@
+# Déploiement de GitHub Pages — workflow contrôlé par le dépôt.
+#
+# Remplace le workflow auto-généré « pages build and deployment » qui échouait
+# au stade `actions/checkout` avec un message « Your account is suspended »
+# trompeur (le compte fonctionne normalement, voir vigipol). Ce workflow-ci
+# tourne sous notre contrôle, avec des permissions explicitement déclarées,
+# ce qui le rend reproductible et déboguable.
+#
+# Pré-requis côté Settings :
+#   Settings → Pages → Source = "GitHub Actions"
+# Le workflow auto-généré disparaît alors automatiquement.
+
+name: Déploiement Pages
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'docs/**'
+      - '.github/workflows/deploy-pages.yml'
+  workflow_dispatch:
+
+# Permissions minimales requises par les trois actions GitHub officielles.
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Empêche deux déploiements concurrents ; ne tue pas un déploiement déjà en cours.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cloner le dépôt
+        uses: actions/checkout@v4
+
+      - name: Configurer Pages
+        uses: actions/configure-pages@v5
+
+      - name: Empaqueter le dossier docs/
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs
+
+      - name: Déployer sur GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
