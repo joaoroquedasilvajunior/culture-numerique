@@ -37,9 +37,11 @@ sources:
     axe_tdb: ["consommation", "presence"]
 
   cinema_pays:
-    label: "Résultats d'exploitation des établissements cinématographiques selon le pays d'origine des films"
+    label: "Résultats d'exploitation des établissements cinématographiques selon le pays d'origine des films (hebdomadaire)"
     isq_table_id: "3059"
-    file_pattern: "Résultats d'exploitation des établissements*pays d'origine*.xlsx"
+    # Pattern resserré : « hebdomadaires » obligatoire pour éviter de matcher
+    # le nouveau fichier annuel (cinema_pays_annuel) qui partage le préfixe.
+    file_pattern: "Résultats d'exploitation des établissements*pays d'origine*hebdomadaires*.xlsx"
     isq_url: "https://statistique.quebec.ca/fr/produit/tableau/resultats-exploitation-cinemas-pays-origine"
     classification: "OCCQ — données hebdomadaires"
     extractor: extract_cinema_pays
@@ -111,6 +113,33 @@ sources:
     extractor: extract_indicateurs_cinema
     axe_tdb: ["presence", "consommation"]
     notes: "Projections, assistance, recettes, prix d'entrée moyen, entrées par habitant, etc."
+
+  cinema_pays_annuel:
+    label: "Résultats d'exploitation des établissements cinématographiques selon le pays d'origine des films — assistance annuelle"
+    file_pattern: "Résultats d'exploitation des établissements*pays d'origine*annuelles*.xlsx"
+    isq_url: "https://statistique.quebec.ca/fr/produit/tableau/resultats-exploitation-cinemas-pays-origine-annuelles"
+    classification: "OCCQ — séries annuelles 1985-"
+    extractor: extract_cinema_pays_annuel
+    axe_tdb: ["consommation", "presence"]
+    notes: "Assistance (spectateurs) ventilée par pays d'origine du film, série annuelle 1985-. Donne directement le volume absolu — utile pour calculer C_cinema dans R3 sans recourir à une part hebdomadaire."
+
+  cinema_langue:
+    label: "Résultats d'exploitation des établissements cinématographiques selon la langue de projection"
+    file_pattern: "Résultats d'exploitation des établissements*langue de projection*.xlsx"
+    isq_url: "https://statistique.quebec.ca/fr/produit/tableau/resultats-exploitation-cinemas-langue-projection"
+    classification: "OCCQ — séries annuelles 1985-"
+    extractor: extract_cinema_langue
+    axe_tdb: ["presence"]
+    notes: "Projections ventilées « Langue française » vs « Autres que le français » (chacune subdivisée Cinémas / Ciné-parcs). Indicateur direct du marché francophone — central pour la Loi 109."
+
+  cinema_classement:
+    label: "Résultats d'exploitation des établissements cinématographiques selon la catégorie de classement des films"
+    file_pattern: "Résultats d'exploitation des établissements*catégorie de classement*.xlsx"
+    isq_url: "https://statistique.quebec.ca/fr/produit/tableau/resultats-exploitation-cinemas-classement"
+    classification: "OCCQ — séries annuelles 1985-"
+    extractor: extract_cinema_classement
+    axe_tdb: ["consommation"]
+    notes: "Projections par classement RCQ (Visa général, 13+, 16+, 18+), série annuelle 1985-."
 
 # Configuration du tableau de bord
 dashboard:

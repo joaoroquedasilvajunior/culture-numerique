@@ -648,10 +648,10 @@ a{color:inherit;text-decoration:none}
             <div class="kpi-spark" id="spark2"></div>
           </div>
           <div class="kpi-label">Part QC — box-office cinéma</div>
-          <div class="kpi-value">4,7&nbsp;%</div>
+          <div class="kpi-value">3,9&nbsp;%</div>
           <div class="kpi-delta down">
             <svg class="kpi-delta-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M7 7l10 10M7 17h10V7"/></svg>
-            −12,4&nbsp;% vs même période 2025
+            −38,7&nbsp;% vs même période 2025
           </div>
         </div>
 
@@ -762,6 +762,21 @@ a{color:inherit;text-decoration:none}
             </div>
           </div>
           <div class="card-body"><div class="chart-wrap"><canvas id="chart_scene_hist"></canvas></div></div>
+        </div>
+      </div>
+
+      <div class="row" style="grid-template-columns:1fr;margin-top:20px">
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <div class="card-title">Projections cinéma au Québec selon la langue — série longue 1985-2025</div>
+              <div class="card-sub">ISQ · Résultats d'exploitation cinéma selon la langue de projection · nombre de projections (milliers)</div>
+            </div>
+          </div>
+          <div class="card-body"><div class="chart-wrap"><canvas id="chart_cine_langue"></canvas></div></div>
+          <div class="card-foot" id="foot_cine_langue">
+            Part francophone des projections : <strong>51,2 % en 1985</strong> → sommet <strong>74,4 % en 2005</strong> → <strong>67,2 % en 2025</strong>. Un sommet, puis un reflux qui dure depuis vingt ans — précisément le signal qu'un cadre réglementaire de découvrabilité comme la Loi 109 cherche à corriger côté offre numérique.
+          </div>
         </div>
       </div>
     </section>
@@ -1148,6 +1163,59 @@ spark('spark4', [0, -2, -4, -7, -10, -11.6], C.bo);
       plugins: { legend: { display: false }},
       scales: { x: { grid: { display: false }},
         y: { grid: { color: '#f0f4f8' }, ticks: { callback: v => v.toLocaleString('fr-CA') }}}}
+  });
+})();
+
+// === CHART 3 bis : Projections cinéma par langue (série longue 1985-2025) ===
+// Stacked bar de la ventilation Langue française vs Autres que le français.
+// Source : cinema_langue (ISQ, mise à jour 9 juin 2026).
+(function(){
+  if (!D.cinema_langue || !D.cinema_langue.indicateurs) return;
+  const inds = D.cinema_langue.indicateurs;
+  const fr = inds.find(i => i.libelle === 'Langue française' && i.niveau === 0);
+  const autres = inds.find(i => i.libelle === 'Autres que le français' && i.niveau === 0);
+  const tot = inds.find(i => i.libelle === 'Projections' && i.niveau === 0);
+  if (!fr || !autres || !tot) return;
+  const annees = tot.serie.map(p => p.annee);
+  // Convertir en milliers pour échelle lisible
+  const sFr = fr.serie.map(p => p.valeur != null ? p.valeur / 1000 : null);
+  const sAutres = autres.serie.map(p => p.valeur != null ? p.valeur / 1000 : null);
+  new Chart(document.getElementById('chart_cine_langue'), {
+    type: 'bar',
+    data: {
+      labels: annees,
+      datasets: [
+        { label: 'Langue française', data: sFr, backgroundColor: C.bb,
+          borderColor: C.bb400, borderWidth: 0, stack: 'projections' },
+        { label: 'Autres que le français', data: sAutres, backgroundColor: C.cb800,
+          borderColor: C.cb700, borderWidth: 0, stack: 'projections' },
+      ],
+    },
+    options: { responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: true, position: 'top', align: 'end',
+          labels: { boxWidth: 12, boxHeight: 12, font: {size: 11.5}, padding: 12 }},
+        tooltip: { callbacks: {
+          label: ctx => {
+            const idx = ctx.dataIndex;
+            const fVal = sFr[idx] || 0, aVal = sAutres[idx] || 0;
+            const total = fVal + aVal;
+            const pct = total ? (ctx.dataset.data[idx] / total * 100).toFixed(1).replace('.', ',') + ' %' : '—';
+            return ctx.dataset.label + ' : ' + (ctx.dataset.data[idx] || 0).toLocaleString('fr-CA',{maximumFractionDigits:0}) + ' k (' + pct + ')';
+          },
+          footer: items => {
+            const idx = items[0].dataIndex;
+            const total = (sFr[idx] || 0) + (sAutres[idx] || 0);
+            return 'Total : ' + total.toLocaleString('fr-CA',{maximumFractionDigits:0}) + ' k projections';
+          },
+        }},
+      },
+      scales: {
+        x: { stacked: true, grid: { display: false }, ticks: { autoSkip: true, maxRotation: 0, font: {size: 10.5} }},
+        y: { stacked: true, grid: { color: '#f0f4f8' },
+          ticks: { callback: v => v.toLocaleString('fr-CA') + ' k' }},
+      },
+    },
   });
 })();
 

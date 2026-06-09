@@ -491,6 +491,149 @@ def extract_indicateurs_cinema(path: Path) -> dict:
     return {'annees': annees, 'indicateurs': indicateurs}
 
 
+# ---------- Helpers spécifiques aux séries cinéma 1985- ----------
+#
+# Ces trois fichiers (langue, classement, pays annuel) partagent une mise en
+# page commune : ligne d'années en colonne paire (B, D, F, ...), libellés en
+# colonne A, indentation par NBSP triples (3 NBSP = sous-niveau). C'est une
+# convention distincte du tableau « Indicateurs cinéma » (qui démarre en 1975
+# et colle ses années en C, E, G, ...).
+
+def _find_year_row_paired(ws, max_scan_row: int = 12) -> int | None:
+    """Retourne le numéro de ligne où la colonne B contient une année (1900-2100).
+    Pour les tableaux ISQ dont les années sont en colonnes paires B/D/F/...
+    """
+    for r in range(1, max_scan_row + 1):
+        v = ws.cell(row=r, column=2).value
+        if v is None:
+            continue
+        try:
+            n = int(str(v).rstrip('¹²³⁴⁵⁶⁷⁸⁹⁰').strip())
+            if 1900 < n < 2100:
+                return r
+        except (ValueError, TypeError):
+            continue
+    return None
+
+
+def _read_paired_years(ws, annee_row: int) -> tuple[list[int], list[int]]:
+    """Lit la ligne d'années sur colonnes paires (B, D, F, ...).
+    Retourne (annees, colonnes_paires) — exclut les colonnes vides en tête/queue.
+    """
+    annees, cols = [], []
+    c = 2
+    while c <= (ws.max_column or 2):
+        v = ws.cell(row=annee_row, column=c).value
+        if v is not None and str(v).strip():
+            try:
+                annees.append(int(str(v).rstrip('¹²³⁴⁵⁶⁷⁸⁹⁰').strip()))
+                cols.append(c)
+            except (ValueError, TypeError):
+                pass
+        c += 2
+    return annees, cols
+
+
+def _indent_level_nbsp3(s) -> int:
+    """Niveau hiérarchique pour les fichiers cinéma 1985- (3 NBSP par niveau)."""
+    if s is None:
+        return 0
+    raw = str(s)
+    nbsp = len(raw) - len(raw.lstrip('\xa0'))
+    return nbsp // 3
+
+
+def _extract_serie_longue_cinema(path: Path, *,
+                                  labels_stop_prefixes: tuple = ('Notes', 'Source', '.. :', '- :'),
+                                  ) -> dict:
+    """Extracteur commun aux trois nouveaux tableaux cinéma 1985-.
+
+    Logique : trouver la ligne d'années, puis lire chaque ligne suivante comme
+    un indicateur (libellé col A, valeurs aux colonnes paires). On s'arrête
+    quand on rencontre une ligne de notes/sources ou une ligne vide après
+    avoir commencé à accumuler des indicateurs.
+    """
+    wb = load_workbook(path, data_only=True)
+    ws = wb['Tableau']
+
+    annee_row = _find_year_row_paired(ws)
+    if annee_row is None:
+        raise ValueError(f"Ligne d'années introuvable dans {path.name}")
+    annees, year_cols = _read_paired_years(ws, annee_row)
+
+    indicateurs = []
+    for r in range(annee_row + 1, (ws.max_row or annee_row + 1) + 1):
+        label_raw = ws.cell(row=r, column=1).value
+        if label_raw is None or not str(label_raw).strip():
+            # Ligne vide : si on a déjà accumulé des indicateurs, c'est la fin
+            if indicateurs:
+                break
+            continue
+        label_str = str(label_raw).lstrip(' \xa0').rstrip()
+        if any(label_str.startswith(p) for p in labels_stop_prefixes):
+            break
+        niveau = _indent_level_nbsp3(label_raw)
+        serie = [{'annee': yr, 'valeur': _to_num(ws.cell(row=r, column=col).value)}
+                 for yr, col in zip(annees, year_cols)]
+        # Filtrer les lignes sans aucune valeur (sépareurs visuels)
+        if all(p['valeur'] is None for p in serie):
+            continue
+        indicateurs.append({
+            'libelle': _clean_label(label_raw),
+            'niveau': niveau,
+            'serie': serie,
+        })
+    return {'annees': annees, 'indicateurs': indicateurs}
+
+
+# ---------- Nouveaux extracteurs cinéma (publiés juin 2026) ----------
+
+def extract_cinema_langue(path: Path) -> dict:
+    """Tableau « Résultats d'exploitation cinéma — langue de projection » (1985-).
+
+    Hiérarchie attendue :
+      Projections
+      Langue française
+        Cinémas
+        Ciné-parcs
+      Autres que le français
+        Cinémas
+        Ciné-parcs
+
+    Indicateur direct du marché francophone — pertinent pour la Loi 109.
+    """
+    return _extract_serie_longue_cinema(path)
+
+
+def extract_cinema_classement(path: Path) -> dict:
+    """Tableau « Résultats d'exploitation cinéma — catégorie de classement » (1985-).
+
+    Hiérarchie attendue : Projections / Visa général / 13 ans et plus /
+    16 ans et plus / 18 ans et plus, chacune subdivisée Cinémas / Ciné-parcs
+    (sauf 18+).
+    """
+    return _extract_serie_longue_cinema(path)
+
+
+def extract_cinema_pays_annuel(path: Path) -> dict:
+    """Tableau « Résultats d'exploitation cinéma — pays d'origine, données annuelles » (1985-).
+
+    Liste plate de pays, indicateur = assistance (spectateurs) ventilée par
+    pays d'origine du film. Permet de calculer directement C_cinema dans R3
+    sans recourir à une multiplication recettes × part hebdomadaire.
+
+    Retourne en plus du format standard une clé `assistance_par_pays` qui
+    indexe les indicateurs par libellé de pays pour usage rapide en aval.
+    """
+    base = _extract_serie_longue_cinema(path)
+    # Index complémentaire par pays
+    base['assistance_par_pays'] = {
+        ind['libelle']: ind['serie']
+        for ind in base['indicateurs']
+    }
+    return base
+
+
 # ---------- Registry ----------
 
 EXTRACTORS = {
@@ -504,4 +647,7 @@ EXTRACTORS = {
     'extract_ventes_categorie': extract_ventes_categorie,
     'extract_etablissements': extract_etablissements,
     'extract_indicateurs_cinema': extract_indicateurs_cinema,
+    'extract_cinema_langue': extract_cinema_langue,
+    'extract_cinema_classement': extract_cinema_classement,
+    'extract_cinema_pays_annuel': extract_cinema_pays_annuel,
 }

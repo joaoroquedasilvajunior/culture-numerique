@@ -40,7 +40,7 @@ def combined(raw_dir):
     f_pal = find_source_file(raw_dir, 'Palmarès des enregistrements*.xlsx')
     f_cin = find_source_file(
         raw_dir,
-        "Résultats d'exploitation des établissements*pays d'origine*.xlsx"
+        "Résultats d'exploitation des établissements*pays d'origine*hebdomadaires*.xlsx"
     )
     return {
         'part_qc': extract.extract_part_qc(f_part),
@@ -95,7 +95,9 @@ def test_r3_cinema_metadata_seulement(combined):
         combined['volume_musique'], combined['part_qc'], combined['cinema_pays']
     )
     cinema = r3['canaux']['cinema']
-    assert cinema['part_qc_box_office_pct'] == 4.7
+    # ISQ a révisé la part QC entre le 22 mai et le 9 juin : 4,7 → 3,9 %
+    # (même semaine de référence 24-30 avril 2026)
+    assert cinema['part_qc_box_office_pct'] == 3.9
     assert cinema['status'] == 'donnees_annuelles_a_venir'
     assert cinema['consommation_absolue_recettes_qc'] is None
 

@@ -1,6 +1,6 @@
 {
   "annee": 2025,
-  "date_calcul": "2026-05-26T15:24:17",
+  "date_calcul": "2026-06-09T11:18:22",
   "protocole_version": "1.1.0",
   "reperes": {
     "r1_ecart_decouvrabilite": {
@@ -39,7 +39,7 @@
           "provisional": true
         },
         "cinema": {
-          "part_qc_box_office_pct": 4.7,
+          "part_qc_box_office_pct": 3.9,
           "consommation_absolue_recettes_qc": null,
           "status": "donnees_annuelles_a_venir",
           "note": "Recettes totales annuelles requises pour C_film ; indicateurs_cinema est annuel mais cinema_pays est YTD — consolidation au 1ᵉʳ mars année+1."

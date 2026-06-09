@@ -51,14 +51,25 @@ def test_volume_streaming(raw_dir):
 
 
 def test_cinema_quebec(raw_dir):
-    """Part QC box-office YTD = 4,7 %, var an−1 = −12,4 %."""
-    f = find_source_file(raw_dir,
-                         "Résultats d'exploitation des établissements*pays d'origine*.xlsx")
-    assert f is not None, "Fichier cinéma pays d'origine manquant"
+    """Part QC box-office YTD = 3,9 %, var an−1 = −38,7 % (semaine 24-30 avril 2026).
+
+    Source : ISQ, fichier hebdomadaire mis à jour le 9 juin 2026.
+    Le pattern inclut « hebdomadaires » pour ne pas matcher le nouveau
+    fichier annuel publié simultanément (cinema_pays_annuel).
+
+    ⚠ Révision ISQ entre les versions du 22 mai et du 9 juin (même semaine
+    de référence) : pct_cumul_ytd 4,7 → 3,9 % ; var_cumul 12,4 → 38,7 %.
+    À documenter dans le ledger / la chronique.
+    """
+    f = find_source_file(
+        raw_dir,
+        "Résultats d'exploitation des établissements*pays d'origine*hebdomadaires*.xlsx"
+    )
+    assert f is not None, "Fichier cinéma pays d'origine (hebdomadaire) manquant"
     data = extract.extract_cinema_pays(f)
     qc = next(p for p in data['pays'] if p['pays'] == 'Québec')
-    assert qc['pct_cumul_ytd'] == 4.7
-    assert qc['var_cumul_an_prec_pct'] == -12.4
+    assert qc['pct_cumul_ytd'] == 3.9
+    assert qc['var_cumul_an_prec_pct'] == -38.7
 
 
 def test_palmares_quebec_count(raw_dir):
@@ -150,3 +161,96 @@ def test_indicateurs_cinema_serie_longue(raw_dir):
     assistance = next(i for i in data['indicateurs'] if i['libelle'] == 'Assistance')
     val_1975 = next(p['valeur'] for p in assistance['serie'] if p['annee'] == 1975)
     assert val_1975 == 20107000.0
+
+
+# === Nouvelles sources cinéma (publiées juin 2026, série annuelle 1985-2025) =
+
+def test_cinema_langue_part_francophone_2025(raw_dir):
+    """Langue de projection — part francophone 2025 ≈ 67 % (464 365 / 691 261).
+
+    Source : ISQ, mise à jour 9 juin 2026 (résultats annuels 2025).
+    Indicateur direct du marché francophone — central pour la Loi 109.
+    """
+    f = find_source_file(
+        raw_dir,
+        "Résultats d'exploitation des établissements*langue de projection*.xlsx"
+    )
+    assert f is not None, "Fichier langue de projection manquant"
+    data = extract.extract_cinema_langue(f)
+    assert data['annees'][0] == 1985
+    assert data['annees'][-1] == 2025
+    # Projections totales 2025
+    projections = next(i for i in data['indicateurs'] if i['libelle'] == 'Projections')
+    val_total = next(p['valeur'] for p in projections['serie'] if p['annee'] == 2025)
+    assert val_total == 691261.0
+    # Langue française 2025 (niveau 0, distinct des « Cinémas » au niveau 1)
+    fr = next(i for i in data['indicateurs']
+              if i['libelle'] == 'Langue française' and i['niveau'] == 0)
+    val_fr = next(p['valeur'] for p in fr['serie'] if p['annee'] == 2025)
+    assert val_fr == 464365.0
+    # Part francophone des projections 2025 : ≈ 67,2 %
+    assert 0.66 < val_fr / val_total < 0.68
+    # Hiérarchie : Cinémas et Ciné-parcs présents comme sous-niveaux
+    assert any(i['libelle'] == 'Cinémas' and i['niveau'] == 1
+               for i in data['indicateurs'])
+    assert any(i['libelle'] == 'Ciné-parcs' and i['niveau'] == 1
+               for i in data['indicateurs'])
+
+
+def test_cinema_classement_visa_general_2025(raw_dir):
+    """Catégorie de classement — Visa général domine en 2025 (≈ 68 % du total).
+
+    Source : ISQ, mise à jour 9 juin 2026.
+    """
+    f = find_source_file(
+        raw_dir,
+        "Résultats d'exploitation des établissements*catégorie de classement*.xlsx"
+    )
+    assert f is not None, "Fichier catégorie de classement manquant"
+    data = extract.extract_cinema_classement(f)
+    assert data['annees'][0] == 1985
+    assert data['annees'][-1] == 2025
+    visa = next(i for i in data['indicateurs']
+                if i['libelle'] == 'Visa général' and i['niveau'] == 0)
+    val_visa = next(p['valeur'] for p in visa['serie'] if p['annee'] == 2025)
+    assert val_visa == 473627.0
+    # Les quatre classes principales sont toutes présentes au niveau 0
+    classes_niveau0 = [i['libelle'] for i in data['indicateurs'] if i['niveau'] == 0]
+    for c in ('Visa général', '13 ans et plus', '16 ans et plus', '18 ans et plus'):
+        assert c in classes_niveau0, f"Classe « {c} » manquante au niveau 0"
+
+
+def test_cinema_pays_annuel_quebec_2025(raw_dir):
+    """Pays d'origine annuel — assistance QC 2025 = 1 036 590 (≈ 9 % du total).
+
+    Source : ISQ, mise à jour 9 juin 2026.
+
+    À noter : la part annuelle (9,04 %) est nettement supérieure à la part
+    YTD hebdomadaire courante (4,7 % au cumul YTD). L'écart vient en partie
+    du fait que l'assistance QC se concentre certains mois — le YTD précoce
+    sous-représente le poids annuel réel.
+    """
+    f = find_source_file(
+        raw_dir,
+        "Résultats d'exploitation des établissements*pays d'origine*annuelles*.xlsx"
+    )
+    assert f is not None, "Fichier pays d'origine annuel manquant"
+    data = extract.extract_cinema_pays_annuel(f)
+    assert data['annees'][0] == 1985
+    assert data['annees'][-1] == 2025
+    # Index par pays disponible et couvrant les pays attendus
+    assert 'assistance_par_pays' in data
+    assert {'États-Unis', 'France', 'Grande-Bretagne', 'Québec', 'Total'}.issubset(
+        set(data['assistance_par_pays'].keys())
+    )
+    # Assistance QC 2025
+    qc_serie = data['assistance_par_pays']['Québec']
+    val_qc = next(p['valeur'] for p in qc_serie if p['annee'] == 2025)
+    assert val_qc == 1036590.0
+    # Assistance totale 2025
+    total_serie = data['assistance_par_pays']['Total']
+    val_total = next(p['valeur'] for p in total_serie if p['annee'] == 2025)
+    assert val_total == 11470431.0
+    # Part annuelle QC ≈ 9,04 %
+    part_qc = val_qc / val_total
+    assert 0.090 < part_qc < 0.091
