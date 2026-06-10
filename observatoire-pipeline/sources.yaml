@@ -66,14 +66,25 @@ sources:
     axe_tdb: ["presence", "ecosysteme"]
 
   emplois_eerh:
-    label: "Emplois salariés dans certaines industries de la culture et des communications (EERH)"
+    label: "Emplois salariés dans certaines industries de la culture et des communications (EERH) — données mensuelles MM3"
     isq_table_id: "2576"
-    file_pattern: "Emplois salariés*.xlsx"
+    # Pattern resserré : « données mensuelles » obligatoire pour ne plus matcher
+    # le nouveau fichier annuel (emplois_eerh_annuel) qui partage le préfixe.
+    file_pattern: "Emplois salariés*données mensuelles*.xlsx"
     isq_url: "https://statistique.quebec.ca/fr/produit/tableau/2576"
-    classification: "SCIAN 2022 — désaisonnalisé, MM3"
+    classification: "SCIAN 2022 — désaisonnalisé, MM3 ; année courante (YTD)"
     extractor: extract_emplois_eerh
     axe_tdb: ["ecosysteme"]
-    notes: "Tableau 2576. Note méthodologique 2009 : exclut travailleurs autonomes, T4 obligatoire."
+    notes: "Tableau 2576. Mois « (À venir) » tolérés ; l'extracteur calcule la variation Jan → dernier mois disponible et expose l'année de référence et le nombre de mois disponibles."
+
+  emplois_eerh_annuel:
+    label: "Emplois salariés dans certaines industries de la culture et des communications (EERH) — données annuelles 2001-2025"
+    file_pattern: "Emplois salariés*données annuelles*.xlsx"
+    isq_url: "https://statistique.quebec.ca/fr/produit/tableau/emplois-salaries-culture-communications-annuel"
+    classification: "SCIAN 2022 — moyennes annuelles 2001-"
+    extractor: extract_emplois_eerh_annuel
+    axe_tdb: ["ecosysteme"]
+    notes: "Série annuelle EERH portée par le Québec. Sert de baseline figée pour les variations 2025 quand le fichier mensuel passe en année courante (YTD)."
 
   ventes_livres:
     label: "Variations mensuelles et annuelles des ventes de livres neufs"

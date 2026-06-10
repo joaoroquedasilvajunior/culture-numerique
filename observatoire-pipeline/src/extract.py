@@ -249,12 +249,36 @@ def extract_evolution(path: Path) -> dict:
 
 def extract_emplois_eerh(path: Path) -> list[dict]:
     """
-    Tableau ISQ 2576 « Emplois salariés EERH ».
-    Pour chaque industrie, on calcule la variation annuelle (Jan -> Déc) et le TCM cumulé.
-    Retourne une liste de dicts : un par industrie active.
+    Tableau ISQ 2576 « Emplois salariés EERH » — fichier mensuel MM3.
+
+    Tolérant à l'année partielle : quand l'ISQ bascule sur l'année en cours,
+    les mois non encore publiés portent la marque « (À venir) » dans l'en-tête
+    et leurs cellules sont vides. L'extracteur :
+      - lit l'année de référence depuis L4 (« 2025 », « 2026 », …) ;
+      - repère le dernier mois publié (n non None) ;
+      - calcule la variation Jan → dernier mois publié ;
+      - expose `mois_disponibles`, `mois_dernier`, `annee_reference`.
+
+    La variation n'est donc plus systématiquement « Jan → Déc » mais
+    « Jan → dernier mois disponible » de l'année courante. Pour la baseline
+    annuelle figée (2025), utiliser plutôt `extract_emplois_eerh_annuel`.
     """
     wb = load_workbook(path, data_only=True)
     ws = wb['Tableau']
+
+    # Année de référence : en L3 ou L4 selon le millésime du fichier ISQ
+    annee_ref = None
+    for r in range(2, 6):
+        v = ws.cell(row=r, column=1).value
+        if v is None:
+            continue
+        try:
+            n = int(str(v).strip())
+            if 2000 < n < 2100:
+                annee_ref = n
+                break
+        except (ValueError, TypeError):
+            continue
 
     MOIS = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin',
             'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre']
@@ -285,9 +309,18 @@ def extract_emplois_eerh(path: Path) -> list[dict]:
             tcm_series = [_to_num(tcm_row[c - 1]) for c in month_cols]
 
             n_jan = n_series[0]
-            n_dec = n_series[-1]
-            if n_jan is not None and n_dec is not None and n_jan != 0:
-                variation_pct = (n_dec - n_jan) / n_jan * 100
+            # Repérer le dernier mois publié (variation Jan → dernier mois)
+            n_dernier = None
+            mois_dernier_idx = None
+            for idx in range(len(n_series) - 1, -1, -1):
+                if n_series[idx] is not None:
+                    n_dernier = n_series[idx]
+                    mois_dernier_idx = idx
+                    break
+            mois_disponibles = sum(1 for v in n_series if v is not None)
+
+            if n_jan is not None and n_dernier is not None and n_jan != 0:
+                variation_pct = (n_dernier - n_jan) / n_jan * 100
             else:
                 variation_pct = None
 
@@ -300,8 +333,108 @@ def extract_emplois_eerh(path: Path) -> list[dict]:
                 'n_serie': n_series,
                 'tcm_serie': tcm_series,
                 'n_janvier': n_jan,
-                'n_decembre': n_dec,
+                'n_decembre': n_series[-1],
+                'n_dernier_mois': n_dernier,
+                'mois_dernier': MOIS[mois_dernier_idx] if mois_dernier_idx is not None else None,
+                'mois_disponibles': mois_disponibles,
+                'annee_reference': annee_ref,
                 'variation_pct': variation_pct,
+            })
+            i += 2
+        else:
+            i += 1
+
+    return out
+
+
+def extract_emplois_eerh_annuel(path: Path) -> list[dict]:
+    """
+    Tableau EERH série annuelle 2001- (Québec), source des baselines figées.
+
+    Layout : ligne d'années en L5 (col 3 = 2001, col 5 = 2002, ..., paires).
+    Pour chaque industrie : deux lignes (n + TCA), avec SCIAN entre
+    parenthèses dans le libellé col A et indentation NBSP par sextuplets
+    (convention ISQ).
+
+    Retourne une liste de dicts compatible avec extract_emplois_eerh,
+    enrichie de `annees`, `n_serie` et `tca_serie`. Les helpers `n_2024`,
+    `n_2025` et `tca_2025` exposent directement les chiffres pivots
+    utiles à la baseline 2025 du protocole.
+    """
+    wb = load_workbook(path, data_only=True)
+    ws = wb['Tableau']
+
+    # Repérer la ligne d'années (2001 en colonne 3)
+    annee_row = None
+    for r in range(1, 12):
+        v = ws.cell(row=r, column=3).value
+        if v is None:
+            continue
+        try:
+            if int(str(v).strip()) == 2001:
+                annee_row = r
+                break
+        except (ValueError, TypeError):
+            continue
+    if annee_row is None:
+        raise ValueError("Ligne d'années (2001) introuvable dans le fichier annuel")
+
+    # Lire toutes les années sur colonnes paires
+    annees, year_cols = [], []
+    c = 3
+    while c <= (ws.max_column or 3):
+        v = ws.cell(row=annee_row, column=c).value
+        if v is not None and str(v).strip():
+            try:
+                annees.append(int(str(v).strip()))
+                year_cols.append(c)
+            except (ValueError, TypeError):
+                pass
+        c += 2
+
+    out = []
+    i = annee_row + 1
+    while i <= (ws.max_row or annee_row + 1):
+        col1 = ws.cell(row=i, column=1).value
+        col2 = ws.cell(row=i, column=2).value
+
+        # Ligne d'industrie : libellé + col2 == 'n'
+        if (col1 is not None and str(col1).strip()
+                and isinstance(col2, str) and col2.strip() == 'n'):
+            industry_raw = str(col1)
+            niveau = _hierarchy_level(industry_raw)
+            terminee = _is_terminated(industry_raw)
+
+            scian_match = re.search(r'\(([\d,\s]+)\)\s*(?:\(Terminé\))?\s*$',
+                                    industry_raw.replace('\xa0', '').strip())
+            scian = scian_match.group(1).replace(' ', '') if scian_match else ''
+            label_clean = re.sub(r'\s*\([\d,\s]+\)\s*(?:\(Terminé\))?\s*$', '',
+                                 industry_raw.replace('\xa0', '').strip()).strip()
+
+            n_serie = [_to_num(ws.cell(row=i, column=col).value)
+                       for col in year_cols]
+            tca_serie = [_to_num(ws.cell(row=i + 1, column=col).value)
+                         for col in year_cols] if i + 1 <= (ws.max_row or 0) \
+                        else [None] * len(year_cols)
+
+            # Helpers pour les pivots de la baseline 2025
+            def _val(an):
+                return n_serie[annees.index(an)] if an in annees else None
+
+            def _tca(an):
+                return tca_serie[annees.index(an)] if an in annees else None
+
+            out.append({
+                'scian': scian,
+                'industrie': label_clean,
+                'niveau': niveau,
+                'serie_terminee': terminee,
+                'annees': annees,
+                'n_serie': n_serie,
+                'tca_serie': tca_serie,
+                'n_2024': _val(2024),
+                'n_2025': _val(2025),
+                'tca_2025': _tca(2025),
             })
             i += 2
         else:
@@ -650,4 +783,5 @@ EXTRACTORS = {
     'extract_cinema_langue': extract_cinema_langue,
     'extract_cinema_classement': extract_cinema_classement,
     'extract_cinema_pays_annuel': extract_cinema_pays_annuel,
+    'extract_emplois_eerh_annuel': extract_emplois_eerh_annuel,
 }

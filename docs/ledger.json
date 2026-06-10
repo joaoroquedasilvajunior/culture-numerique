@@ -1,5 +1,5 @@
 {
-  "build_iso": "2026-06-09T15:18:22.050010+00:00",
+  "build_iso": "2026-06-10T23:40:31.765150+00:00",
   "pipeline_version": "1.0.0",
   "sources_used": [
     {
@@ -48,13 +48,22 @@
       "label": "Évolution de statistiques clés de la culture et des communications"
     },
     {
-      "path": "/Users/joaoroque/Documents/Claude/Projects/Culture Québec en donnée/Données Québec/Emplois salariés dans certaines industries de la culture et des communications selon l'Enquête sur l'emploi.xlsx",
-      "name": "Emplois salariés dans certaines industries de la culture et des communications selon l'Enquête sur l'emploi.xlsx",
-      "sha256": "efc0bdf434924d94ca39a00f01f95e23ed7c43e568d3991c2761d4c20e5025f9",
-      "size_bytes": 13667,
-      "mtime_iso": "2026-04-16T14:56:38.078998+00:00",
+      "path": "/Users/joaoroque/Documents/Claude/Projects/Culture Québec en donnée/Données Québec/Emplois salariés dans certaines industries de la culture et des communications selon l'Enquête sur l'emploi, la rémunération et les heures de travail (EERH), données mensuelles désaisonnalisées en moyennes mobiles de trois mois.xlsx",
+      "name": "Emplois salariés dans certaines industries de la culture et des communications selon l'Enquête sur l'emploi, la rémunération et les heures de travail (EERH), données mensuelles désaisonnalisées en moyennes mobiles de trois mois.xlsx",
+      "sha256": "4bb9199bd1bea22ff784e9f4941953fa9ec59d98f40a46da56e8d6f9c7919f18",
+      "size_bytes": 12953,
+      "mtime_iso": "2026-06-10T17:08:30.847703+00:00",
       "source_key": "emplois_eerh",
-      "label": "Emplois salariés dans certaines industries de la culture et des communications (EERH)"
+      "label": "Emplois salariés dans certaines industries de la culture et des communications (EERH) — données mensuelles MM3"
+    },
+    {
+      "path": "/Users/joaoroque/Documents/Claude/Projects/Culture Québec en donnée/Données Québec/Emplois salariés dans certaines industries de la culture et des communications selon l'Enquête sur l'emploi, la rémunération et les heures de travail (EERH), Canada et provinces, données annuelles, 2001-2025.xlsx",
+      "name": "Emplois salariés dans certaines industries de la culture et des communications selon l'Enquête sur l'emploi, la rémunération et les heures de travail (EERH), Canada et provinces, données annuelles, 2001-2025.xlsx",
+      "sha256": "799b06f47890c89496da817a6f3cb14f11c47dd198bda965af9f9e66a326e22f",
+      "size_bytes": 20362,
+      "mtime_iso": "2026-06-10T23:17:54.526598+00:00",
+      "source_key": "emplois_eerh_annuel",
+      "label": "Emplois salariés dans certaines industries de la culture et des communications (EERH) — données annuelles 2001-2025"
     },
     {
       "path": "/Users/joaoroque/Documents/Claude/Projects/Culture Québec en donnée/Données Québec/Variations mensuelles et annuelles des ventes de livres neufs, Québec.xlsx",

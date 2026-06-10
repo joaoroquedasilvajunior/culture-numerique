@@ -91,21 +91,61 @@ def test_evolution_streaming_2024(raw_dir):
     assert val_2024 == 31004652.5
 
 
-def test_emplois_5121_decline(raw_dir):
-    """Emplois film et vidéo (5121) : variation 2025 ≈ −11,6 %."""
-    f = find_source_file(raw_dir, 'Emplois salariés*.xlsx')
+def test_emplois_eerh_mensuel_ytd_2026(raw_dir):
+    """Fichier mensuel EERH — l'ISQ a basculé en 2026 (le 10 juin 2026).
+
+    Vérifie la tolérance à l'année partielle : annee_reference=2026,
+    mois_disponibles=3 (Jan, Fev, Mar), variation_pct calculée Jan→Mars
+    plutôt que Jan→Déc.
+    """
+    f = find_source_file(raw_dir, 'Emplois salariés*données mensuelles*.xlsx')
+    assert f is not None, "Fichier EERH mensuel manquant"
     data = extract.extract_emplois_eerh(f)
     rec = next(r for r in data if r['scian'] == '5121')
+    assert rec['annee_reference'] == 2026
+    assert rec['mois_disponibles'] == 3
+    assert rec['mois_dernier'] == 'Mars'
+    # Variation Jan → Mars 2026 ≈ +1,7 % — légère reprise après la chute 2025
     assert rec['variation_pct'] is not None
-    assert -12.0 < rec['variation_pct'] < -11.0
+    assert 1.0 < rec['variation_pct'] < 3.0
 
 
-def test_emplois_5162_growth(raw_dir):
-    """Distribution de contenu en continu (5162) : variation 2025 > +30 %."""
-    f = find_source_file(raw_dir, 'Emplois salariés*.xlsx')
-    data = extract.extract_emplois_eerh(f)
+def test_emplois_eerh_annuel_5121_baseline_2025(raw_dir):
+    """Baseline figée — film et vidéo (5121) : n_2025 = 14 299, TCA 2025 = −8,6 %.
+
+    Source : ISQ EERH série annuelle 2001-2025 (Québec), mise à jour 10 juin 2026.
+    Cette baseline annuelle est moins volatile que la variation Jan→Déc
+    mensuelle (qui valait −11,6 % sur la même industrie en 2025). Les deux
+    mesures sont distinctes mais cohérentes — l'année 2025 a effectivement
+    décliné davantage en fin qu'en moyenne annuelle.
+    """
+    f = find_source_file(raw_dir, 'Emplois salariés*données annuelles*.xlsx')
+    assert f is not None, "Fichier EERH annuel manquant"
+    data = extract.extract_emplois_eerh_annuel(f)
+    rec = next(r for r in data if r['scian'] == '5121')
+    assert rec['n_2024'] == 15636.0
+    assert rec['n_2025'] == 14299.0
+    assert rec['tca_2025'] == -8.6
+    # Plage de la série
+    assert rec['annees'][0] == 2001
+    assert rec['annees'][-1] == 2025
+
+
+def test_emplois_eerh_annuel_5162_baseline_2025(raw_dir):
+    """Baseline figée — distribution contenu en continu (5162) : TCA 2025 = +5,2 %.
+
+    Source : ISQ EERH série annuelle 2001-2025, mise à jour 10 juin 2026.
+    Le TCA annuel +5,2 % est nettement inférieur à la variation Jan→Déc 2025
+    mensuelle (+30 %) : 2025 a connu une trajectoire fortement ascendante au
+    cours de l'année, ce que la moyenne annuelle 2025 ne capture qu'en partie.
+    """
+    f = find_source_file(raw_dir, 'Emplois salariés*données annuelles*.xlsx')
+    assert f is not None, "Fichier EERH annuel manquant"
+    data = extract.extract_emplois_eerh_annuel(f)
     rec = next(r for r in data if r['scian'] == '5162')
-    assert rec['variation_pct'] > 30.0
+    assert rec['n_2024'] == 1657.0
+    assert rec['n_2025'] == 1743.0
+    assert rec['tca_2025'] == 5.2
 
 
 def test_ventes_livres_total(raw_dir):
