@@ -1,22 +1,22 @@
 {
-  "build_iso": "2026-06-10T23:40:31.765150+00:00",
+  "build_iso": "2026-06-12T17:33:32.369744+00:00",
   "pipeline_version": "1.0.0",
   "sources_used": [
     {
-      "path": "/Users/joaoroque/Documents/Claude/Projects/Culture Québec en donnée/Données Québec/Part des interprètes du Québec dans la consommation d'enregistrements musicaux, données hebdomadaires.xlsx",
-      "name": "Part des interprètes du Québec dans la consommation d'enregistrements musicaux, données hebdomadaires.xlsx",
-      "sha256": "b0a2392f86a71a5a54924352e4997d84a107c8c51e027debac8fe5adc3a76d7e",
-      "size_bytes": 7370,
-      "mtime_iso": "2026-05-22T19:04:56.760873+00:00",
+      "path": "/Users/joaoroque/Documents/Claude/Projects/Culture Québec en donnée/Données Québec/Part des interprètes du Québec dans la consommation d'enregistrements musicaux, données hebdomadaires, Québec_3.xlsx",
+      "name": "Part des interprètes du Québec dans la consommation d'enregistrements musicaux, données hebdomadaires, Québec_3.xlsx",
+      "sha256": "f40f3e2dc889da7cf91ee0c2f6130140443e76b83568309b503f7ce65d898ead",
+      "size_bytes": 7373,
+      "mtime_iso": "2026-06-12T13:04:48.827705+00:00",
       "source_key": "part_qc",
       "label": "Part des interprètes du Québec dans la consommation d'enregistrements musicaux"
     },
     {
-      "path": "/Users/joaoroque/Documents/Claude/Projects/Culture Québec en donnée/Données Québec/Consommation d'enregistrements musicaux selon le type de produit, données hebdomadaires, Québec.xlsx",
-      "name": "Consommation d'enregistrements musicaux selon le type de produit, données hebdomadaires, Québec.xlsx",
-      "sha256": "4b59e9f2182d1d2dcb8d9409ac0d77da02d36ea5c45997ba779bcfbf6067bfa9",
-      "size_bytes": 8088,
-      "mtime_iso": "2026-04-22T01:00:31.612622+00:00",
+      "path": "/Users/joaoroque/Documents/Claude/Projects/Culture Québec en donnée/Données Québec/Consommation d'enregistrements musicaux selon le type de produit, données hebdomadaires, Québec_3.xlsx",
+      "name": "Consommation d'enregistrements musicaux selon le type de produit, données hebdomadaires, Québec_3.xlsx",
+      "sha256": "a580275b784173d01578892bcd076e1fd4b7b0a4abd42fc65573fedca03aa0f3",
+      "size_bytes": 8060,
+      "mtime_iso": "2026-06-12T13:03:57.133345+00:00",
       "source_key": "volume_musique",
       "label": "Consommation d'enregistrements musicaux selon le type de produit"
     },
@@ -30,11 +30,11 @@
       "label": "Résultats d'exploitation des établissements cinématographiques selon le pays d'origine des films (hebdomadaire)"
     },
     {
-      "path": "/Users/joaoroque/Documents/Claude/Projects/Culture Québec en donnée/Données Québec/Palmarès des enregistrements musicaux, Québec.xlsx",
-      "name": "Palmarès des enregistrements musicaux, Québec.xlsx",
-      "sha256": "9319b3151d4767eced6901e452bb3fbc33c3cabe65fc077d3df2e0361e69c0cb",
-      "size_bytes": 7068,
-      "mtime_iso": "2026-04-22T01:01:01.203332+00:00",
+      "path": "/Users/joaoroque/Documents/Claude/Projects/Culture Québec en donnée/Données Québec/Palmarès des enregistrements musicaux, Québec_2.xlsx",
+      "name": "Palmarès des enregistrements musicaux, Québec_2.xlsx",
+      "sha256": "f3a94788e6c0a91547867b87738e9a8776d1e6bc9fecb8f0d3902451482a9a18",
+      "size_bytes": 7052,
+      "mtime_iso": "2026-06-12T13:05:44.046450+00:00",
       "source_key": "palmares_top20",
       "label": "Palmarès des enregistrements musicaux"
     },

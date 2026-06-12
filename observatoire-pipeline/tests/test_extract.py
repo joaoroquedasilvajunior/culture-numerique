@@ -37,17 +37,27 @@ def test_part_qc_streaming(raw_dir):
 
 
 def test_part_qc_albums_numeriques(raw_dir):
-    """Part QC albums numériques YTD — 24 au 30 avril 2026 = 24,5 % (plus haute des canaux numériques)."""
+    """Part QC albums numériques YTD — semaine du 22 au 28 mai 2026 = 24,1 %.
+
+    Source : ISQ tableau 4153, mise à jour 12 juin 2026.
+    La part QC a légèrement reculé sur 4 semaines (24,5 → 24,1 %) mais reste
+    la plus élevée des canaux numériques.
+    """
     f = find_source_file(raw_dir, 'Part des interprètes*.xlsx')
     data = extract.extract_part_qc(f)
-    assert data['indicateurs']['albums_numeriques']['cumul_ytd_pct'] == 24.5
+    assert data['indicateurs']['albums_numeriques']['cumul_ytd_pct'] == 24.1
 
 
 def test_volume_streaming(raw_dir):
-    """Streaming cumulatif YTD = 4 829 409,6 milliers d'écoutes."""
+    """Streaming cumulatif YTD = 13 027 963,2 milliers d'écoutes (semaine du 22-28 mai 2026).
+
+    Source : ISQ tableau 2140, mise à jour 12 juin 2026.
+    Volume YTD passé de 4,83 G (cumul à fin avril) à 13,03 G (cumul à fin mai) —
+    avance temporelle attendue du cumul, pas une révision rétroactive.
+    """
     f = find_source_file(raw_dir, "Consommation d'enregistrements musicaux*.xlsx")
     data = extract.extract_volume_musique(f)
-    assert data['indicateurs']['streaming']['cumul_ytd'] == 4829409.6
+    assert data['indicateurs']['streaming']['cumul_ytd'] == 13027963.2
 
 
 def test_cinema_quebec(raw_dir):
@@ -73,13 +83,18 @@ def test_cinema_quebec(raw_dir):
 
 
 def test_palmares_quebec_count(raw_dir):
-    """Un seul interprète québécois dans le top 20."""
+    """Un seul interprète québécois dans le top 20 — Les Cowboys Fringants au rang 17.
+
+    Source : ISQ Palmarès cumulatif annuel, mise à jour 12 juin 2026.
+    L'unique entrée québécoise est descendue du rang 15 au rang 17 entre la
+    semaine du 24-30 avril et celle du 22-28 mai 2026. La diversité reste à 1.
+    """
     f = find_source_file(raw_dir, 'Palmarès des enregistrements*.xlsx')
     data = extract.extract_palmares(f)
     qc = [t for t in data if t['provenance'] == 'Québec']
     assert len(qc) == 1
     assert qc[0]['interprete'] == 'Les Cowboys Fringants'
-    assert qc[0]['rang'] == 15
+    assert qc[0]['rang'] == 17
 
 
 def test_evolution_streaming_2024(raw_dir):

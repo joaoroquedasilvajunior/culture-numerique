@@ -1,15 +1,15 @@
 {
   "annee": 2025,
-  "date_calcul": "2026-06-10T19:40:31",
+  "date_calcul": "2026-06-12T13:33:32",
   "protocole_version": "1.1.0",
   "reperes": {
     "r1_ecart_decouvrabilite": {
-      "ratio": 3.55,
-      "ecart_pts": 17.6,
-      "part_albums_numeriques_pct": 24.5,
+      "ratio": 3.49,
+      "ecart_pts": 17.2,
+      "part_albums_numeriques_pct": 24.1,
       "part_streaming_pct": 6.9,
       "source": "ISQ tableau 4153",
-      "periode": "24 au 30 avril 2026",
+      "periode": "22 au 28 mai 2026",
       "provisional": true,
       "note": "Lecture YTD courante. Valeur 2025 à figer au 1ᵉʳ mars sur l'archive ISQ annuelle (tâche #26)."
     },
@@ -19,7 +19,7 @@
         "Les Cowboys Fringants"
       ],
       "rangs_quebecois": [
-        15
+        17
       ],
       "source": "ISQ — Palmarès des enregistrements musicaux (cumulatif annuel)",
       "provisional": true
@@ -27,15 +27,15 @@
     "r3_consommation_absolue": {
       "canaux": {
         "streaming_musique": {
-          "volume_total_k_ecoutes": 4829409.6,
+          "volume_total_k_ecoutes": 13027963.2,
           "part_qc_pct": 6.9,
-          "consommation_qc_k_ecoutes": 333229.3,
+          "consommation_qc_k_ecoutes": 898929.5,
           "provisional": true
         },
         "albums_numeriques": {
-          "volume_total_unites": 39.5,
-          "part_qc_pct": 24.5,
-          "consommation_qc_unites": 10.0,
+          "volume_total_unites": 104.8,
+          "part_qc_pct": 24.1,
+          "consommation_qc_unites": 25.0,
           "provisional": true
         },
         "cinema": {

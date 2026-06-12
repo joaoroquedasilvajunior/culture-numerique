@@ -53,12 +53,18 @@ def combined(raw_dir):
 # === R1 — Écart de découvrabilité ============================================
 
 def test_r1_ratio_et_ecart(combined):
-    """R1 — p_alb=24,5 % / p_str=6,9 % → R≈3,55 ; E=17,6 pts."""
+    """R1 — p_alb=24,1 % / p_str=6,9 % → R≈3,49 ; E=17,2 pts.
+
+    Cumul à la semaine du 22-28 mai 2026 (ISQ 4153, mise à jour 12 juin 2026).
+    L'écart se resserre légèrement par rapport à la lecture de fin avril
+    (où R = 3,55 et E = 17,6 pts) — la part QC sur albums numériques a reculé
+    de 0,4 pt pendant que le streaming est resté stable.
+    """
     r1 = derive.derive_r1(combined['part_qc'])
     assert r1['part_streaming_pct'] == 6.9
-    assert r1['part_albums_numeriques_pct'] == 24.5
-    assert r1['ratio'] == 3.55
-    assert r1['ecart_pts'] == 17.6
+    assert r1['part_albums_numeriques_pct'] == 24.1
+    assert r1['ratio'] == 3.49
+    assert r1['ecart_pts'] == 17.2
     assert r1['provisional'] is True
     assert r1['source'] == 'ISQ tableau 4153'
 
@@ -66,26 +72,35 @@ def test_r1_ratio_et_ecart(combined):
 # === R2 — Profondeur du catalogue (N₂₀) ======================================
 
 def test_r2_n20_cowboys_fringants(combined):
-    """R2 — Un seul interprète québécois distinct dans le top 20."""
+    """R2 — Un seul interprète québécois distinct dans le top 20 (rang 17 au 22-28 mai 2026).
+
+    Source : ISQ Palmarès, mise à jour 12 juin 2026.
+    """
     r2 = derive.derive_r2(combined['palmares_top20'])
     assert r2['n20'] == 1
     assert r2['interpretes'] == ['Les Cowboys Fringants']
-    assert r2['rangs_quebecois'] == [15]
+    assert r2['rangs_quebecois'] == [17]
     assert r2['provisional'] is True
 
 
 # === R3 — Consommation québécoise absolue ===================================
 
 def test_r3_streaming_consommation_absolue(combined):
-    """R3 — C_streaming = 4 829 409,6 × 6,9 % ≈ 333 229,3 k écoutes."""
+    """R3 — C_streaming = 13 027 963,2 × 6,9 % ≈ 898 929,5 k écoutes québécoises.
+
+    Source : ISQ 2140 × 4153, cumul YTD au 22-28 mai 2026 (mise à jour 12 juin 2026).
+    Le volume YTD a presque triplé depuis fin avril (4,83 G → 13,03 G k écoutes)
+    par avance temporelle du cumul ; la part QC restant à 6,9 %, la consommation
+    absolue suit la même croissance.
+    """
     r3 = derive.derive_r3(
         combined['volume_musique'], combined['part_qc'], combined['cinema_pays']
     )
     s = r3['canaux']['streaming_musique']
-    assert s['volume_total_k_ecoutes'] == 4829409.6
+    assert s['volume_total_k_ecoutes'] == 13027963.2
     assert s['part_qc_pct'] == 6.9
-    # 4 829 409,6 × 0,069 = 333 229,2624 → arrondi 1 décimale
-    assert s['consommation_qc_k_ecoutes'] == pytest.approx(333229.3, abs=0.1)
+    # 13 027 963,2 × 0,069 = 898 929,4608 → arrondi 1 décimale
+    assert s['consommation_qc_k_ecoutes'] == pytest.approx(898929.5, abs=0.1)
     assert s['provisional'] is True
 
 
@@ -193,7 +208,7 @@ def test_payload_for_dashboard_inclut_reperes(combined):
     assert r4['total'] == 12
     # R1 — les valeurs YTD doivent être disponibles
     r1 = payload['reperes']['reperes']['r1_ecart_decouvrabilite']
-    assert r1['ratio'] == 3.55
+    assert r1['ratio'] == 3.49
     assert r1['provisional'] is True
 
 
