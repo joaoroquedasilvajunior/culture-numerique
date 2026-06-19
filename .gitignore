@@ -40,5 +40,13 @@ Données Québec/
 # --- Fichiers de travail temporaires ---
 observatoire-pipeline/_mv*
 
+# --- Atelier éditorial privé ---
+# Le dossier chroniques/ contient les drafts, les chroniques publiées (qui
+# vivent déjà sur LinkedIn) et les archives de veille hebdomadaire. Le dépôt
+# public n'expose que la méthode + l'outil + le tableau de bord ; le contenu
+# éditorial reste privé. Pour réintégrer le dossier au dépôt, retirer ces
+# trois lignes et faire `git add chroniques/`.
+chroniques/
+
 # Nom de dossier en octets exacts (NFD macOS) :
 Données Québec/

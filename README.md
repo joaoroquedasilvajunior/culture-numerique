@@ -42,7 +42,6 @@ puis branche `main` et dossier `/docs`.
   tableau de bord HTML. Détails dans `observatoire-pipeline/README.md`.
 - `docs/` — tableau de bord publié (`index.html`) et journal d'audit (`ledger.json`,
   `ledger_history.jsonl`).
-- `chroniques/` — chroniques du Carnet de données et items de veille.
 - `Manifeste_observatoire_souverainete_culturelle.*` — posture éditoriale du Carnet
   de données (le nom de fichier conserve « observatoire » par stabilité git ; le
   contenu a été mis à jour).

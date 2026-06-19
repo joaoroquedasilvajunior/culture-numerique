@@ -36,9 +36,11 @@ tripartite Loi 109) : voir `observatoire-pipeline/README.md`.
 ## Repères du dépôt
 
 - `observatoire-pipeline/` — pipeline ISQ → JSON → tableau de bord HTML.
-- `chroniques/` — chroniques du Carnet de données (`01_`, `02_`…) et items de veille
-  (`veille_AAAA-MM_*`). Méthode éditoriale : pluralisme méthodologique + Cadre UNESCO 2025
-  (écosystème culturel et créatif, lentille praxéologique, 4 capitaux, 3 étapes).
+- `chroniques/` *(non versionné, atelier éditorial privé)* — chroniques du Carnet
+  de données (`01_`, `02_`…) et items de veille (`veille_AAAA-MM_*`). Méthode
+  éditoriale : pluralisme méthodologique + Cadre UNESCO 2025 (écosystème culturel
+  et créatif, lentille praxéologique, 4 capitaux, 3 étapes). Le dossier existe
+  localement mais est exclu du dépôt GitHub via `.gitignore`.
 - `Données Québec/` — fichiers .xlsx téléchargés de l'ISQ (sources du pipeline).
 - `Manifeste_observatoire_souverainete_culturelle.*` — posture éditoriale du Carnet de données
   (le nom de fichier conserve « observatoire » par stabilité git).
