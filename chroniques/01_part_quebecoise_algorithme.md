@@ -3,7 +3,7 @@ title: "Pourquoi la part québécoise s'effondre quand le canal devient algorith
 subtitle: "Ce que les chiffres ISQ disent à six mois de la Loi 109"
 author: Joao Roquer
 date: 2026-05-04
-publication: Observatoire de la souveraineté culturelle numérique
+publication: Carnet de données — souveraineté culturelle numérique (anciennement « Observatoire de la souveraineté culturelle numérique »)
 issue: "01"
 tags: [découvrabilité, Loi 109, streaming, cinéma, OCCQ, ISQ, souveraineté culturelle]
 license: CC BY 4.0
@@ -65,4 +65,4 @@ Le premier rapport triennal du ministre, prévu à l'article 33, ne paraîtra pa
 
 ---
 
-*Cette chronique est le premier numéro de l'Observatoire de la souveraineté culturelle numérique. Le tableau de bord empirique qui rend disponibles toutes les données mobilisées ici, ainsi que le code de transformation, sont publiés en accompagnement.*
+*Cette chronique est le premier numéro du Carnet de données — souveraineté culturelle numérique (initialement publié sous le nom « Observatoire de la souveraineté culturelle numérique » ; renommé en juin 2026). Le tableau de bord empirique qui rend disponibles toutes les données mobilisées ici, ainsi que le code de transformation, sont publiés en accompagnement.*

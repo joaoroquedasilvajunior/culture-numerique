@@ -1,6 +1,6 @@
 # Veille réglementaire MCCQ + CRTC — semaine du 1ᵉʳ au 8 juin 2026
 
-*Observatoire de la souveraineté culturelle numérique — veille réglementaire hebdomadaire. Démarche indépendante, sans affiliation au MCCQ, au CRTC, à l'ISQ ni à aucun gouvernement.*
+*Carnet de données — souveraineté culturelle numérique — veille réglementaire hebdomadaire. Démarche indépendante, sans affiliation au MCCQ, au CRTC, à l'ISQ ni à aucun gouvernement.*
 
 ---
 
@@ -39,4 +39,4 @@ Semaine calme côté publications officielles, mais un signal fort : le gouverne
 
 ---
 
-*Item de veille produit par la tâche planifiée `veille-mccq-crtc` de l'Observatoire de la souveraineté culturelle numérique. Cadence : hebdomadaire (lundi). Périmètre : MCCQ + CRTC. Focus : Loi 109, découvrabilité, souveraineté culturelle, contenu francophone, plateformes.*
+*Item de veille produit par la tâche planifiée `veille-mccq-crtc` du Carnet de données — souveraineté culturelle numérique. Cadence : hebdomadaire (lundi). Périmètre : MCCQ + CRTC. Focus : Loi 109, découvrabilité, souveraineté culturelle, contenu francophone, plateformes.*

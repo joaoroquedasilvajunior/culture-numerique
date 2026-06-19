@@ -2,7 +2,10 @@
 
 Analyses traçables des données culturelles de l'Institut de la statistique du Québec
 (statistique.quebec.ca, thème culture-et-médias), au regard de la **Loi 109** sur la
-découvrabilité. Cadre : **Observatoire de la souveraineté culturelle numérique**.
+découvrabilité. Cadre : **Carnet de données — souveraineté culturelle numérique**
+(anciennement « Observatoire de la souveraineté culturelle numérique » jusqu'au
+2026-06-12 ; renommé pour éviter la confusion avec l'OCCQ et d'autres
+observatoires institutionnels).
 
 ## Conventions
 
@@ -33,12 +36,14 @@ tripartite Loi 109) : voir `observatoire-pipeline/README.md`.
 ## Repères du dépôt
 
 - `observatoire-pipeline/` — pipeline ISQ → JSON → tableau de bord HTML.
-- `chroniques/` — chroniques de l'Observatoire (`01_`, `02_`…) et items de veille
+- `chroniques/` — chroniques du Carnet de données (`01_`, `02_`…) et items de veille
   (`veille_AAAA-MM_*`). Méthode éditoriale : pluralisme méthodologique + Cadre UNESCO 2025
   (écosystème culturel et créatif, lentille praxéologique, 4 capitaux, 3 étapes).
 - `Données Québec/` — fichiers .xlsx téléchargés de l'ISQ (sources du pipeline).
-- `Manifeste_observatoire_souverainete_culturelle.*` — posture éditoriale de l'Observatoire.
-- `Protocole_reperes_observatoire.md` — protocole gelé des 5 repères suivis (v1.0, 2026-05-25) ; définitions, sources, baseline 2025.
+- `Manifeste_observatoire_souverainete_culturelle.*` — posture éditoriale du Carnet de données
+  (le nom de fichier conserve « observatoire » par stabilité git).
+- `Protocole_reperes_observatoire.md` — protocole gelé des 5 repères suivis (v1.0, 2026-05-25) ; définitions, sources, baseline 2025
+  (le nom de fichier conserve « observatoire » par stabilité git).
 
 ## Veille
 

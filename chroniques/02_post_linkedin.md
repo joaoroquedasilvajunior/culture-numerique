@@ -1,6 +1,6 @@
 # Post LinkedIn — « Les mêmes chiffres, une autre histoire »
 
-*Observatoire de la souveraineté culturelle numérique — chronique 02. Texte prêt à publier ; copier le bloc ci-dessous.*
+*Carnet de données — souveraineté culturelle numérique — chronique 02 (publié initialement sous le nom « Observatoire de la souveraineté culturelle numérique »). Texte prêt à publier ; copier le bloc ci-dessous.*
 
 ---
 
@@ -20,7 +20,7 @@ Mais en les lisant ensemble, à travers le Cadre UNESCO pour les statistiques cu
 
 C'est la dynamique même que la Loi 109 sur la découvrabilité cherche à corriger.
 
-Le deuxième numéro de l'Observatoire de la souveraineté culturelle numérique applique cette approche — le pluralisme méthodologique — aux données publiques de l'ISQ. La chronique, le tableau de bord empirique et le pipeline de transformation des données sont ouverts et reproductibles.
+Le deuxième numéro du Carnet de données — souveraineté culturelle numérique applique cette approche — le pluralisme méthodologique — aux données publiques de l'ISQ. La chronique, le tableau de bord empirique et le pipeline de transformation des données sont ouverts et reproductibles.
 
 Les mêmes chiffres. Une autre histoire.
 
@@ -28,4 +28,4 @@ Les mêmes chiffres. Une autre histoire.
 
 ---
 
-**À faire avant publication :** déposer en commentaire le lien vers la chronique complète (`02_memes_chiffres_autre_histoire.pdf`) et vers le tableau de bord de l'Observatoire — LinkedIn défavorise les liens placés dans le corps du post.
+**À faire avant publication :** déposer en commentaire le lien vers la chronique complète (`02_memes_chiffres_autre_histoire.pdf`) et vers le tableau de bord du Carnet de données — LinkedIn défavorise les liens placés dans le corps du post.

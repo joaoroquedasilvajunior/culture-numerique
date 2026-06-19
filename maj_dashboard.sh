@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #
-# maj_dashboard.sh — Mise à jour du tableau de bord de l'Observatoire de la
-# souveraineté culturelle numérique.
+# maj_dashboard.sh — Mise à jour du tableau de bord du Carnet de données
+# — souveraineté culturelle numérique.
 #
 # Enchaîne la routine de mise à jour :
 #   1. Archivage horodaté des fichiers sources ISQ (.xlsx)
@@ -60,7 +60,7 @@ else
 fi
 
 echo "=================================================================="
-echo " Observatoire de la souveraineté culturelle numérique"
+echo " Carnet de données — souveraineté culturelle numérique"
 echo " Mise à jour du tableau de bord — $DATE"
 echo "=================================================================="
 

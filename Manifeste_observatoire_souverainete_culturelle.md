@@ -1,10 +1,19 @@
-**OBSERVATOIRE DE LA SOUVERAINETÉ CULTURELLE NUMÉRIQUE**
+**CARNET DE DONNÉES --- SOUVERAINETÉ CULTURELLE NUMÉRIQUE**
 
 **Manifeste et cadre méthodologique**
 
-*Un observatoire indépendant des indicateurs de la Loi 109 au Québec*
+*Un projet indépendant de suivi des indicateurs de la Loi 109 au Québec*
 
-Version 1.0 · Mai 2026 · Joao Roquer
+Version 1.1 · Juin 2026 · Joao Roquer
+
+> **Note de renommage (12 juin 2026).** Le projet portait initialement le nom
+> *Observatoire de la souveraineté culturelle numérique*. Il a été renommé
+> *Carnet de données --- souveraineté culturelle numérique* pour éviter la
+> confusion avec des institutions portant la dénomination « Observatoire » au
+> Québec (notamment l'OCCQ, branche statistique de l'ISQ). La posture éditoriale,
+> la méthode et le cadre tripartite restent inchangés. Les chroniques 01 et 02
+> déjà publiées en PDF conservent leur titre d'origine en tant que documents
+> datés ; les livrables futurs portent le nouveau nom.
 
 **Préambule**
 
@@ -31,12 +40,12 @@ l'environnement numérique. Trois ans, c'est long. Le rapport officiel ne
 sera ni continu, ni soumis au regard critique de la société civile au
 moment où il serait le plus utile.
 
-L'**Observatoire de la souveraineté culturelle numérique** propose de
+Le **Carnet de données --- souveraineté culturelle numérique** propose de
 combler cet espace.
 
 **Notre proposition**
 
-Nous sommes un observatoire indépendant qui rend public, en continu et
+Nous sommes un projet indépendant qui rend public, en continu et
 avec rigueur méthodologique, l'état des indicateurs de souveraineté
 culturelle numérique au Québec. Nous travaillons à partir des données
 ouvertes de l'Institut de la statistique du Québec (ISQ), de
@@ -168,7 +177,7 @@ institutionnelle est évitée.
 
 **Gouvernance**
 
-Cet observatoire est porté par Joao Roquer, analyste en politiques
+Ce Carnet de données est porté par Joao Roquer, analyste en politiques
 culturelles numériques et développeur d'outils civiques. Il fonctionne
 en projet indépendant, sans financement gouvernemental ni dépendance à
 un acteur sectoriel. Cette autonomie est la condition de la posture
@@ -188,6 +197,7 @@ contribution est tracée et créditée.
 
 **Citation recommandée**
 
-*Roquer, J. (2026). Observatoire de la souveraineté culturelle numérique
---- Manifeste et cadre méthodologique (Version 1.0). Document
-indépendant, mai 2026.*
+*Roquer, J. (2026). Carnet de données --- souveraineté culturelle
+numérique --- Manifeste et cadre méthodologique (Version 1.1). Document
+indépendant, juin 2026. Anciennement « Observatoire de la souveraineté
+culturelle numérique » jusqu'à juin 2026.*

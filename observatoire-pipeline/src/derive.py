@@ -1,5 +1,5 @@
 """
-Dériveur des cinq repères de l'Observatoire de la souveraineté culturelle numérique.
+Dériveur des cinq repères du Carnet de données — souveraineté culturelle numérique.
 
 Conformément au Protocole v1.1.0 (gel initial 2026-05-25, révision mineure
 2026-05-26 — matrice R4 figée en annexe, conventions externes R5) :

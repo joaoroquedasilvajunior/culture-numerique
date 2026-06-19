@@ -1,4 +1,5 @@
-# Manifeste des sources de données mobilisées par l'Observatoire de la souveraineté culturelle numérique.
+# Manifeste des sources de données mobilisées par le Carnet de données — souveraineté culturelle numérique.
+# (Anciennement « Observatoire de la souveraineté culturelle numérique » jusqu'au 2026-06-12.)
 # Chaque entrée décrit un tableau ISQ attendu, son URL permanente, sa classification,
 # et la fonction d'extraction qui le transforme en JSON normalisé.
 #

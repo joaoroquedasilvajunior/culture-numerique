@@ -124,5 +124,5 @@ même définition (recettes vs assistance).
 
 ---
 
-*Document de travail — Observatoire de la souveraineté culturelle numérique.
+*Document de travail — Carnet de données — souveraineté culturelle numérique.
 Préparé le 2026-05-26 pour la tâche #26 (confirmation des baselines 2025).*

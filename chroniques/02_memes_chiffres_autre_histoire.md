@@ -3,7 +3,7 @@ title: "Les mêmes chiffres, une autre histoire"
 subtitle: "Lire la statistique culturelle québécoise à travers le Cadre UNESCO 2025"
 author: Joao Roquer
 date: 2026-05-21
-publication: Observatoire de la souveraineté culturelle numérique
+publication: Carnet de données — souveraineté culturelle numérique (anciennement « Observatoire de la souveraineté culturelle numérique »)
 issue: "02"
 tags: [méthodologie, Cadre UNESCO 2025, statistiques culturelles, Loi 109, découvrabilité, EERH, OCCQ, ISQ, souveraineté culturelle]
 license: CC BY 4.0
@@ -25,7 +25,7 @@ Le premier numéro de cet Observatoire reposait sur un chiffre : **6,8 %**, la p
 
 Or le secteur culturel n'est pas bâti ainsi. Il s'étend du patrimoine, qui se mesure sur des échelles séculaires, aux industries formelles, qui suivent des cycles trimestriels ; des créateurs indépendants, qui travaillent hors du cadre salarial, aux intermédiaires numériques, qui opèrent à la vitesse de la machine. Aucun tableau de l'ISQ ne voit l'ensemble. Quand l'analyse reste dans un seul tableau, elle hérite de ses angles morts sans s'en apercevoir.
 
-Cette chronique fait autre chose. Elle reprend des données que l'Observatoire a déjà extraites — les mêmes fichiers, les mêmes chiffres — et les relit à travers une seconde grille. Le pari : **l'écart entre la lecture conventionnelle et la seconde lecture est lui-même un résultat.**
+Cette chronique fait autre chose. Elle reprend des données que le Carnet de données a déjà extraites — les mêmes fichiers, les mêmes chiffres — et les relit à travers une seconde grille. Le pari : **l'écart entre la lecture conventionnelle et la seconde lecture est lui-même un résultat.**
 
 ## Le pluralisme méthodologique et le Cadre UNESCO 2025
 
@@ -49,7 +49,7 @@ La lecture conventionnelle range ces variations dans des cellules distinctes d'u
 
 ## Deuxième lecture : la Loi 109 mesure un capital sur quatre
 
-L'article 33 de la *Loi sur la découvrabilité des contenus culturels francophones dans l'environnement numérique* oblige le ministre à faire rapport, tous les trois ans, sur trois objets : la **présence**, la **découvrabilité** et la **consommation** des contenus. Le premier numéro de l'Observatoire a utilisé cette triade comme charpente ; celui-ci l'interroge.
+L'article 33 de la *Loi sur la découvrabilité des contenus culturels francophones dans l'environnement numérique* oblige le ministre à faire rapport, tous les trois ans, sur trois objets : la **présence**, la **découvrabilité** et la **consommation** des contenus. Le premier numéro du Carnet de données a utilisé cette triade comme charpente ; celui-ci l'interroge.
 
 Le Cadre UNESCO 2025 reconnaît quatre capitaux que l'activité culturelle génère : économique, naturel, humain et social. Plaçons la triade de l'article 33 en regard. Présence, découvrabilité et consommation sont toutes trois des mesures tournées vers le marché — elles décrivent si un contenu existe dans l'environnement numérique, s'il peut y être repéré, et s'il y est effectivement consommé. Dans le vocabulaire du cadre, elles relèvent presque entièrement du **capital économique** et de ses antécédents immédiats. Où, dans le rapport triennal, figure le **capital humain** — la transmission du métier, la formation et le renouvellement des créateurs ? Où figure le **capital social** — la participation culturelle, la cohésion qu'une vie culturelle partagée produit ?
 
@@ -85,4 +85,4 @@ Et la seconde grille est elle-même jeune. Le Cadre 2025 a été lancé il y a h
 
 ---
 
-*Cette chronique est le deuxième numéro de l'Observatoire de la souveraineté culturelle numérique. Le tableau de bord empirique et le pipeline de transformation des données ISQ sont publiés en accompagnement. La méthode du pluralisme méthodologique mobilisée ici est articulée plus largement dans le* Atana FCS Consulting Playbook *(J. Roque, mai 2026).*
+*Cette chronique est le deuxième numéro du Carnet de données — souveraineté culturelle numérique (initialement publié sous le nom « Observatoire de la souveraineté culturelle numérique » ; renommé en juin 2026). Le tableau de bord empirique et le pipeline de transformation des données ISQ sont publiés en accompagnement. La méthode du pluralisme méthodologique mobilisée ici est articulée plus largement dans le* Atana FCS Consulting Playbook *(J. Roque, mai 2026).*

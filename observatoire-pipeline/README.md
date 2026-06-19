@@ -1,8 +1,8 @@
-# Observatoire de la souveraineté culturelle numérique — pipeline
+# Carnet de données — souveraineté culturelle numérique — pipeline
 
 Pipeline reproductible qui transforme les tableaux statistiques de l'**Institut de la statistique du Québec** (ISQ) et de l'**Observatoire de la culture et des communications du Québec** (OCCQ) en un tableau de bord HTML interactif structuré au regard de la **Loi 109** (chapitre 38, 2025) sur la souveraineté culturelle et la découvrabilité des contenus francophones.
 
-> Ce dépôt accompagne le *[Manifeste de l'Observatoire de la souveraineté culturelle numérique](../Manifeste_observatoire_souverainete_culturelle.pdf)*. Il est l'incarnation technique de la traçabilité que ce manifeste promet.
+> Ce dépôt accompagne le *[Manifeste du Carnet de données — souveraineté culturelle numérique](../Manifeste_observatoire_souverainete_culturelle.pdf)* (le nom de fichier conserve « observatoire » par stabilité git). Il est l'incarnation technique de la traçabilité que ce manifeste promet. Anciennement « Observatoire de la souveraineté culturelle numérique » jusqu'au 2026-06-12.
 
 ## Démarrage rapide
 

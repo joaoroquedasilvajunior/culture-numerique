@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Point d'entrée du pipeline de l'Observatoire de la souveraineté culturelle numérique.
+Point d'entrée du pipeline du Carnet de données — souveraineté culturelle numérique.
 
 Usage :
     python build.py                # build complet, verbeux
@@ -25,7 +25,7 @@ def main():
     parser.add_argument('--quiet', '-q', action='store_true', help='Réduit la sortie')
     args = parser.parse_args()
 
-    print('Observatoire de la souveraineté culturelle numérique — Pipeline\n')
+    print('Carnet de données — souveraineté culturelle numérique — Pipeline\n')
     record = run(repo_root=Path(__file__).parent, verbose=not args.quiet)
     if record['errors']:
         sys.exit(1)

@@ -1,6 +1,6 @@
 # Post LinkedIn — « Deux trajectoires inversées »
 
-*Observatoire de la souveraineté culturelle numérique — note de cadrage, juin 2026. Texte prêt à publier ; copier le bloc ci-dessous.*
+*Carnet de données — souveraineté culturelle numérique — note de cadrage, juin 2026. Texte prêt à publier ; copier le bloc ci-dessous.*
 
 ---
 
@@ -16,7 +16,7 @@ Deux ordres de gouvernement avancent sur le même objet — la place du contenu 
 
 Ce n'est pas un détail technique. C'est la question centrale que la Loi 109 cherche à trancher pour le Québec : qui décide de ce qui est rendu trouvable sur les plateformes, et à quelles conditions ? Tant que la réponse fédérale oscille, la portée effective du cadre québécois sur les mêmes plateformes — qui opèrent à l'échelle canadienne et nord-américaine — reste suspendue à des arbitrages qui se font ailleurs.
 
-La trajectoire québécoise n'est pas isolée. Elle ne peut pas être analysée comme telle. C'est précisément ce que l'Observatoire entend documenter au fil des décisions à venir : la divergence entre les paliers de réglementation, et ce qu'elle produit comme zone grise pour les plateformes — et pour le contenu d'ici.
+La trajectoire québécoise n'est pas isolée. Elle ne peut pas être analysée comme telle. C'est précisément ce que le Carnet de données entend documenter au fil des décisions à venir : la divergence entre les paliers de réglementation, et ce qu'elle produit comme zone grise pour les plateformes — et pour le contenu d'ici.
 
 À suivre.
 
@@ -36,4 +36,4 @@ Aucune interprétation ne dépasse le matériel factuel cité. Les liens vers le
 
 ---
 
-*Observatoire de la souveraineté culturelle numérique — projet indépendant, non affilié au MCCQ, au CRTC, à l'ISQ ni à aucun gouvernement. Le tableau de bord empirique de l'Observatoire (données ISQ, pipeline reproductible) est accessible à [joaoroquedasilvajunior.github.io/culture-numerique](https://joaoroquedasilvajunior.github.io/culture-numerique/).*
+*Carnet de données — souveraineté culturelle numérique — projet indépendant, non affilié au MCCQ, au CRTC, à l'ISQ ni à aucun gouvernement. Le tableau de bord empirique du Carnet de données (données ISQ, pipeline reproductible) est accessible à [joaoroquedasilvajunior.github.io/culture-numerique](https://joaoroquedasilvajunior.github.io/culture-numerique/).*

@@ -1,7 +1,13 @@
-# Observatoire de la souveraineté culturelle numérique
+# Carnet de données — souveraineté culturelle numérique
 
 **Analyses traçables des données culturelles publiques du Québec, au regard de la
 Loi 109 sur la découvrabilité.**
+
+> Ce projet portait jusqu'au 2026-06-12 le nom *Observatoire de la souveraineté
+> culturelle numérique*. Il a été renommé *Carnet de données — souveraineté culturelle
+> numérique* pour éviter la confusion avec des institutions portant la dénomination
+> « Observatoire » (notamment l'OCCQ, branche statistique de l'ISQ). La posture, la
+> méthode et le cadre éditorial ne changent pas.
 
 Ce dépôt rassemble un pipeline de données reproductible, un tableau de bord et des
 chroniques d'analyse portant sur les industries de la culture et des communications
@@ -10,7 +16,7 @@ au Québec, à partir des données ouvertes de l'Institut de la statistique du Q
 
 ## Démarche indépendante — avertissement
 
-L'Observatoire de la souveraineté culturelle numérique est une **initiative
+Le Carnet de données — souveraineté culturelle numérique est une **initiative
 indépendante de recherche et d'analyse citoyenne**. Il n'est **ni affilié, ni
 mandaté, ni endossé** par l'Institut de la statistique du Québec, le ministère de la
 Culture et des Communications, le Conseil de la radiodiffusion et des
@@ -36,9 +42,10 @@ puis branche `main` et dossier `/docs`.
   tableau de bord HTML. Détails dans `observatoire-pipeline/README.md`.
 - `docs/` — tableau de bord publié (`index.html`) et journal d'audit (`ledger.json`,
   `ledger_history.jsonl`).
-- `chroniques/` — chroniques de l'Observatoire et items de veille.
-- `Manifeste_observatoire_souverainete_culturelle.*` — posture éditoriale de
-  l'Observatoire.
+- `chroniques/` — chroniques du Carnet de données et items de veille.
+- `Manifeste_observatoire_souverainete_culturelle.*` — posture éditoriale du Carnet
+  de données (le nom de fichier conserve « observatoire » par stabilité git ; le
+  contenu a été mis à jour).
 
 ## Sources et traçabilité
 

@@ -1,8 +1,16 @@
-# Protocole des repères suivis — Observatoire de la souveraineté culturelle numérique
+# Protocole des repères suivis — Carnet de données — souveraineté culturelle numérique
 
 **Version 1.1.0** — révisée le 2026-05-26 (gel initial : 2026-05-25)
 **Cadre :** pluralisme méthodologique + Cadre UNESCO 2025 pour les statistiques culturelles
-**Posture éditoriale :** voir *Manifeste de l'Observatoire de la souveraineté culturelle numérique*
+**Posture éditoriale :** voir *Manifeste du Carnet de données — souveraineté culturelle numérique*
+
+> **Note de renommage (12 juin 2026).** Le projet portait initialement le nom
+> *Observatoire de la souveraineté culturelle numérique*. Renommé *Carnet de données
+> — souveraineté culturelle numérique* pour éviter la confusion avec l'OCCQ et
+> d'autres institutions « Observatoire » au Québec. La discipline du gel et les
+> versions du protocole ne sont pas affectées : v1.0, v1.0.1 et v1.1.0 demeurent
+> identiques sur le fond. Le nom de fichier reste `Protocole_reperes_observatoire.md`
+> par stabilité git.
 
 ---
 
@@ -188,7 +196,7 @@ couverture est documentée dans la matrice annexée mais n'entre pas dans le num
 conformément à la limite déjà reconnue ci-dessous (« qualité non incluse »).
 
 **Source.** Recensement manuel annuel des publications ISQ / OCCQ / MCC / CRTC, mené
-par l'Observatoire au 1ᵉʳ mars.
+par le Carnet de données au 1ᵉʳ mars.
 
 **Période.** Annuelle.
 
@@ -263,7 +271,7 @@ n'inclut que les travailleurs salariés porteurs de T4) à une estimation du noy
 créatif effectif (incluant les autonomes invisibles à l'EERH). L'*écart* entre les
 deux mesures est le résultat.
 
-**Cible.** Chronique 03 ou 04 de l'Observatoire — la première publication à dire
+**Cible.** Chronique 03 ou 04 du Carnet de données — la première publication à dire
 publiquement, données à l'appui, ce que la statistique culturelle québécoise ne
 mesure pas.
 
@@ -329,4 +337,4 @@ la matrice doit s'accompagner d'une mise à jour synchrone du dériveur et de
 ---
 
 *Document gelé le 2026-05-25. Toute révision future créera une version 1.x distincte
-avec note de motivation. — Observatoire de la souveraineté culturelle numérique.*
+avec note de motivation. — Carnet de données — souveraineté culturelle numérique.*

@@ -1,6 +1,6 @@
 # Post LinkedIn — « Le ressort se resserre »
 
-*Observatoire de la souveraineté culturelle numérique — veille de données, mai 2026. Texte prêt à publier ; copier le bloc ci-dessous.*
+*Carnet de données — souveraineté culturelle numérique — veille de données, mai 2026 (publié initialement sous le nom « Observatoire de la souveraineté culturelle numérique »). Texte prêt à publier ; copier le bloc ci-dessous.*
 
 ---
 
@@ -21,7 +21,7 @@ Le constat tient en une phrase : là où l'intention de l'auditeur s'exprime, le
 
 C'est exactement la dynamique que la Loi 109 sur la découvrabilité des contenus culturels francophones cherche à corriger. Chaque mise à jour de l'ISQ permet d'en suivre la trajectoire.
 
-Le tableau de bord de l'Observatoire de la souveraineté culturelle numérique reprend ces indicateurs au fil des publications de l'ISQ. Données ouvertes, pipeline reproductible.
+Le tableau de bord du Carnet de données — souveraineté culturelle numérique reprend ces indicateurs au fil des publications de l'ISQ. Données ouvertes, pipeline reproductible.
 
 Le même public. Deux trajectoires.
 
@@ -29,6 +29,6 @@ Le même public. Deux trajectoires.
 
 ---
 
-**À faire avant publication :** déposer en commentaire le lien vers le tableau de bord de l'Observatoire et vers le graphique `veille_2026-05_ecart_canaux.png` — LinkedIn défavorise les liens placés dans le corps du post.
+**À faire avant publication :** déposer en commentaire le lien vers le tableau de bord du Carnet de données et vers le graphique `veille_2026-05_ecart_canaux.png` — LinkedIn défavorise les liens placés dans le corps du post.
 
 **Note de traçabilité.** Chiffres tirés du tableau ISQ 4153, « Part des interprètes du Québec dans la consommation d'enregistrements musicaux, données hebdomadaires » (compilation OCCQ, données Luminate Data), mise à jour du 22 mai 2026 — cumulatif annuel, semaines du 20-26 février et du 24-30 avril 2026.
