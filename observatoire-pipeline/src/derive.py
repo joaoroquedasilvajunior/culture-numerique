@@ -467,6 +467,12 @@ def derive_all(combined: dict, annee: int = 2025) -> dict:
             combined['remunerations_eerh_statcan']
         )
 
+    # Bloc auxiliaire — lentille 2 « usage révélé » (hors protocole)
+    # Lecture directe de l'extraction AEI Canada, pas de transformation
+    # supplémentaire à ce stade. L'extracteur a déjà calculé les agrégats
+    # productif/apprentissage et identifié le périmètre créatif.
+    lentille_2 = combined.get('aei_canada')
+
     payload = {
         "annee": annee,
         "date_calcul": dt.datetime.now().isoformat(timespec='seconds'),
@@ -475,4 +481,14 @@ def derive_all(combined: dict, annee: int = 2025) -> dict:
     }
     if lentille_3 is not None:
         payload["lentille_3_ameliorée"] = lentille_3
+    if lentille_2 is not None:
+        payload["lentille_2_usage_revele"] = {
+            'statut': 'auxiliaire_provisoire',
+            'note_statut': ('Dérivation analytique hors protocole v1.1.0. Pas un '
+                            'repère gelé. Sert la lentille 2 « usage révélé » de '
+                            'la méthode AI-exposure : ce que les utilisateurs '
+                            'canadiens de Claude.ai font réellement, par tâche '
+                            'O*NET et par mode de collaboration.'),
+            **lentille_2,
+        }
     return payload

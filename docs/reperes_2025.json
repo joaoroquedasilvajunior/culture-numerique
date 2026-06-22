@@ -1,6 +1,6 @@
 {
   "annee": 2025,
-  "date_calcul": "2026-06-22T14:30:08",
+  "date_calcul": "2026-06-22T15:02:07",
   "protocole_version": "1.1.0",
   "reperes": {
     "r1_ecart_decouvrabilite": {
@@ -224,5 +224,123 @@
         ]
       }
     ]
+  },
+  "lentille_2_usage_revele": {
+    "statut": "auxiliaire_provisoire",
+    "note_statut": "Dérivation analytique hors protocole v1.1.0. Pas un repère gelé. Sert la lentille 2 « usage révélé » de la méthode AI-exposure : ce que les utilisateurs canadiens de Claude.ai font réellement, par tâche O*NET et par mode de collaboration.",
+    "source": "Anthropic Economic Index — Claude.ai Free/Pro/Max, release Hugging Face Anthropic/EconomicIndex, cinquième édition (« Learning curves », publiée 2026-03-24)",
+    "release_anthropic": "2026-03-24",
+    "periode_start": "2026-02-05",
+    "periode_end": "2026-02-12",
+    "platform": "Claude AI (Free, Pro, and Max)",
+    "pays": "CA",
+    "note_limites": "Granularité géographique : Canada national, pas de coupe Québec disponible dans la release. L'intersection onet_task::collaboration n'est exposée par Anthropic que pour la géographie GLOBAL (filtre vie privée) ; pour le Canada on a donc le breakdown collaboration agrégé toutes tâches confondues, pas par tâche. Période d'observation : une seule semaine (5-12 février 2026) ; pas de tendance temporelle possible avec ce seul fichier.",
+    "collaboration_canada": {
+      "directive": 27.634931665508454,
+      "task iteration": 27.190950505752454,
+      "learning": 25.430468689676474,
+      "feedback loop": 10.960543587367772,
+      "validation": 5.968651069415489,
+      "none": 2.814454482279361,
+      "not_classified": null
+    },
+    "agregats_collaboration": {
+      "productif_pct": 65.79,
+      "apprentissage_pct": 31.4,
+      "none_pct": 2.81,
+      "ratio_productif_apprentissage": 2.1
+    },
+    "taches_creatives": {
+      "coeur_culturel": [
+        {
+          "tache_onet": "write reviews of literary, musical, or other artwork, based on knowledge, judgment, or experience.",
+          "pct_total_canada": 0.16601034669137518,
+          "count": 43.0,
+          "categorie": "coeur_culturel"
+        },
+        {
+          "tache_onet": "read, evaluate and edit manuscripts or other materials submitted for publication and confer with authors regarding changes in content, style or organization, or publication.",
+          "pct_total_canada": 0.11582117211026176,
+          "count": 30.0,
+          "categorie": "coeur_culturel"
+        },
+        {
+          "tache_onet": "program computerized graphic effects.",
+          "pct_total_canada": 0.10423905489923557,
+          "count": 27.0,
+          "categorie": "coeur_culturel"
+        },
+        {
+          "tache_onet": "develop, copy, or adapt designs for garments, and design patterns to fit measurements, applying knowledge of garment design, construction, styling, and fabric.",
+          "pct_total_canada": 0.08879623195120068,
+          "count": 23.0,
+          "categorie": "coeur_culturel"
+        },
+        {
+          "tache_onet": "create finished art work as decoration, or to elucidate or substitute for spoken or written messages.",
+          "pct_total_canada": 0.08107482047718323,
+          "count": 21.0,
+          "categorie": "coeur_culturel"
+        },
+        {
+          "tache_onet": "design complex graphics and animation, using independent judgment, creativity, and computer equipment.",
+          "pct_total_canada": 0.06949270326615706,
+          "count": 18.0,
+          "categorie": "coeur_culturel"
+        },
+        {
+          "tache_onet": "create custom illustrations or other graphic elements.",
+          "pct_total_canada": 0.061771291792139596,
+          "count": 16.0,
+          "categorie": "coeur_culturel"
+        }
+      ],
+      "contenu_ecrit": [
+        {
+          "tache_onet": "prepare, rewrite and edit copy to improve readability, or supervise others who do this work.",
+          "pct_total_canada": 1.3396648907420277,
+          "count": 347.0,
+          "categorie": "contenu_ecrit"
+        },
+        {
+          "tache_onet": "edit, standardize, or make changes to material prepared by other writers or establishment personnel.",
+          "pct_total_canada": 0.9188479654080767,
+          "count": 238.0,
+          "categorie": "contenu_ecrit"
+        },
+        {
+          "tache_onet": "write advertising copy for use by publication, broadcast, or internet media to promote the sale of goods and services.",
+          "pct_total_canada": 0.6447378580804571,
+          "count": 167.0,
+          "categorie": "contenu_ecrit"
+        },
+        {
+          "tache_onet": "edit or rewrite existing copy as necessary, and submit copy for approval by supervisor.",
+          "pct_total_canada": 0.6099915064473785,
+          "count": 158.0,
+          "categorie": "contenu_ecrit"
+        },
+        {
+          "tache_onet": "develop briefings, brochures, multimedia presentations, web pages, promotional products, technical illustrations, and computer artwork for use in products, technical manuals, literature, newsletters, and slide shows.",
+          "pct_total_canada": 0.46328468844104703,
+          "count": 120.0,
+          "categorie": "contenu_ecrit"
+        },
+        {
+          "tache_onet": "write, design, or edit web page content, or direct others producing content.",
+          "pct_total_canada": 0.24708516716855838,
+          "count": 64.0,
+          "categorie": "contenu_ecrit"
+        }
+      ],
+      "pct_total_coeur_culturel": 0.69,
+      "pct_total_contenu_ecrit": 4.22,
+      "pct_total_creatif": 4.91
+    },
+    "meta": {
+      "n_taches_onet_canada_total": 271,
+      "n_taches_coeur_culturel": 7,
+      "n_taches_contenu_ecrit": 6
+    }
   }
 }

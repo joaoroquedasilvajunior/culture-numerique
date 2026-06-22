@@ -1,5 +1,5 @@
 {
-  "build_iso": "2026-06-22T18:30:08.113446+00:00",
+  "build_iso": "2026-06-22T19:02:07.895178+00:00",
   "pipeline_version": "1.0.0",
   "sources_used": [
     {
@@ -73,6 +73,15 @@
       "mtime_iso": "2026-06-22T17:53:09.873552+00:00",
       "source_key": "remunerations_eerh_statcan",
       "label": "Rémunération hebdomadaire moyenne (EERH) — Québec, secteurs SCIAN 2 chiffres, mensuel désaisonnalisé"
+    },
+    {
+      "path": "/Users/joaoroque/Documents/Claude/Projects/Culture Québec en donnée/Données Québec/aei_raw_claude_ai_2026-02-05_to_2026-02-12.csv",
+      "name": "aei_raw_claude_ai_2026-02-05_to_2026-02-12.csv",
+      "sha256": "69ebf6f9afc1e3be45caab172a84ae09e78bf41b97e1c310100d81c8a35a7433",
+      "size_bytes": 103287181,
+      "mtime_iso": "2026-06-22T18:51:28.750941+00:00",
+      "source_key": "aei_canada",
+      "label": "Anthropic Economic Index — Claude.ai Canada, semaine du 5-12 février 2026"
     },
     {
       "path": "/Users/joaoroque/Documents/Claude/Projects/Culture Québec en donnée/Données Québec/Variations mensuelles et annuelles des ventes de livres neufs, Québec.xlsx",

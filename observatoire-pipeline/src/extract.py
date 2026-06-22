@@ -887,6 +887,173 @@ def extract_remunerations_eerh_statcan(path: Path) -> dict:
     }
 
 
+def extract_aei_canada(path: Path) -> dict:
+    """Anthropic Economic Index — données Claude.ai pour le Canada.
+
+    Source : `aei_raw_claude_ai_<period>.csv` (release Hugging Face Anthropic/EconomicIndex).
+    Format : CSV en format long, ~478k lignes. L'extracteur filtre uniquement
+    les observations Canada (`geo_id == 'CA'`).
+
+    Sert la **lentille 2 « usage révélé »** de l'analyse AI-exposure : ce que
+    les utilisateurs canadiens de Claude.ai font réellement, ventilation par
+    tâche O*NET et par mode de collaboration (directive, learning, feedback
+    loop, etc.).
+
+    Limite assumée : l'intersection `onet_task::collaboration` n'est exposée
+    par Anthropic que pour la géographie GLOBAL (filtre vie privée). Pour le
+    Canada, on a donc le breakdown collaboration *agrégé toutes tâches
+    confondues*, sans ventilation par tâche.
+
+    Périmètre créatif au sens du Carnet (filtrage par sous-chaînes signatures
+    des libellés O*NET) :
+      * **Cœur culturel** (7 tâches) : illustration, animation/VFX, art visuel,
+        design mode, édition de manuscrits, critique d'œuvres
+      * **Création de contenu écrit** (6 tâches) : rédaction publicitaire,
+        édition de copie, design éditorial, web content
+    """
+    # Sous-chaînes signatures des libellés O*NET retenus comme créatifs
+    COEUR_CULTUREL_PATTERNS = [
+        'write reviews of literary',
+        'read, evaluate and edit manuscripts',
+        'program computerized graphic effects',
+        'develop, copy, or adapt designs for garments',
+        'create finished art work',
+        'design complex graphics and animation',
+        'create custom illustrations',
+    ]
+    CONTENU_ECRIT_PATTERNS = [
+        'prepare, rewrite and edit copy',
+        'edit, standardize, or make changes to material prepared by other writers',
+        'write advertising copy',
+        'edit or rewrite existing copy',
+        'develop briefings, brochures, multimedia presentations',
+        'write, design, or edit web page content',
+    ]
+
+    def _classer_tache(libelle: str) -> str | None:
+        low = libelle.lower()
+        for p in COEUR_CULTUREL_PATTERNS:
+            if p in low:
+                return 'coeur_culturel'
+        for p in CONTENU_ECRIT_PATTERNS:
+            if p in low:
+                return 'contenu_ecrit'
+        return None
+
+    # Collecte
+    taches_ca = {}  # libelle -> {'pct': ..., 'count': ...}
+    collaboration_ca = {}  # cluster -> {'pct': ..., 'count': ...}
+    date_start = None
+    date_end = None
+    platform = None
+
+    with open(path, encoding='utf-8') as fh:
+        reader = csv.DictReader(fh)
+        for row in reader:
+            if row['geo_id'] != 'CA':
+                continue
+            date_start = date_start or row['date_start']
+            date_end = date_end or row['date_end']
+            platform = platform or row['platform_and_product']
+
+            if row['facet'] == 'onet_task':
+                t = row['cluster_name']
+                if t not in taches_ca:
+                    taches_ca[t] = {'pct': None, 'count': None}
+                val = float(row['value']) if row['value'] else None
+                if row['variable'] == 'onet_task_pct':
+                    taches_ca[t]['pct'] = val
+                elif row['variable'] == 'onet_task_count':
+                    taches_ca[t]['count'] = val
+            elif row['facet'] == 'collaboration':
+                c = row['cluster_name']
+                if c not in collaboration_ca:
+                    collaboration_ca[c] = {'pct': None, 'count': None}
+                val = float(row['value']) if row['value'] else None
+                if row['variable'] == 'collaboration_pct':
+                    collaboration_ca[c]['pct'] = val
+                elif row['variable'] == 'collaboration_count':
+                    collaboration_ca[c]['count'] = val
+
+    # Agrégats collaboration (productif vs apprentissage selon la grille AI-exposure)
+    # Productif = directive + feedback loop + task iteration (substitution potentielle)
+    # Apprentissage = learning + validation (augmentation du capital humain)
+    PRODUCTIF_MODES = {'directive', 'feedback loop', 'task iteration'}
+    APPRENTISSAGE_MODES = {'learning', 'validation'}
+    productif_pct = sum(collaboration_ca.get(m, {}).get('pct') or 0
+                        for m in PRODUCTIF_MODES)
+    apprentissage_pct = sum(collaboration_ca.get(m, {}).get('pct') or 0
+                            for m in APPRENTISSAGE_MODES)
+    none_pct = collaboration_ca.get('none', {}).get('pct') or 0
+    ratio = round(productif_pct / apprentissage_pct, 2) if apprentissage_pct > 0 else None
+
+    # Classer les tâches en périmètre créatif
+    coeur_culturel = []
+    contenu_ecrit = []
+    for libelle, data in taches_ca.items():
+        cat = _classer_tache(libelle)
+        if cat is None:
+            continue
+        item = {
+            'tache_onet': libelle,
+            'pct_total_canada': data['pct'],
+            'count': data['count'],
+            'categorie': cat,
+        }
+        if cat == 'coeur_culturel':
+            coeur_culturel.append(item)
+        else:
+            contenu_ecrit.append(item)
+
+    coeur_culturel.sort(key=lambda x: -(x['pct_total_canada'] or 0))
+    contenu_ecrit.sort(key=lambda x: -(x['pct_total_canada'] or 0))
+
+    pct_total_coeur = sum(t['pct_total_canada'] or 0 for t in coeur_culturel)
+    pct_total_contenu = sum(t['pct_total_canada'] or 0 for t in contenu_ecrit)
+
+    return {
+        'source': ('Anthropic Economic Index — Claude.ai Free/Pro/Max, '
+                   'release Hugging Face Anthropic/EconomicIndex, cinquième édition '
+                   '(« Learning curves », publiée 2026-03-24)'),
+        'release_anthropic': '2026-03-24',
+        'periode_start': date_start,
+        'periode_end': date_end,
+        'platform': platform,
+        'pays': 'CA',
+        'note_limites': ("Granularité géographique : Canada national, pas de "
+                         "coupe Québec disponible dans la release. L'intersection "
+                         "onet_task::collaboration n'est exposée par Anthropic que "
+                         "pour la géographie GLOBAL (filtre vie privée) ; pour le "
+                         "Canada on a donc le breakdown collaboration agrégé toutes "
+                         "tâches confondues, pas par tâche. Période d'observation : "
+                         "une seule semaine (5-12 février 2026) ; pas de tendance "
+                         "temporelle possible avec ce seul fichier."),
+        'collaboration_canada': {
+            mode: collaboration_ca.get(mode, {}).get('pct')
+            for mode in ('directive', 'task iteration', 'learning',
+                         'feedback loop', 'validation', 'none', 'not_classified')
+        },
+        'agregats_collaboration': {
+            'productif_pct': round(productif_pct, 2),
+            'apprentissage_pct': round(apprentissage_pct, 2),
+            'none_pct': round(none_pct, 2),
+            'ratio_productif_apprentissage': ratio,
+        },
+        'taches_creatives': {
+            'coeur_culturel': coeur_culturel,
+            'contenu_ecrit': contenu_ecrit,
+            'pct_total_coeur_culturel': round(pct_total_coeur, 2),
+            'pct_total_contenu_ecrit': round(pct_total_contenu, 2),
+            'pct_total_creatif': round(pct_total_coeur + pct_total_contenu, 2),
+        },
+        'meta': {
+            'n_taches_onet_canada_total': len(taches_ca),
+            'n_taches_coeur_culturel': len(coeur_culturel),
+            'n_taches_contenu_ecrit': len(contenu_ecrit),
+        },
+    }
+
+
 # ---------- Registry ----------
 
 EXTRACTORS = {
@@ -905,4 +1072,5 @@ EXTRACTORS = {
     'extract_cinema_pays_annuel': extract_cinema_pays_annuel,
     'extract_emplois_eerh_annuel': extract_emplois_eerh_annuel,
     'extract_remunerations_eerh_statcan': extract_remunerations_eerh_statcan,
+    'extract_aei_canada': extract_aei_canada,
 }

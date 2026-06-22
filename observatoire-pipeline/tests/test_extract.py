@@ -196,6 +196,54 @@ def test_remunerations_eerh_statcan_secteur_71_stable(raw_dir):
     assert abs(rem[2025]['valeur'] - rem[2024]['valeur']) < 10  # variation < 10 $
 
 
+def test_aei_canada_collaboration_globale(raw_dir):
+    """Lentille 2 « usage révélé » — collaboration Canada (semaine du 5-12 fév. 2026).
+
+    Source : Anthropic Economic Index 5e édition, release 2026-03-24.
+    Les utilisateurs canadiens de Claude.ai utilisent l'IA majoritairement en
+    mode productif (substitution potentielle) plutôt qu'en mode apprentissage.
+    Productif (directive + task iteration + feedback loop) = 65,79 %.
+    Apprentissage (learning + validation) = 31,40 %. Ratio 2,1×.
+    """
+    f = find_source_file(raw_dir, 'aei_raw_claude_ai_*.csv')
+    assert f is not None, "Fichier AEI Canada manquant"
+    data = extract.extract_aei_canada(f)
+    assert data['pays'] == 'CA'
+    assert data['release_anthropic'] == '2026-03-24'
+    assert data['periode_start'] == '2026-02-05'
+    assert data['periode_end'] == '2026-02-12'
+    # Agrégats collaboration
+    ag = data['agregats_collaboration']
+    assert ag['productif_pct'] == 65.79
+    assert ag['apprentissage_pct'] == 31.40
+    assert ag['ratio_productif_apprentissage'] == 2.10
+    # Les 6 modes principaux sont tous présents
+    collab = data['collaboration_canada']
+    for mode in ('directive', 'task iteration', 'learning', 'feedback loop', 'validation', 'none'):
+        assert collab[mode] is not None, f"Mode {mode} manquant"
+
+
+def test_aei_canada_perimetre_creatif(raw_dir):
+    """Périmètre créatif du Carnet sur l'AEI Canada : 13 tâches O*NET retenues
+    (7 cœur culturel + 6 contenu écrit), pour 4,91 % du total des conversations
+    canadiennes. Signal modeste mais visible."""
+    f = find_source_file(raw_dir, 'aei_raw_claude_ai_*.csv')
+    data = extract.extract_aei_canada(f)
+    creatif = data['taches_creatives']
+    meta = data['meta']
+    assert meta['n_taches_onet_canada_total'] == 271
+    assert meta['n_taches_coeur_culturel'] == 7
+    assert meta['n_taches_contenu_ecrit'] == 6
+    assert creatif['pct_total_coeur_culturel'] == 0.69
+    assert creatif['pct_total_contenu_ecrit'] == 4.22
+    assert creatif['pct_total_creatif'] == 4.91
+    # Vérifie que les tâches cœur culturel sont triées par % décroissant
+    coeur_pcts = [t['pct_total_canada'] for t in creatif['coeur_culturel']]
+    assert coeur_pcts == sorted(coeur_pcts, reverse=True)
+    # La tâche en tête du cœur culturel est la critique d'œuvres
+    assert 'write reviews of literary' in creatif['coeur_culturel'][0]['tache_onet']
+
+
 def test_remunerations_eerh_statcan_periode_couverte(raw_dir):
     """La table CANSIM démarre en janvier 2001 et la diffusion 2026-05-28 va
     jusqu'à mars 2026 (3 mois d'année partielle 2026)."""

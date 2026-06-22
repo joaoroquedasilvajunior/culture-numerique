@@ -96,6 +96,15 @@ sources:
     axe_tdb: ["ecosysteme"]
     notes: "Source Statistique Canada (et non ISQ) parce que l'ISQ ne diffuse pas le volet rémunération de l'EERH pour le Québec dans le thème culture. Limite : granularité SCIAN 2 chiffres uniquement ([51] Information/culture, [71] Arts-spectacles-loisirs). Sert la lentille 3 « rémunération » de l'analyse AI-exposure, en complément des effectifs de emplois_eerh_annuel (qui descend au niveau 4 chiffres mais ne contient pas la rémunération)."
 
+  aei_canada:
+    label: "Anthropic Economic Index — Claude.ai Canada, semaine du 5-12 février 2026"
+    file_pattern: "aei_raw_claude_ai_*.csv"
+    isq_url: "https://huggingface.co/datasets/Anthropic/EconomicIndex/tree/main/release_2026_03_24"
+    classification: "Anthropic Economic Index — 5e édition, release 2026-03-24 ; usage Claude.ai Free/Pro/Max ; ventilation par tâche O*NET et par mode de collaboration"
+    extractor: extract_aei_canada
+    axe_tdb: ["ecosysteme"]
+    notes: "Sert la lentille 2 « usage révélé » de l'analyse AI-exposure. Granularité Canada national (pas de coupe Québec dans la release). L'intersection onet_task::collaboration n'est exposée que pour la géographie GLOBAL (filtre vie privée Anthropic) ; on a donc le breakdown collaboration agrégé toutes tâches confondues pour le Canada, sans ventilation par tâche. Périmètre créatif au sens du Carnet : 13 tâches O*NET retenues (7 cœur culturel + 6 contenu écrit). Licence CC-BY."
+
   ventes_livres:
     label: "Variations mensuelles et annuelles des ventes de livres neufs"
     isq_table_id: "2342"
