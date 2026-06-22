@@ -261,6 +261,81 @@ a{color:inherit;text-decoration:none}
   box-shadow:0 2px 6px rgba(248,191,87,0.35);
 }
 
+/* LENTILLE 3 AMÉLIORÉE — Deux cards de classification SCIAN 2 chiffres */
+.lentille3-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:18px}
+.l3-card{
+  background:var(--surface);
+  border-radius:var(--radius);
+  padding:20px 22px;
+  box-shadow:var(--shadow-sm);
+  border:1px solid var(--border);
+  border-left:4px solid var(--text-soft);
+  display:flex;flex-direction:column;gap:10px;
+  transition:transform 0.2s,box-shadow 0.2s;
+}
+.l3-card:hover{transform:translateY(-1px);box-shadow:var(--shadow-md)}
+.l3-card.verdict-consolidation{border-left-color:var(--hb-400)}
+.l3-card.verdict-contraction_nette{border-left-color:var(--bo-500)}
+.l3-card.verdict-expansion_saine{border-left-color:#22a06b}
+.l3-card.verdict-precarisation{border-left-color:#b86db8}
+.l3-card.verdict-stable{border-left-color:var(--cb-700)}
+.l3-card.verdict-indeterminee{border-left-color:var(--text-soft)}
+.l3-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.l3-scian{
+  font-family:'Nunito',sans-serif;font-weight:700;font-size:11px;
+  background:var(--cb-300);color:#fff;padding:4px 10px;border-radius:5px;letter-spacing:0.04em;
+}
+.l3-verdict-badge{
+  font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;
+  padding:4px 10px;border-radius:12px;white-space:nowrap;
+}
+.l3-verdict-badge.verdict-consolidation{background:var(--hb-900);color:var(--hb-200);border:1px solid var(--hb-700)}
+.l3-verdict-badge.verdict-contraction_nette{background:var(--bo-900);color:var(--bo-300);border:1px solid var(--bo-700)}
+.l3-verdict-badge.verdict-expansion_saine{background:#dff5eb;color:#0d5e3d;border:1px solid #6fc99c}
+.l3-verdict-badge.verdict-precarisation{background:#f5e8f5;color:#6e2c6e;border:1px solid #b86db8}
+.l3-verdict-badge.verdict-stable{background:var(--cb-900);color:var(--cb-300);border:1px solid var(--cb-800)}
+.l3-verdict-badge.verdict-indeterminee{background:#f0f2f5;color:var(--text-muted);border:1px solid var(--border)}
+.l3-libelle{font-family:'Nunito',sans-serif;font-size:15px;font-weight:700;color:var(--cb-300);line-height:1.3}
+.l3-metrics{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:4px;padding:12px 14px;background:#f9fafc;border-radius:var(--radius-sm)}
+.l3-metric{display:flex;flex-direction:column;gap:2px}
+.l3-metric-label{font-size:10.5px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em;font-weight:600}
+.l3-metric-value{
+  font-family:'Nunito',sans-serif;font-size:20px;font-weight:800;
+  letter-spacing:-0.02em;line-height:1.1;
+}
+.l3-metric-value.up{color:#22a06b}
+.l3-metric-value.down{color:var(--bo-500)}
+.l3-metric-value.flat{color:var(--text-muted)}
+.l3-metric-sub{font-size:11px;color:var(--text-soft);margin-top:2px}
+.l3-lecture{font-size:12.5px;color:var(--text-muted);line-height:1.55;margin-top:2px}
+.l3-composantes{
+  margin-top:6px;padding-top:10px;border-top:1px dashed var(--border);
+  font-size:11.5px;color:var(--text-muted);
+}
+.l3-composantes-titre{font-size:10.5px;text-transform:uppercase;letter-spacing:0.06em;font-weight:700;color:var(--text-soft);margin-bottom:6px}
+.l3-composante{display:flex;justify-content:space-between;gap:8px;padding:2px 0;font-size:11.5px}
+.l3-composante .scian{font-family:'Nunito',sans-serif;font-weight:600;color:var(--cb-400)}
+.l3-composante .tca{font-weight:600}
+.l3-composante .tca.up{color:#22a06b}
+.l3-composante .tca.down{color:var(--bo-500)}
+.l3-composante .tca.na{color:var(--text-soft);font-style:italic}
+.l3-statut-banner{
+  margin:0 0 14px;padding:8px 14px;
+  background:var(--hb-900);
+  border-left:3px solid var(--hb-400);
+  border-radius:var(--radius-sm);
+  font-size:12px;line-height:1.5;color:var(--cb-400);
+}
+.l3-statut-banner strong{color:var(--hb-200);font-weight:700}
+.l3-method-note{
+  margin-top:16px;padding:12px 18px;
+  background:#f5f7fb;
+  border:1px solid var(--border);
+  border-radius:var(--radius-sm);
+  font-size:11.5px;line-height:1.55;color:var(--text-muted);
+}
+.l3-method-note strong{color:var(--cb-400);font-weight:700}
+
 /* TIMELINE */
 .timeline-wrap{
   background:var(--surface);border-radius:var(--radius);padding:24px 28px;
@@ -467,6 +542,10 @@ a{color:inherit;text-decoration:none}
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
       Repères suivis <span class="nav-num">5</span>
     </a>
+    <a href="#lentille3" data-section="lentille3">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12h6l3-8 4 16 3-8h4"/></svg>
+      Lentille 3 améliorée <span class="nav-num">2</span>
+    </a>
     <a href="#vue-ensemble" class="active" data-section="vue-ensemble">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
       Vue d'ensemble
@@ -613,6 +692,80 @@ a{color:inherit;text-decoration:none}
 
       <div class="reperes-note">
         <strong>Provisional vs gelé.</strong> R1, R2 et R3 portent la mention <em>Lecture YTD</em> tant que la baseline annuelle 2025 n'a pas été figée par recoupement avec l'archive ISQ (au 1ᵉʳ mars de l'année suivante). R4 est gelé par le protocole et ne bougera qu'avec un bump de version. R5 attend l'identification de ses sources. Méthodologie complète&nbsp;: <a href="https://github.com/joaoroquedasilvajunior/culture-numerique/blob/main/Protocole_reperes_observatoire.md" target="_blank" rel="noopener">Protocole v1.1.0</a>&nbsp;; donnée auditable&nbsp;: <a href="reperes_2025.json" target="_blank" rel="noopener">reperes_2025.json</a>.
+      </div>
+    </section>
+
+    <!-- LENTILLE 3 AMÉLIORÉE — Dérivation auxiliaire hors protocole -->
+    <section id="lentille3" class="section">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title"><span class="star">⊕</span>Lentille 3 améliorée &mdash; effectifs × rémunération</h2>
+          <p class="section-sub">Croisement des deux mesures matérielles disponibles côté main-d'œuvre culturelle au Québec, pour les secteurs SCIAN 2 chiffres. Classification en quatre quadrants standard de la grille AI-exposure&nbsp;: consolidation, contraction nette, expansion saine, précarisation. Comparaison 2024 → 2025.</p>
+        </div>
+      </div>
+
+      <div class="l3-statut-banner">
+        <strong>Dérivation auxiliaire &mdash; hors protocole.</strong> Cette section présente un signal analytique qui n'est pas gelé par le Protocole des repères v1.1.0. Elle complète la lentille 3 «&nbsp;sortie matérielle&nbsp;» de la méthode AI-exposure en croisant effectifs (ISQ EERH annuel, niveau SCIAN 4&nbsp;chiffres) et rémunération hebdomadaire moyenne (StatCan CANSIM 14-10-0223, niveau SCIAN 2&nbsp;chiffres). À lire avec ses caveats, pas comme un repère pérenne.
+      </div>
+
+      <div class="lentille3-grid">
+
+        <!-- L3 card secteur 51 -->
+        <div class="l3-card" id="l3card-51">
+          <div class="l3-head">
+            <span class="l3-scian" id="l3-51-scian">SCIAN [51]</span>
+            <span class="l3-verdict-badge" id="l3-51-verdict-badge">—</span>
+          </div>
+          <div class="l3-libelle" id="l3-51-libelle">Industrie de l'information et industrie culturelle</div>
+          <div class="l3-metrics">
+            <div class="l3-metric">
+              <span class="l3-metric-label">Effectifs</span>
+              <span class="l3-metric-value" id="l3-51-eff-var">—</span>
+              <span class="l3-metric-sub" id="l3-51-eff-sub">2024 → 2025</span>
+            </div>
+            <div class="l3-metric">
+              <span class="l3-metric-label">Rémunération hebdo</span>
+              <span class="l3-metric-value" id="l3-51-rem-var">—</span>
+              <span class="l3-metric-sub" id="l3-51-rem-sub">2024 → 2025</span>
+            </div>
+          </div>
+          <div class="l3-lecture" id="l3-51-lecture">—</div>
+          <div class="l3-composantes">
+            <div class="l3-composantes-titre">Composantes ISQ niveau 4 chiffres (effectifs)</div>
+            <div id="l3-51-composantes"></div>
+          </div>
+        </div>
+
+        <!-- L3 card secteur 71 -->
+        <div class="l3-card" id="l3card-71">
+          <div class="l3-head">
+            <span class="l3-scian" id="l3-71-scian">SCIAN [71]</span>
+            <span class="l3-verdict-badge" id="l3-71-verdict-badge">—</span>
+          </div>
+          <div class="l3-libelle" id="l3-71-libelle">Arts, spectacles et loisirs</div>
+          <div class="l3-metrics">
+            <div class="l3-metric">
+              <span class="l3-metric-label">Effectifs</span>
+              <span class="l3-metric-value" id="l3-71-eff-var">—</span>
+              <span class="l3-metric-sub" id="l3-71-eff-sub">2024 → 2025</span>
+            </div>
+            <div class="l3-metric">
+              <span class="l3-metric-label">Rémunération hebdo</span>
+              <span class="l3-metric-value" id="l3-71-rem-var">—</span>
+              <span class="l3-metric-sub" id="l3-71-rem-sub">2024 → 2025</span>
+            </div>
+          </div>
+          <div class="l3-lecture" id="l3-71-lecture">—</div>
+          <div class="l3-composantes">
+            <div class="l3-composantes-titre">Composantes ISQ niveau 4 chiffres (effectifs)</div>
+            <div id="l3-71-composantes"></div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="l3-method-note">
+        <strong>Caveat de granularité.</strong> La rémunération hebdomadaire moyenne n'est diffusée par Statistique Canada qu'au niveau SCIAN 2&nbsp;chiffres pour les coupes provinciales (CANSIM 14-10-0223). On ne peut donc pas distinguer dans la rémunération ce qui se passe spécifiquement sur 5121 (film) vs 5162 (streaming). Les composantes ISQ niveau 4 chiffres exposées ci-dessus apportent le contexte effectifs, mais pas la rémunération désagrégée. <strong>Trois lectures restent possibles</strong> du pattern «&nbsp;consolidation&nbsp;» observé sur le secteur 51&nbsp;: capture de valeur côté survivants, effet de composition interne, ou hausse salariale réelle des survivants. La lentille 3 seule ne tranche pas&nbsp;; lentilles 1 (demande experte) et 2 (usage révélé) à instrumenter pour fermer le gap.
       </div>
     </section>
 
@@ -1082,6 +1235,98 @@ const C = {
   }
 
   // R5 — placeholder rendu statiquement, rien à peupler ici
+})();
+
+// === LENTILLE 3 AMÉLIORÉE — Population des deux cards (secteurs 51 et 71) ===
+// La dérivation est calculée côté pipeline (src/derive.py:derive_lentille_3_amelioree)
+// et exposée dans D.reperes.lentille_3_ameliorée. Statut auxiliaire provisoire,
+// hors protocole gelé. Si la donnée est absente (sources EERH ou rémunération
+// manquantes), la section reste à l'état statique avec des « — ».
+(function(){
+  const L3 = D.reperes && D.reperes.lentille_3_ameliorée;
+  if (!L3 || !L3.secteurs) return;
+
+  // Helpers
+  const fmt = (n, dec) => (n == null) ? '—' : Number(n).toLocaleString('fr-CA',
+      {minimumFractionDigits: dec, maximumFractionDigits: dec});
+  const setText = (id, val) => { const el = document.getElementById(id);
+                                  if (el) el.textContent = val; };
+  const setClass = (id, cls) => { const el = document.getElementById(id);
+                                  if (el) el.className = cls; };
+
+  function dirClass(v){
+    if (v == null) return 'flat';
+    if (v >= 2) return 'up';
+    if (v <= -2) return 'down';
+    return 'flat';
+  }
+  function fmtVar(v, decimals){
+    if (v == null) return '—';
+    const signe = v > 0 ? '+' : '';
+    return signe + fmt(v, decimals == null ? 2 : decimals).replace('.', ',') + ' %';
+  }
+
+  // Libellés conviviaux des verdicts
+  const VERDICT_LABEL = {
+    'consolidation': 'Consolidation',
+    'contraction_nette': 'Contraction nette',
+    'expansion_saine': 'Expansion saine',
+    'precarisation': 'Précarisation',
+    'stable': 'Stable',
+    'indeterminee': 'Indéterminée'
+  };
+
+  L3.secteurs.forEach(s => {
+    const code = s.code_scian;  // '51' ou '71'
+    // En-tête : code SCIAN + verdict badge
+    setText(`l3-${code}-scian`, `SCIAN [${code}]`);
+    setText(`l3-${code}-libelle`, s.libelle);
+    const verdict = s.classification || 'indeterminee';
+    setText(`l3-${code}-verdict-badge`, VERDICT_LABEL[verdict] || verdict);
+    setClass(`l3-${code}-verdict-badge`, `l3-verdict-badge verdict-${verdict}`);
+    // Bordure gauche du card par verdict
+    setClass(`l3card-${code}`, `l3-card verdict-${verdict}`);
+
+    // Effectifs
+    const eff = s.effectifs || {};
+    const varEff = eff.variation_pct;
+    setText(`l3-${code}-eff-var`, fmtVar(varEff));
+    setClass(`l3-${code}-eff-var`, `l3-metric-value ${dirClass(varEff)}`);
+    if (eff.moyenne_2024 != null && eff.moyenne_2025 != null) {
+      setText(`l3-${code}-eff-sub`,
+              `${fmt(eff.moyenne_2024, 0)} → ${fmt(eff.moyenne_2025, 0)} salariés`);
+    }
+
+    // Rémunération
+    const rem = s.remuneration_hebdo || {};
+    const varRem = rem.variation_pct;
+    setText(`l3-${code}-rem-var`, fmtVar(varRem));
+    setClass(`l3-${code}-rem-var`, `l3-metric-value ${dirClass(varRem)}`);
+    if (rem.moyenne_2024 != null && rem.moyenne_2025 != null) {
+      setText(`l3-${code}-rem-sub`,
+              `${fmt(rem.moyenne_2024, 0)} $ → ${fmt(rem.moyenne_2025, 0)} $ / sem.`);
+    }
+
+    // Lecture analytique
+    setText(`l3-${code}-lecture`, s.lecture || '');
+
+    // Composantes ISQ niveau 4
+    const comp_el = document.getElementById(`l3-${code}-composantes`);
+    if (comp_el) {
+      comp_el.innerHTML = '';
+      (s.composantes_ISQ_niveau_4 || []).forEach(c => {
+        const tca = c.tca_2025;
+        const tcaClass = tca == null ? 'na' : (tca > 0 ? 'up' : 'down');
+        const tcaText = tca == null ? 'TCA n/d' : `TCA ${(tca > 0 ? '+' : '') + tca.toString().replace('.', ',')} %`;
+        const row = document.createElement('div');
+        row.className = 'l3-composante';
+        row.innerHTML = `<span class="scian">[${c.scian}]</span>` +
+                        `<span style="flex:1;text-align:left;padding:0 8px;color:var(--text-muted)">${c.industrie.slice(0, 36)}</span>` +
+                        `<span class="tca ${tcaClass}">${tcaText}</span>`;
+        comp_el.appendChild(row);
+      });
+    }
+  });
 })();
 
 // === SPARKLINES (SVG inline) ===
