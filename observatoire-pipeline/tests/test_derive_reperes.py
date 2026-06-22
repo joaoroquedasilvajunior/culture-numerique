@@ -212,6 +212,70 @@ def test_payload_for_dashboard_inclut_reperes(combined):
     assert r1['provisional'] is True
 
 
+def test_lentille_3_amelioree_secteur_51_consolidation(raw_dir):
+    """Lentille 3 améliorée (auxiliaire, hors protocole) — Secteur SCIAN [51] :
+    effectifs −5,38 % et rémunération hebdo +4,26 % entre 2024 et 2025 →
+    classification 'consolidation'. La valeur se concentre chez les survivants.
+    """
+    # Charger directement les sources nécessaires (pas le fixture combined,
+    # qui ne contient que les sources musique/cinéma)
+    config = yaml.safe_load((REPO_ROOT / 'sources.yaml').read_text(encoding='utf-8'))
+    raw = _resolve_raw_dir(REPO_ROOT, config)
+    f_eff = find_source_file(raw, 'Emplois salariés*données annuelles*.xlsx')
+    f_rem = find_source_file(raw, '14100223*.zip')
+    eff = extract.extract_emplois_eerh_annuel(f_eff)
+    rem = extract.extract_remunerations_eerh_statcan(f_rem)
+    l3 = derive.derive_lentille_3_amelioree(eff, rem)
+
+    assert l3['statut'] == 'auxiliaire_provisoire'
+    assert l3['annees_comparees'] == [2024, 2025]
+    sect_51 = next(s for s in l3['secteurs'] if s['code_scian'] == '51')
+    assert sect_51['effectifs']['variation_pct'] == -5.38
+    assert sect_51['remuneration_hebdo']['variation_pct'] == 4.26
+    assert sect_51['classification'] == 'consolidation'
+    # Composantes ISQ niveau 4 attachées : doivent inclure 5121, 5122, 5131,
+    # 5151, 5152, 5161, 5162 (les codes culture dans le tableau ISQ)
+    codes_composantes = {c['scian'] for c in sect_51['composantes_ISQ_niveau_4']}
+    assert {'5121', '5122', '5131', '5161', '5162'}.issubset(codes_composantes)
+
+
+def test_lentille_3_amelioree_secteur_71_stable(raw_dir):
+    """Lentille 3 améliorée — Secteur SCIAN [71] : variations 2024→2025 sous
+    le seuil de ±2 % sur les deux mesures → classification 'stable'.
+    """
+    config = yaml.safe_load((REPO_ROOT / 'sources.yaml').read_text(encoding='utf-8'))
+    raw = _resolve_raw_dir(REPO_ROOT, config)
+    f_eff = find_source_file(raw, 'Emplois salariés*données annuelles*.xlsx')
+    f_rem = find_source_file(raw, '14100223*.zip')
+    eff = extract.extract_emplois_eerh_annuel(f_eff)
+    rem = extract.extract_remunerations_eerh_statcan(f_rem)
+    l3 = derive.derive_lentille_3_amelioree(eff, rem)
+
+    sect_71 = next(s for s in l3['secteurs'] if s['code_scian'] == '71')
+    assert -2.0 < sect_71['effectifs']['variation_pct'] < 2.0 or \
+           sect_71['effectifs']['variation_pct'] == 1.74
+    assert -2.0 < sect_71['remuneration_hebdo']['variation_pct'] < 2.0
+    assert sect_71['classification'] == 'stable'
+
+
+def test_classifier_quatre_quadrants():
+    """Les quatre quadrants standard sont bien différenciés par _classifier."""
+    # Consolidation : effectifs ↓, rémunération ↑
+    assert derive._classifier(-5.0, +3.0)['classification'] == 'consolidation'
+    # Contraction nette : effectifs ↓, rémunération ↓
+    assert derive._classifier(-5.0, -3.0)['classification'] == 'contraction_nette'
+    # Expansion saine : effectifs ↑, rémunération ↑
+    assert derive._classifier(+5.0, +3.0)['classification'] == 'expansion_saine'
+    # Précarisation : effectifs ↑, rémunération ↓
+    assert derive._classifier(+5.0, -3.0)['classification'] == 'precarisation'
+    # Stable : variations sous le seuil
+    assert derive._classifier(+1.5, +1.0)['classification'] == 'stable'
+    assert derive._classifier(-1.0, +0.5)['classification'] == 'stable'
+    # Indéterminée : une mesure manquante
+    assert derive._classifier(None, +5.0)['classification'] == 'indeterminee'
+    assert derive._classifier(+5.0, None)['classification'] == 'indeterminee'
+
+
 def test_payload_for_dashboard_sans_reperes(combined):
     """Si reperes=None, le payload reste compatible avec l'ancien template."""
     from src.pipeline import _payload_for_dashboard

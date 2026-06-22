@@ -235,6 +235,174 @@ def derive_r4() -> dict:
     }
 
 
+# === Lentille 3 améliorée — dérivation auxiliaire hors protocole =============
+#
+# Cette dérivation croise les effectifs (ISQ EERH série annuelle, niveau SCIAN
+# 4 chiffres) avec la rémunération hebdomadaire moyenne (StatCan CANSIM
+# 14-10-0223, niveau SCIAN 2 chiffres) pour classer chaque secteur en
+# consolidation / contraction nette / expansion saine / précarisation.
+#
+# Elle s'inscrit dans le cadre de la grille AI-exposure (méthodologie à trois
+# lentilles : demande experte, usage révélé, sortie matérielle wages). Notre
+# dépôt n'instrumente que la lentille 3 actuellement ; cette dérivation enrichit
+# cette lentille en combinant deux mesures matérielles complémentaires.
+#
+# Statut : **auxiliaire provisoire**. Pas gelée par le protocole v1.1.0, pas un
+# repère au sens du Protocole. Présente dans le payload pour exposition, à
+# considérer comme un signal analytique à raffiner.
+#
+# Limite assumée : la rémunération n'existe qu'au niveau SCIAN 2 chiffres pour
+# les coupes provinciales. Les effectifs ISQ niveau 4 chiffres sont exposés en
+# contexte, mais la classification est faite au niveau 2 chiffres où les deux
+# mesures coexistent.
+
+SEUIL_VARIATION_PCT = 2.0  # ±2 % en deçà = stable (sous le bruit + IPC)
+
+# Mapping de nos SCIAN 4 chiffres ISQ vers leur secteur SCIAN 2 chiffres parent.
+# Sert à exposer le contexte « composantes ISQ » sous chaque secteur classifié.
+SCIAN_4_TO_2 = {
+    '5121': '51', '5122': '51', '5131': '51', '5132': '51',
+    '5151': '51', '5152': '51', '5161': '51', '5162': '51',
+    '517': '51', '5191': '51',
+    '7111': '71', '7112': '71', '7113': '71', '7115': '71',
+    '712': '71', '7121': '71', '713': '71',
+    '4592': '459',  # Hors [51] et [71], mais on l'expose en contexte si présent
+}
+
+
+def _classifier(var_eff_pct: float | None, var_rem_pct: float | None,
+                seuil: float = SEUIL_VARIATION_PCT) -> dict:
+    """Quatre quadrants standard de la lentille 3."""
+    if var_eff_pct is None or var_rem_pct is None:
+        return {"classification": "indeterminee",
+                "raison": "donnée manquante sur une des deux mesures"}
+    eff_baisse = var_eff_pct <= -seuil
+    eff_hausse = var_eff_pct >= seuil
+    rem_baisse = var_rem_pct <= -seuil
+    rem_hausse = var_rem_pct >= seuil
+
+    if eff_baisse and rem_hausse:
+        return {"classification": "consolidation",
+                "lecture": ("La valeur se concentre chez les survivants. "
+                            "Les emplois supprimés étaient en moyenne moins "
+                            "bien rémunérés que ceux qui restent, OU les "
+                            "survivants ont obtenu des hausses, OU effet de "
+                            "composition interne du secteur.")}
+    if eff_baisse and rem_baisse:
+        return {"classification": "contraction_nette",
+                "lecture": ("Perte de valeur globale. Moins d'emplois, et les "
+                            "emplois restants sont moins bien payés. Signal "
+                            "fort de désinvestissement sectoriel.")}
+    if eff_hausse and rem_hausse:
+        return {"classification": "expansion_saine",
+                "lecture": ("Capture de valeur et croissance simultanées. Le "
+                            "secteur attire des emplois et les rémunère mieux.")}
+    if eff_hausse and rem_baisse:
+        return {"classification": "precarisation",
+                "lecture": ("Plus d'emplois mais moins bien payés. Le secteur "
+                            "grossit en absorbant des emplois moins qualifiés "
+                            "ou moins rémunérés.")}
+    # Stable sur au moins une des deux dimensions
+    return {"classification": "stable",
+            "lecture": (f"Variation sous le seuil de {seuil} % sur au moins "
+                        f"une des deux mesures. Pas de mouvement structurel "
+                        f"détecté entre les deux années comparées.")}
+
+
+def _var_pct(v_initial: float | None, v_final: float | None) -> float | None:
+    if v_initial is None or v_final is None or v_initial == 0:
+        return None
+    return round((v_final - v_initial) / v_initial * 100, 2)
+
+
+def derive_lentille_3_amelioree(emplois_eerh_annuel: list,
+                                  remunerations_statcan: dict,
+                                  annee_initiale: int = 2024,
+                                  annee_finale: int = 2025) -> dict:
+    """Croise effectifs (ISQ niveau 4 chiffres) et rémunération hebdomadaire
+    moyenne (StatCan niveau 2 chiffres) pour classifier chaque secteur SCIAN
+    2 chiffres sur la grille consolidation / contraction nette / expansion
+    saine / précarisation.
+
+    Retourne un bloc analytique à inscrire dans le payload sous une clé
+    distincte du bloc `reperes` (ce n'est PAS un repère du protocole).
+    """
+    # Index des effectifs annuels par SCIAN 4 chiffres
+    index_eff_4 = {ind['scian']: ind for ind in emplois_eerh_annuel if ind.get('scian')}
+
+    secteurs_out = []
+    for sect in remunerations_statcan.get('secteurs', []):
+        code_2 = sect['code_scian']
+        libelle = sect['libelle']
+
+        # Récupérer les moyennes annuelles 2024 et 2025 (effectifs + rémunération)
+        eff_par_an = {m['annee']: m['valeur'] for m in
+                      sect['mesures'].get('effectifs', {}).get('moyennes_annuelles', [])}
+        rem_par_an = {m['annee']: m['valeur'] for m in
+                      sect['mesures'].get('remuneration_hebdo', {}).get('moyennes_annuelles', [])}
+
+        var_eff = _var_pct(eff_par_an.get(annee_initiale), eff_par_an.get(annee_finale))
+        var_rem = _var_pct(rem_par_an.get(annee_initiale), rem_par_an.get(annee_finale))
+
+        verdict = _classifier(var_eff, var_rem)
+
+        # Composantes ISQ niveau 4 chiffres rattachées à ce secteur 2 chiffres
+        composantes = []
+        for scian_4, sect_parent in SCIAN_4_TO_2.items():
+            if sect_parent != code_2:
+                continue
+            ind = index_eff_4.get(scian_4)
+            if ind is None:
+                continue
+            composantes.append({
+                'scian': ind['scian'],
+                'industrie': ind['industrie'],
+                'n_2024': ind.get('n_2024'),
+                'n_2025': ind.get('n_2025'),
+                'tca_2025': ind.get('tca_2025'),
+            })
+
+        secteurs_out.append({
+            'code_scian': code_2,
+            'libelle': libelle,
+            'effectifs': {
+                f'moyenne_{annee_initiale}': eff_par_an.get(annee_initiale),
+                f'moyenne_{annee_finale}': eff_par_an.get(annee_finale),
+                'variation_pct': var_eff,
+            },
+            'remuneration_hebdo': {
+                f'moyenne_{annee_initiale}': rem_par_an.get(annee_initiale),
+                f'moyenne_{annee_finale}': rem_par_an.get(annee_finale),
+                'variation_pct': var_rem,
+            },
+            **verdict,
+            'composantes_ISQ_niveau_4': composantes,
+        })
+
+    return {
+        'methode': ('Croisement effectifs ISQ EERH (niveau SCIAN 4 chiffres, '
+                    'série annuelle) × rémunération hebdomadaire moyenne StatCan '
+                    'CANSIM 14-10-0223 (niveau SCIAN 2 chiffres, agrégée annuel). '
+                    'Classification en quatre quadrants standard de la lentille 3 '
+                    'AI-exposure : consolidation, contraction nette, expansion '
+                    'saine, précarisation. Seuil de stabilité : ±%s %%.' %
+                    SEUIL_VARIATION_PCT),
+        'note_limites': ('Classification opérée au niveau SCIAN 2 chiffres parce '
+                         'que la rémunération n\'est diffusée qu\'à ce niveau pour '
+                         'les coupes provinciales. Les composantes ISQ niveau 4 '
+                         'chiffres sont exposées en contexte ; leur lecture '
+                         'individuelle reste limitée à la dimension effectifs.'),
+        'annees_comparees': [annee_initiale, annee_finale],
+        'seuil_stabilite_pct': SEUIL_VARIATION_PCT,
+        'statut': 'auxiliaire_provisoire',
+        'note_statut': ('Dérivation analytique hors protocole v1.1.0. Pas un '
+                        'repère gelé. Présente dans le payload pour exposition, '
+                        'à raffiner avec les futures itérations de la méthode '
+                        'AI-exposure.'),
+        'secteurs': secteurs_out,
+    }
+
+
 def derive_r5() -> dict:
     """R5 — Volume d'œuvres québécoises rendues publiques. Chantier ouvert."""
     return {
@@ -290,9 +458,21 @@ def derive_all(combined: dict, annee: int = 2025) -> dict:
     reperes['r4_angle_mort'] = derive_r4()
     reperes['r5_volume_oeuvres'] = derive_r5()
 
-    return {
+    # Bloc auxiliaire — lentille 3 améliorée (hors protocole)
+    lentille_3 = None
+    if ('emplois_eerh_annuel' in combined
+            and 'remunerations_eerh_statcan' in combined):
+        lentille_3 = derive_lentille_3_amelioree(
+            combined['emplois_eerh_annuel'],
+            combined['remunerations_eerh_statcan']
+        )
+
+    payload = {
         "annee": annee,
         "date_calcul": dt.datetime.now().isoformat(timespec='seconds'),
         "protocole_version": PROTOCOLE_VERSION,
         "reperes": reperes
     }
+    if lentille_3 is not None:
+        payload["lentille_3_ameliorée"] = lentille_3
+    return payload

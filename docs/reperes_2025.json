@@ -1,6 +1,6 @@
 {
   "annee": 2025,
-  "date_calcul": "2026-06-22T14:04:29",
+  "date_calcul": "2026-06-22T14:21:47",
   "protocole_version": "1.1.0",
   "reperes": {
     "r1_ecart_decouvrabilite": {
@@ -119,5 +119,110 @@
       "note": "Sources à identifier avant première mesure : ADISQ (musique), SODEC / Téléfilm Canada (cinéma), OCCQ / dépôt légal BAnQ (livre). La définition de « œuvre québécoise » sera alignée sur les conventions institutionnelles existantes (critères ADISQ ; grille SODEC de qualification du film québécois ; convention OCCQ de l'édition) plutôt qu'inventée pour le protocole.",
       "provisional": null
     }
+  },
+  "lentille_3_ameliorée": {
+    "methode": "Croisement effectifs ISQ EERH (niveau SCIAN 4 chiffres, série annuelle) × rémunération hebdomadaire moyenne StatCan CANSIM 14-10-0223 (niveau SCIAN 2 chiffres, agrégée annuel). Classification en quatre quadrants standard de la lentille 3 AI-exposure : consolidation, contraction nette, expansion saine, précarisation. Seuil de stabilité : ±2.0 %.",
+    "note_limites": "Classification opérée au niveau SCIAN 2 chiffres parce que la rémunération n'est diffusée qu'à ce niveau pour les coupes provinciales. Les composantes ISQ niveau 4 chiffres sont exposées en contexte ; leur lecture individuelle reste limitée à la dimension effectifs.",
+    "annees_comparees": [
+      2024,
+      2025
+    ],
+    "seuil_stabilite_pct": 2.0,
+    "statut": "auxiliaire_provisoire",
+    "note_statut": "Dérivation analytique hors protocole v1.1.0. Pas un repère gelé. Présente dans le payload pour exposition, à raffiner avec les futures itérations de la méthode AI-exposure.",
+    "secteurs": [
+      {
+        "code_scian": "51",
+        "libelle": "Industrie de l'information et industrie culturelle",
+        "effectifs": {
+          "moyenne_2024": 74287.58,
+          "moyenne_2025": 70294.33,
+          "variation_pct": -5.38
+        },
+        "remuneration_hebdo": {
+          "moyenne_2024": 1673.04,
+          "moyenne_2025": 1744.35,
+          "variation_pct": 4.26
+        },
+        "classification": "consolidation",
+        "lecture": "La valeur se concentre chez les survivants. Les emplois supprimés étaient en moyenne moins bien rémunérés que ceux qui restent, OU les survivants ont obtenu des hausses, OU effet de composition interne du secteur.",
+        "composantes_ISQ_niveau_4": [
+          {
+            "scian": "5121",
+            "industrie": "Industries du film et de vidéo",
+            "n_2024": 15636.0,
+            "n_2025": 14299.0,
+            "tca_2025": -8.6
+          },
+          {
+            "scian": "5122",
+            "industrie": "Industries de l'enregistrement sonore",
+            "n_2024": 436.0,
+            "n_2025": 459.0,
+            "tca_2025": 5.3
+          },
+          {
+            "scian": "5131",
+            "industrie": "Éditeurs de journaux, de périodiques, de livres et de répertoires",
+            "n_2024": 4742.0,
+            "n_2025": 4528.0,
+            "tca_2025": -4.5
+          },
+          {
+            "scian": "5151",
+            "industrie": "Radiodiffusion et télédiffusion",
+            "n_2024": null,
+            "n_2025": null,
+            "tca_2025": null
+          },
+          {
+            "scian": "5152",
+            "industrie": "Télévision payante et spécialisée",
+            "n_2024": null,
+            "n_2025": null,
+            "tca_2025": null
+          },
+          {
+            "scian": "5161",
+            "industrie": "Stations de radiodiffusion et de télédiffusion",
+            "n_2024": 7053.0,
+            "n_2025": 6963.0,
+            "tca_2025": -1.3
+          },
+          {
+            "scian": "5162",
+            "industrie": "Services de distribution de contenu médiatique diffusé en continu et autres réseaux et fournisseurs de contenu médiatique",
+            "n_2024": 1657.0,
+            "n_2025": 1743.0,
+            "tca_2025": 5.2
+          }
+        ]
+      },
+      {
+        "code_scian": "71",
+        "libelle": "Arts, spectacles et loisirs",
+        "effectifs": {
+          "moyenne_2024": 67866.75,
+          "moyenne_2025": 69045.58,
+          "variation_pct": 1.74
+        },
+        "remuneration_hebdo": {
+          "moyenne_2024": 782.46,
+          "moyenne_2025": 787.95,
+          "variation_pct": 0.7
+        },
+        "classification": "stable",
+        "lecture": "Variation sous le seuil de 2.0 % sur au moins une des deux mesures. Pas de mouvement structurel détecté entre les deux années comparées.",
+        "composantes_ISQ_niveau_4": [
+          {
+            "scian": "7111",
+            "industrie": "Compagnies d'arts d'interprétation",
+            "n_2024": 3937.0,
+            "n_2025": 3717.0,
+            "tca_2025": -5.6
+          }
+        ]
+      }
+    ]
   }
 }
