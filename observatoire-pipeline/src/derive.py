@@ -473,6 +473,12 @@ def derive_all(combined: dict, annee: int = 2025) -> dict:
     # productif/apprentissage et identifié le périmètre créatif.
     lentille_2 = combined.get('aei_canada')
 
+    # Bloc auxiliaire — lentille 1b « demande marché » (hors protocole)
+    # Lecture directe de l'extraction JVWS Québec. L'extracteur expose les
+    # 6 sous-secteurs SCIAN culture avec leur série trimestrielle + moyennes
+    # sur les 5 derniers trimestres.
+    lentille_1b = combined.get('job_vacancy_quebec')
+
     payload = {
         "annee": annee,
         "date_calcul": dt.datetime.now().isoformat(timespec='seconds'),
@@ -490,5 +496,16 @@ def derive_all(combined: dict, annee: int = 2025) -> dict:
                             'canadiens de Claude.ai font réellement, par tâche '
                             'O*NET et par mode de collaboration.'),
             **lentille_2,
+        }
+    if lentille_1b is not None:
+        payload["lentille_1b_demande_marche"] = {
+            'statut': 'auxiliaire_provisoire',
+            'note_statut': ('Dérivation analytique hors protocole v1.1.0. Pas un '
+                            'repère gelé. Sert la sous-lentille 1b « demande '
+                            'marché » de l\'analyse AI-exposure : ce que les '
+                            'employeurs québécois cherchent réellement à '
+                            'embaucher dans les industries culturelles, à quel '
+                            'salaire, à quel taux de vacance.'),
+            **lentille_1b,
         }
     return payload

@@ -1,5 +1,5 @@
 {
-  "build_iso": "2026-06-22T19:16:39.523851+00:00",
+  "build_iso": "2026-06-22T20:12:19.525737+00:00",
   "pipeline_version": "1.0.0",
   "sources_used": [
     {
@@ -82,6 +82,15 @@
       "mtime_iso": "2026-06-22T18:51:28.750941+00:00",
       "source_key": "aei_canada",
       "label": "Anthropic Economic Index — Claude.ai Canada, semaine du 5-12 février 2026"
+    },
+    {
+      "path": "/Users/joaoroque/Documents/Claude/Projects/Culture Québec en donnée/Données Québec/14100442-fra.zip",
+      "name": "14100442-fra.zip",
+      "sha256": "1dc87de078ea77e7940564fa67383c41e25382a75af6f2dea2b95c91982f93a3",
+      "size_bytes": 4647927,
+      "mtime_iso": "2026-06-22T19:52:25.588132+00:00",
+      "source_key": "job_vacancy_quebec",
+      "label": "Postes vacants, taux et salaire horaire offert (JVWS) — Québec, SCIAN 3 chiffres, trimestriel"
     },
     {
       "path": "/Users/joaoroque/Documents/Claude/Projects/Culture Québec en donnée/Données Québec/Variations mensuelles et annuelles des ventes de livres neufs, Québec.xlsx",

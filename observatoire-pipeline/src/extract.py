@@ -887,6 +887,141 @@ def extract_remunerations_eerh_statcan(path: Path) -> dict:
     }
 
 
+def extract_job_vacancy_quebec(path: Path) -> dict:
+    """Table StatCan CANSIM 14-10-0442 — Postes vacants, employés salariés,
+    taux de postes vacants et salaire horaire offert moyen, par SCIAN 3 chiffres,
+    province ou territoire, données trimestrielles non désaisonnalisées.
+
+    Sert la **sous-lentille 1b « demande marché »** de l'analyse AI-exposure :
+    ce que les employeurs québécois cherchent réellement à embaucher dans les
+    industries culturelles, à quel salaire, à quel taux de vacance.
+
+    Filtre : GÉO == 'Québec' + SCIAN dans {512, 513, 515, 516, 519, 711, 712}.
+    Format zip / CSV long, identique au pattern de CANSIM 14-10-0223.
+
+    Métriques exposées par SCIAN :
+      - postes_vacants : nombre absolu de postes ouverts (Statistique « Postes vacants »)
+      - employes_salaries : nombre d'emplois salariés en place
+      - taux_postes_vacants : ratio postes vacants / (postes vacants + employés)
+      - salaire_horaire_offert : moyenne du salaire horaire offert dans les postes
+        vacants, en $ courants
+    """
+    SECTEURS = {
+        '512': 'Industries du film et de l\'enregistrement sonore',
+        '513': 'Édition',
+        '515': 'Radiotélévision (sauf par Internet)',
+        '516': 'Radiotélévision et fournisseurs de contenu par Internet',
+        '519': 'Portails de recherche Web, bibliothèques, archives',
+        '711': 'Arts d\'interprétation, sports-spectacles et activités connexes',
+        '712': 'Établissements du patrimoine',
+    }
+    STAT_MAPPING = {
+        'Postes vacants': 'postes_vacants',
+        'Employés salariés': 'employes_salaries',
+        'Taux de postes vacants': 'taux_postes_vacants',
+        'Moyenne du salaire horaire offert': 'salaire_horaire_offert',
+    }
+
+    # (code, periode) -> {stat_key: value}
+    obs = defaultdict(lambda: defaultdict(lambda: None))
+
+    with zipfile.ZipFile(path) as z:
+        csv_name = [n for n in z.namelist()
+                    if n.endswith('.csv') and 'MetaData' not in n]
+        if not csv_name:
+            raise ValueError(f"Aucun CSV de données dans {path.name}")
+        with z.open(csv_name[0]) as fh:
+            text = io.TextIOWrapper(fh, encoding='utf-8-sig', newline='')
+            reader = csv.reader(text, delimiter=';')
+            next(reader)  # header
+            for row in reader:
+                if len(row) < 12:
+                    continue
+                periode, geo, _, scian, stat = row[:5]
+                if geo != 'Québec':
+                    continue
+                m = re.search(r'\[([^\]]+)\]', scian)
+                code = m.group(1).strip() if m else ''
+                if code not in SECTEURS:
+                    continue
+                stat_key = STAT_MAPPING.get(stat)
+                if stat_key is None:
+                    continue
+                val = _to_num(row[11])
+                obs[(code, periode)][stat_key] = val
+
+    # Plage de périodes disponibles
+    toutes_periodes = sorted({p for (_, p) in obs.keys()})
+    periode_min = toutes_periodes[0] if toutes_periodes else None
+    periode_max = toutes_periodes[-1] if toutes_periodes else None
+    # Les 5 derniers trimestres pour les moyennes
+    derniers_5 = toutes_periodes[-5:] if len(toutes_periodes) >= 5 else toutes_periodes
+
+    # Assembler par secteur
+    secteurs_out = []
+    for code, libelle in SECTEURS.items():
+        periodes_secteur = sorted({p for (c, p) in obs.keys() if c == code})
+        if not periodes_secteur:
+            # Secteur non couvert (515 archivé par exemple)
+            secteurs_out.append({
+                'code_scian': code,
+                'libelle': libelle,
+                'statut': 'non_couvert',
+                'note': f"Aucune observation disponible pour SCIAN [{code}] au Québec dans la table.",
+            })
+            continue
+
+        serie = [
+            {
+                'periode': p,
+                **{k: obs[(code, p)].get(k) for k in STAT_MAPPING.values()},
+            }
+            for p in periodes_secteur
+        ]
+
+        # Moyennes sur les 5 derniers trimestres
+        def _moy(stat_key):
+            vals = [obs[(code, p)].get(stat_key) for p in derniers_5
+                    if obs[(code, p)].get(stat_key) is not None]
+            return round(sum(vals) / len(vals), 2) if vals else None
+
+        moyennes = {
+            'postes_vacants': _moy('postes_vacants'),
+            'employes_salaries': _moy('employes_salaries'),
+            'taux_postes_vacants': _moy('taux_postes_vacants'),
+            'salaire_horaire_offert': _moy('salaire_horaire_offert'),
+            'n_trimestres': len(derniers_5),
+            'periodes_couvertes': derniers_5,
+        }
+
+        secteurs_out.append({
+            'code_scian': code,
+            'libelle': libelle,
+            'serie_trimestrielle': serie,
+            'moyennes_5_derniers_trimestres': moyennes,
+        })
+
+    return {
+        'source': ('Statistique Canada — CANSIM 14-10-0442 (Postes vacants, '
+                   'employés salariés, taux de postes vacants et salaire horaire '
+                   'offert moyen selon le sous-secteur SCIAN 3 chiffres, '
+                   'données trimestrielles non désaisonnalisées)'),
+        'tableau': '14-10-0442-01',
+        'periode_min': periode_min,
+        'periode_max': periode_max,
+        'note_limites': ('Granularité SCIAN 3 chiffres (sous-secteur), entre les '
+                         'effectifs ISQ niveau 4 et la rémunération EERH niveau 2. '
+                         "SCIAN 515 (Radiotélévision sauf par Internet) archivé "
+                         "côté ISQ comme côté StatCan, série non disponible. "
+                         'Données non désaisonnalisées — interpréter les '
+                         'variations trimestrielles avec prudence. La métrique '
+                         '« salaire horaire offert » correspond au salaire que '
+                         "l'employeur affiche dans le poste vacant, pas au "
+                         'salaire effectivement versé aux salariés en place.'),
+        'secteurs': secteurs_out,
+    }
+
+
 def extract_aei_canada(path: Path) -> dict:
     """Anthropic Economic Index — données Claude.ai pour le Canada.
 
@@ -1073,4 +1208,5 @@ EXTRACTORS = {
     'extract_emplois_eerh_annuel': extract_emplois_eerh_annuel,
     'extract_remunerations_eerh_statcan': extract_remunerations_eerh_statcan,
     'extract_aei_canada': extract_aei_canada,
+    'extract_job_vacancy_quebec': extract_job_vacancy_quebec,
 }

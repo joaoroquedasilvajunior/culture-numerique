@@ -105,6 +105,15 @@ sources:
     axe_tdb: ["ecosysteme"]
     notes: "Sert la lentille 2 « usage révélé » de l'analyse AI-exposure. Granularité Canada national (pas de coupe Québec dans la release). L'intersection onet_task::collaboration n'est exposée que pour la géographie GLOBAL (filtre vie privée Anthropic) ; on a donc le breakdown collaboration agrégé toutes tâches confondues pour le Canada, sans ventilation par tâche. Périmètre créatif au sens du Carnet : 13 tâches O*NET retenues (7 cœur culturel + 6 contenu écrit). Licence CC-BY."
 
+  job_vacancy_quebec:
+    label: "Postes vacants, taux et salaire horaire offert (JVWS) — Québec, SCIAN 3 chiffres, trimestriel"
+    file_pattern: "14100442*.zip"
+    isq_url: "https://www150.statcan.gc.ca/t1/tbl1/fr/tv.action?pid=1410044201"
+    classification: "Statistique Canada CANSIM 14-10-0442 — Enquête sur les postes vacants et les salaires (JVWS) ; trimestriel non désaisonnalisé ; SCIAN 3 chiffres provincial"
+    extractor: extract_job_vacancy_quebec
+    axe_tdb: ["ecosysteme"]
+    notes: "Sert la sous-lentille 1b « demande marché » de l'analyse AI-exposure. Granularité SCIAN 3 chiffres, intermédiaire entre les effectifs ISQ niveau 4 et la rémunération EERH niveau 2. Couvre 512, 513, 516, 519, 711, 712 ; SCIAN 515 archivé. Métrique clé : « moyenne du salaire horaire offert » dans les postes vacants — distinct du salaire EERH versé aux salariés en place. L'écart entre les deux est un signal de tension du marché."
+
   ventes_livres:
     label: "Variations mensuelles et annuelles des ventes de livres neufs"
     isq_table_id: "2342"

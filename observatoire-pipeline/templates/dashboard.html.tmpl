@@ -402,6 +402,68 @@ a{color:inherit;text-decoration:none}
 }
 .l2-method-note strong{color:var(--cb-400);font-weight:700}
 
+/* LENTILLE 1b DEMANDE MARCHÉ — Deux cards (tension + salaire offert) */
+.lentille1b-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(360px,1fr));gap:18px}
+.l1b-card{
+  background:var(--surface);
+  border-radius:var(--radius);
+  padding:20px 22px;
+  box-shadow:var(--shadow-sm);
+  border:1px solid var(--border);
+  border-left:4px solid var(--bb-500);
+  display:flex;flex-direction:column;gap:12px;
+  transition:transform 0.2s,box-shadow 0.2s;
+}
+.l1b-card:hover{transform:translateY(-1px);box-shadow:var(--shadow-md)}
+.l1b-card.tension{border-left-color:var(--bo-500)}
+.l1b-card.salaire{border-left-color:var(--bb-500)}
+.l1b-row{
+  display:grid;grid-template-columns:60px 1fr 70px 80px;
+  gap:10px;align-items:center;padding:7px 0;
+  border-bottom:1px solid var(--border);
+}
+.l1b-row:last-child{border-bottom:none}
+.l1b-row.absent{opacity:0.5}
+.l1b-row .scian{font-family:'Nunito',sans-serif;font-weight:700;font-size:11.5px;color:var(--cb-300);text-align:center;background:var(--cb-900);padding:3px 0;border-radius:4px}
+.l1b-row .libelle{font-size:12px;color:var(--text-muted);line-height:1.3}
+.l1b-row .metric{font-family:'Nunito',sans-serif;font-weight:700;font-size:14px;color:var(--cb-300);text-align:right}
+.l1b-row .bar-cell{position:relative;height:18px;background:#f0f2f5;border-radius:9px;overflow:hidden}
+.l1b-row .bar-fill{
+  position:absolute;left:0;top:0;bottom:0;
+  border-radius:9px;
+  display:flex;align-items:center;justify-content:flex-end;padding-right:6px;
+  font-size:10.5px;font-weight:700;color:#fff;
+}
+.l1b-row .bar-fill.tension-elevee{background:var(--bo-500)}
+.l1b-row .bar-fill.tension-modere{background:var(--hb-400)}
+.l1b-row .bar-fill.tension-faible{background:var(--sr-400)}
+.l1b-row .bar-fill.tension-na{background:var(--text-soft)}
+.l1b-row .bar-fill.sal-eleve{background:var(--bb-500)}
+.l1b-row .bar-fill.sal-moyen{background:var(--sr-400)}
+.l1b-row .bar-fill.sal-bas{background:var(--cb-700)}
+.l1b-table-head{
+  display:grid;grid-template-columns:60px 1fr 70px 80px;gap:10px;
+  font-size:10px;text-transform:uppercase;letter-spacing:0.06em;font-weight:700;
+  color:var(--text-soft);padding-bottom:6px;border-bottom:2px solid var(--border);
+}
+.l1b-table-head .h-libelle{text-align:left}
+.l1b-table-head .h-bar{text-align:left}
+.l1b-table-head .h-val{text-align:right}
+.l1b-legend{display:flex;gap:14px;flex-wrap:wrap;font-size:11px;color:var(--text-muted);margin-top:8px}
+.l1b-legend-item{display:inline-flex;align-items:center;gap:6px}
+.l1b-legend-dot{display:inline-block;width:10px;height:10px;border-radius:50%}
+.l1b-legend-dot.tension-elevee{background:var(--bo-500)}
+.l1b-legend-dot.tension-modere{background:var(--hb-400)}
+.l1b-legend-dot.tension-faible{background:var(--sr-400)}
+.l1b-method-note{
+  margin-top:16px;padding:12px 18px;
+  background:#f5f7fb;
+  border:1px solid var(--border);
+  border-radius:var(--radius-sm);
+  font-size:11.5px;line-height:1.55;color:var(--text-muted);
+}
+.l1b-method-note strong{color:var(--cb-400);font-weight:700}
+
 /* TIMELINE */
 .timeline-wrap{
   background:var(--surface);border-radius:var(--radius);padding:24px 28px;
@@ -615,6 +677,10 @@ a{color:inherit;text-decoration:none}
     <a href="#lentille2" data-section="lentille2">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/></svg>
       Lentille 2 — usage révélé <span class="nav-num">2</span>
+    </a>
+    <a href="#lentille1b" data-section="lentille1b">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M7 14l4-4 4 4 5-5"/></svg>
+      Lentille 1b — demande marché <span class="nav-num">2</span>
     </a>
     <a href="#vue-ensemble" class="active" data-section="vue-ensemble">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
@@ -934,6 +1000,72 @@ a{color:inherit;text-decoration:none}
 
       <div class="l2-method-note">
         <strong>Caveats à connaître.</strong> Trois limites de la lentille 2 sur cette release. <strong>1)</strong> Granularité géographique&nbsp;: Canada national, pas de coupe Québec dans la release Anthropic. <strong>2)</strong> Aucune ventilation collaboration par tâche au Canada (l'intersection <code>onet_task::collaboration</code> n'est exposée par Anthropic que pour la géographie <code>GLOBAL</code>, filtre vie privée). Le ratio productif/apprentissage est donc agrégé toutes tâches confondues. <strong>3)</strong> Une seule semaine d'observation&nbsp;; pas de tendance temporelle possible avec ce seul fichier. Pour suivre l'évolution, il faudra intégrer les releases futures de l'AEI au fil de leur publication trimestrielle.
+      </div>
+    </section>
+
+    <!-- LENTILLE 1b DEMANDE MARCHÉ — Dérivation auxiliaire hors protocole -->
+    <section id="lentille1b" class="section">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title"><span class="star">⊜</span>Lentille 1b &mdash; demande marché (postes vacants Québec)</h2>
+          <p class="section-sub">Ce que les employeurs québécois cherchent à embaucher dans les industries culturelles, à quel taux de vacance et à quel salaire offert. Source&nbsp;: Statistique Canada, Enquête sur les postes vacants et les salaires (CANSIM 14-10-0442), moyennes des 5 derniers trimestres (Q1 2025 → Q1 2026).</p>
+        </div>
+      </div>
+
+      <div class="l3-statut-banner">
+        <strong>Dérivation auxiliaire &mdash; hors protocole.</strong> Cette section présente la sous-lentille 1b «&nbsp;demande marché&nbsp;» de la méthode AI-exposure. Elle n'est pas un repère gelé du Protocole v1.1.0. Granularité SCIAN 3 chiffres (sous-secteur), intermédiaire entre les effectifs ISQ niveau 4 (lentille 3) et la rémunération EERH niveau 2. Donnée auditable&nbsp;: clé <code>lentille_1b_demande_marche</code> dans <a href="reperes_2025.json" target="_blank" rel="noopener">reperes_2025.json</a>.
+      </div>
+
+      <div class="lentille1b-grid">
+
+        <!-- L1b card 1 : Tension de marché (taux de postes vacants) -->
+        <div class="l1b-card tension">
+          <div class="l2-card-head">
+            <div>
+              <div class="l2-card-title">Tension de marché &mdash; taux de postes vacants</div>
+              <div class="l2-card-sub">Ratio postes vacants sur (postes vacants + employés salariés) — moyenne 5 trimestres</div>
+            </div>
+            <span class="l2-card-badge">Q1 2025 → Q1 2026</span>
+          </div>
+
+          <div class="l1b-table-head">
+            <div></div>
+            <div class="h-libelle">Sous-secteur SCIAN</div>
+            <div class="h-bar">Tension</div>
+            <div class="h-val">Taux</div>
+          </div>
+          <div id="l1b-tension-rows"></div>
+
+          <div class="l1b-legend">
+            <span class="l1b-legend-item"><span class="l1b-legend-dot tension-elevee"></span>Tension élevée (≥ 4 %)</span>
+            <span class="l1b-legend-item"><span class="l1b-legend-dot tension-modere"></span>Modérée (2-4 %)</span>
+            <span class="l1b-legend-item"><span class="l1b-legend-dot tension-faible"></span>Faible (&lt; 2 %)</span>
+          </div>
+        </div>
+
+        <!-- L1b card 2 : Salaire horaire offert -->
+        <div class="l1b-card salaire">
+          <div class="l2-card-head">
+            <div>
+              <div class="l2-card-title">Salaire horaire offert &mdash; moyenne par secteur</div>
+              <div class="l2-card-sub">Salaire $/h affiché dans les postes vacants — moyenne 5 trimestres</div>
+            </div>
+            <span class="l2-card-badge">Q1 2025 → Q1 2026</span>
+          </div>
+
+          <div class="l1b-table-head">
+            <div></div>
+            <div class="h-libelle">Sous-secteur SCIAN</div>
+            <div class="h-bar">Salaire relatif</div>
+            <div class="h-val">$/h</div>
+          </div>
+          <div id="l1b-salaire-rows"></div>
+        </div>
+
+      </div>
+
+      <div class="l1b-method-note">
+        <strong>Caveats.</strong> <strong>1)</strong> Le salaire affiché est celui que l'employeur <em>offre</em> dans le poste vacant, pas celui effectivement versé aux salariés en place (mesuré par la lentille 3 EERH). L'écart entre les deux est lui-même un signal de tension salariale, à explorer dans une itération ultérieure. <strong>2)</strong> Granularité SCIAN 3 chiffres. SCIAN 515 (Radiotélévision hors Internet) archivé chez StatCan, série non disponible. <strong>3)</strong> Données non désaisonnalisées&nbsp;; les comparaisons trimestre par trimestre sont sensibles aux effets saisonniers (les arts d'interprétation, par exemple, recrutent plus en été). Les moyennes 5 trimestres lissent partiellement cet effet.
       </div>
     </section>
 
@@ -1573,6 +1705,121 @@ const C = {
   };
   renderTasks('l2-tasks-coeur', crea.coeur_culturel);
   renderTasks('l2-tasks-contenu', crea.contenu_ecrit);
+})();
+
+// === LENTILLE 1b DEMANDE MARCHÉ — Population des deux cards (Québec JVWS) ===
+// La donnée vient de l'extracteur extract_job_vacancy_quebec (src/extract.py)
+// qui filtre la table CANSIM 14-10-0442 sur GÉO='Québec' et les 6 sous-secteurs
+// SCIAN culture (512, 513, 516, 519, 711, 712). Si la donnée est absente, la
+// section reste à l'état statique avec des « — ».
+(function(){
+  const L1b = D.reperes && D.reperes.lentille_1b_demande_marche;
+  if (!L1b || !L1b.secteurs) return;
+
+  const fmt = (n, dec) => (n == null) ? '—' : Number(n).toLocaleString('fr-CA',
+      {minimumFractionDigits: dec, maximumFractionDigits: dec});
+
+  // Classification des taux de postes vacants
+  function tensionClass(taux){
+    if (taux == null) return 'tension-na';
+    if (taux >= 4) return 'tension-elevee';
+    if (taux >= 2) return 'tension-modere';
+    return 'tension-faible';
+  }
+  // Classification salaire (relatif aux extrêmes du périmètre)
+  function salClass(sal, min, max){
+    if (sal == null || min == null || max == null) return 'sal-moyen';
+    const range = max - min;
+    if (range <= 0) return 'sal-moyen';
+    const pos = (sal - min) / range;
+    if (pos >= 0.66) return 'sal-eleve';
+    if (pos <= 0.33) return 'sal-bas';
+    return 'sal-moyen';
+  }
+
+  // Préparer les secteurs couverts (avec données)
+  const couverts = L1b.secteurs.filter(s => !s.statut || s.statut !== 'non_couvert');
+  const nonCouverts = L1b.secteurs.filter(s => s.statut === 'non_couvert');
+
+  // --- Card 1 : Tension de marché (trié par taux décroissant) ---
+  const tensionData = couverts.map(s => ({
+    code: s.code_scian,
+    libelle: s.libelle,
+    taux: s.moyennes_5_derniers_trimestres.taux_postes_vacants,
+  })).sort((a, b) => (b.taux || 0) - (a.taux || 0));
+
+  // Échelle de barre : max théorique 6 % pour le périmètre culture
+  const tauxMaxAffichage = 6;
+
+  const tensionEl = document.getElementById('l1b-tension-rows');
+  if (tensionEl) {
+    tensionEl.innerHTML = '';
+    tensionData.forEach(item => {
+      const row = document.createElement('div');
+      row.className = 'l1b-row' + (item.taux == null ? ' absent' : '');
+      const cls = tensionClass(item.taux);
+      const widthPct = item.taux == null ? 0 : Math.min(100, (item.taux / tauxMaxAffichage) * 100);
+      const label = item.taux == null ? '' : (Math.round(item.taux * 10) / 10).toString().replace('.', ',') + ' %';
+      row.innerHTML = `
+        <div class="scian">${item.code}</div>
+        <div class="libelle">${item.libelle.slice(0, 50)}</div>
+        <div class="bar-cell"><div class="bar-fill ${cls}" style="width:${widthPct}%">${widthPct >= 25 ? label : ''}</div></div>
+        <div class="metric">${item.taux == null ? '—' : fmt(item.taux, 1).replace('.', ',') + ' %'}</div>`;
+      tensionEl.appendChild(row);
+    });
+    // Lignes non couvertes en bas
+    nonCouverts.forEach(s => {
+      const row = document.createElement('div');
+      row.className = 'l1b-row absent';
+      row.innerHTML = `
+        <div class="scian">${s.code_scian}</div>
+        <div class="libelle">${s.libelle.slice(0, 50)} <em>(série archivée)</em></div>
+        <div class="bar-cell"></div>
+        <div class="metric">—</div>`;
+      tensionEl.appendChild(row);
+    });
+  }
+
+  // --- Card 2 : Salaire horaire offert (trié par salaire décroissant) ---
+  const salData = couverts.map(s => ({
+    code: s.code_scian,
+    libelle: s.libelle,
+    sal: s.moyennes_5_derniers_trimestres.salaire_horaire_offert,
+  })).sort((a, b) => (b.sal || 0) - (a.sal || 0));
+
+  const salValid = salData.map(d => d.sal).filter(v => v != null);
+  const salMin = salValid.length ? Math.min(...salValid) : null;
+  const salMax = salValid.length ? Math.max(...salValid) : null;
+  // Échelle barre : 0 à salMax + 5 $
+  const salBarMax = salMax ? salMax + 5 : 50;
+
+  const salaireEl = document.getElementById('l1b-salaire-rows');
+  if (salaireEl) {
+    salaireEl.innerHTML = '';
+    salData.forEach(item => {
+      const row = document.createElement('div');
+      row.className = 'l1b-row' + (item.sal == null ? ' absent' : '');
+      const cls = salClass(item.sal, salMin, salMax);
+      const widthPct = item.sal == null ? 0 : Math.min(100, (item.sal / salBarMax) * 100);
+      const label = item.sal == null ? '' : Math.round(item.sal) + ' $';
+      row.innerHTML = `
+        <div class="scian">${item.code}</div>
+        <div class="libelle">${item.libelle.slice(0, 50)}</div>
+        <div class="bar-cell"><div class="bar-fill ${cls}" style="width:${widthPct}%">${widthPct >= 30 ? label : ''}</div></div>
+        <div class="metric">${item.sal == null ? '—' : fmt(item.sal, 2).replace('.', ',') + ' $'}</div>`;
+      salaireEl.appendChild(row);
+    });
+    nonCouverts.forEach(s => {
+      const row = document.createElement('div');
+      row.className = 'l1b-row absent';
+      row.innerHTML = `
+        <div class="scian">${s.code_scian}</div>
+        <div class="libelle">${s.libelle.slice(0, 50)} <em>(série archivée)</em></div>
+        <div class="bar-cell"></div>
+        <div class="metric">—</div>`;
+      salaireEl.appendChild(row);
+    });
+  }
 })();
 
 // === SPARKLINES (SVG inline) ===

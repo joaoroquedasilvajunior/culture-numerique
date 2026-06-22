@@ -196,6 +196,45 @@ def test_remunerations_eerh_statcan_secteur_71_stable(raw_dir):
     assert abs(rem[2025]['valeur'] - rem[2024]['valeur']) < 10  # variation < 10 $
 
 
+def test_job_vacancy_quebec_perimetre(raw_dir):
+    """Sous-lentille 1b « demande marché » — JVWS Québec, 5 derniers trimestres.
+
+    Source : Statistique Canada CANSIM 14-10-0442 (diffusion 16 juin 2026).
+    Six SCIAN couverts (512, 513, 516, 519, 711, 712) ; SCIAN 515 archivé.
+    Pattern saillant : taux de postes vacants élevé sur [519] (5,0 %) vs faible
+    sur [516] (0,9 %). Salaire horaire offert le plus bas sur [712] patrimoine.
+    """
+    f = find_source_file(raw_dir, '14100442*.zip')
+    assert f is not None, "Dump CANSIM 14-10-0442 manquant"
+    data = extract.extract_job_vacancy_quebec(f)
+    assert data['tableau'] == '14-10-0442-01'
+    assert data['periode_max'] == '2026-01'
+    # Six SCIAN couverts + un non couvert
+    codes = {s['code_scian'] for s in data['secteurs']}
+    assert {'512', '513', '516', '519', '711', '712'}.issubset(codes)
+    # 515 doit apparaître marqué non couvert
+    s_515 = next(s for s in data['secteurs'] if s['code_scian'] == '515')
+    assert s_515.get('statut') == 'non_couvert'
+
+
+def test_job_vacancy_quebec_secteur_512_film(raw_dir):
+    """SCIAN 512 (Film et enregistrement sonore) — demande marché modérée,
+    salaire offert élevé. Moyenne 5 derniers trimestres : taux ≈ 1,3 %, salaire
+    horaire ≈ 41 $/h."""
+    f = find_source_file(raw_dir, '14100442*.zip')
+    data = extract.extract_job_vacancy_quebec(f)
+    s_512 = next(s for s in data['secteurs'] if s['code_scian'] == '512')
+    m = s_512['moyennes_5_derniers_trimestres']
+    assert m['n_trimestres'] == 5
+    # Note : round(1.325, 2) renvoie 1.32 en Python (banker's rounding)
+    assert m['taux_postes_vacants'] == 1.32
+    assert m['salaire_horaire_offert'] == 41.42
+    # La série trimestrielle doit couvrir 2015-01 → 2026-01
+    serie = s_512['serie_trimestrielle']
+    assert serie[0]['periode'] == '2015-01'
+    assert serie[-1]['periode'] == '2026-01'
+
+
 def test_aei_canada_collaboration_globale(raw_dir):
     """Lentille 2 « usage révélé » — collaboration Canada (semaine du 5-12 fév. 2026).
 

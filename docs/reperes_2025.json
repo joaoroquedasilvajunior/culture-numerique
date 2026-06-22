@@ -1,6 +1,6 @@
 {
   "annee": 2025,
-  "date_calcul": "2026-06-22T15:16:39",
+  "date_calcul": "2026-06-22T16:12:19",
   "protocole_version": "1.1.0",
   "reperes": {
     "r1_ecart_decouvrabilite": {
@@ -342,5 +342,1948 @@
       "n_taches_coeur_culturel": 7,
       "n_taches_contenu_ecrit": 6
     }
+  },
+  "lentille_1b_demande_marche": {
+    "statut": "auxiliaire_provisoire",
+    "note_statut": "Dérivation analytique hors protocole v1.1.0. Pas un repère gelé. Sert la sous-lentille 1b « demande marché » de l'analyse AI-exposure : ce que les employeurs québécois cherchent réellement à embaucher dans les industries culturelles, à quel salaire, à quel taux de vacance.",
+    "source": "Statistique Canada — CANSIM 14-10-0442 (Postes vacants, employés salariés, taux de postes vacants et salaire horaire offert moyen selon le sous-secteur SCIAN 3 chiffres, données trimestrielles non désaisonnalisées)",
+    "tableau": "14-10-0442-01",
+    "periode_min": "2015-01",
+    "periode_max": "2026-01",
+    "note_limites": "Granularité SCIAN 3 chiffres (sous-secteur), entre les effectifs ISQ niveau 4 et la rémunération EERH niveau 2. SCIAN 515 (Radiotélévision sauf par Internet) archivé côté ISQ comme côté StatCan, série non disponible. Données non désaisonnalisées — interpréter les variations trimestrielles avec prudence. La métrique « salaire horaire offert » correspond au salaire que l'employeur affiche dans le poste vacant, pas au salaire effectivement versé aux salariés en place.",
+    "secteurs": [
+      {
+        "code_scian": "512",
+        "libelle": "Industries du film et de l'enregistrement sonore",
+        "serie_trimestrielle": [
+          {
+            "periode": "2015-01",
+            "postes_vacants": null,
+            "employes_salaries": null,
+            "taux_postes_vacants": null,
+            "salaire_horaire_offert": 29.55
+          },
+          {
+            "periode": "2015-04",
+            "postes_vacants": null,
+            "employes_salaries": 20560.0,
+            "taux_postes_vacants": null,
+            "salaire_horaire_offert": 25.2
+          },
+          {
+            "periode": "2015-07",
+            "postes_vacants": null,
+            "employes_salaries": 18735.0,
+            "taux_postes_vacants": 1.5,
+            "salaire_horaire_offert": 22.0
+          },
+          {
+            "periode": "2015-10",
+            "postes_vacants": null,
+            "employes_salaries": 15880.0,
+            "taux_postes_vacants": 2.4,
+            "salaire_horaire_offert": 25.35
+          },
+          {
+            "periode": "2016-01",
+            "postes_vacants": null,
+            "employes_salaries": 14380.0,
+            "taux_postes_vacants": 2.4,
+            "salaire_horaire_offert": 24.35
+          },
+          {
+            "periode": "2016-04",
+            "postes_vacants": 195.0,
+            "employes_salaries": 14880.0,
+            "taux_postes_vacants": 1.3,
+            "salaire_horaire_offert": 21.0
+          },
+          {
+            "periode": "2016-07",
+            "postes_vacants": 320.0,
+            "employes_salaries": 14705.0,
+            "taux_postes_vacants": 2.1,
+            "salaire_horaire_offert": 27.05
+          },
+          {
+            "periode": "2016-10",
+            "postes_vacants": 530.0,
+            "employes_salaries": 15425.0,
+            "taux_postes_vacants": 3.3,
+            "salaire_horaire_offert": 20.55
+          },
+          {
+            "periode": "2017-01",
+            "postes_vacants": 490.0,
+            "employes_salaries": 13390.0,
+            "taux_postes_vacants": 3.5,
+            "salaire_horaire_offert": 27.45
+          },
+          {
+            "periode": "2017-04",
+            "postes_vacants": 320.0,
+            "employes_salaries": 13730.0,
+            "taux_postes_vacants": 2.3,
+            "salaire_horaire_offert": 28.2
+          },
+          {
+            "periode": "2017-07",
+            "postes_vacants": 585.0,
+            "employes_salaries": 16415.0,
+            "taux_postes_vacants": 3.4,
+            "salaire_horaire_offert": 27.65
+          },
+          {
+            "periode": "2017-10",
+            "postes_vacants": 725.0,
+            "employes_salaries": 14115.0,
+            "taux_postes_vacants": 4.9,
+            "salaire_horaire_offert": 26.3
+          },
+          {
+            "periode": "2018-01",
+            "postes_vacants": 835.0,
+            "employes_salaries": 11190.0,
+            "taux_postes_vacants": 6.9,
+            "salaire_horaire_offert": 28.65
+          },
+          {
+            "periode": "2018-04",
+            "postes_vacants": 340.0,
+            "employes_salaries": 13825.0,
+            "taux_postes_vacants": 2.4,
+            "salaire_horaire_offert": 28.25
+          },
+          {
+            "periode": "2018-07",
+            "postes_vacants": 670.0,
+            "employes_salaries": 11355.0,
+            "taux_postes_vacants": 5.6,
+            "salaire_horaire_offert": 24.75
+          },
+          {
+            "periode": "2018-10",
+            "postes_vacants": 630.0,
+            "employes_salaries": 12470.0,
+            "taux_postes_vacants": 4.8,
+            "salaire_horaire_offert": 28.35
+          },
+          {
+            "periode": "2019-01",
+            "postes_vacants": 1155.0,
+            "employes_salaries": 13650.0,
+            "taux_postes_vacants": 7.8,
+            "salaire_horaire_offert": 26.1
+          },
+          {
+            "periode": "2019-04",
+            "postes_vacants": 630.0,
+            "employes_salaries": 14210.0,
+            "taux_postes_vacants": 4.2,
+            "salaire_horaire_offert": 25.75
+          },
+          {
+            "periode": "2019-07",
+            "postes_vacants": 700.0,
+            "employes_salaries": 14305.0,
+            "taux_postes_vacants": 4.7,
+            "salaire_horaire_offert": 24.0
+          },
+          {
+            "periode": "2019-10",
+            "postes_vacants": 590.0,
+            "employes_salaries": 15110.0,
+            "taux_postes_vacants": 3.7,
+            "salaire_horaire_offert": 28.15
+          },
+          {
+            "periode": "2020-01",
+            "postes_vacants": 610.0,
+            "employes_salaries": 13545.0,
+            "taux_postes_vacants": 4.3,
+            "salaire_horaire_offert": 32.1
+          },
+          {
+            "periode": "2020-10",
+            "postes_vacants": 440.0,
+            "employes_salaries": 14335.0,
+            "taux_postes_vacants": 3.0,
+            "salaire_horaire_offert": 27.7
+          },
+          {
+            "periode": "2021-01",
+            "postes_vacants": 895.0,
+            "employes_salaries": 13095.0,
+            "taux_postes_vacants": 6.4,
+            "salaire_horaire_offert": 24.6
+          },
+          {
+            "periode": "2021-04",
+            "postes_vacants": 585.0,
+            "employes_salaries": 13745.0,
+            "taux_postes_vacants": 4.1,
+            "salaire_horaire_offert": 31.2
+          },
+          {
+            "periode": "2021-07",
+            "postes_vacants": 1265.0,
+            "employes_salaries": 14675.0,
+            "taux_postes_vacants": 7.9,
+            "salaire_horaire_offert": 31.05
+          },
+          {
+            "periode": "2021-10",
+            "postes_vacants": 890.0,
+            "employes_salaries": 14820.0,
+            "taux_postes_vacants": 5.7,
+            "salaire_horaire_offert": 29.7
+          },
+          {
+            "periode": "2022-01",
+            "postes_vacants": 645.0,
+            "employes_salaries": 14845.0,
+            "taux_postes_vacants": 4.2,
+            "salaire_horaire_offert": 31.3
+          },
+          {
+            "periode": "2022-04",
+            "postes_vacants": 1415.0,
+            "employes_salaries": 20595.0,
+            "taux_postes_vacants": 6.4,
+            "salaire_horaire_offert": 30.3
+          },
+          {
+            "periode": "2022-07",
+            "postes_vacants": null,
+            "employes_salaries": 15455.0,
+            "taux_postes_vacants": 7.7,
+            "salaire_horaire_offert": 29.8
+          },
+          {
+            "periode": "2022-10",
+            "postes_vacants": 980.0,
+            "employes_salaries": 19555.0,
+            "taux_postes_vacants": 4.8,
+            "salaire_horaire_offert": 33.7
+          },
+          {
+            "periode": "2023-01",
+            "postes_vacants": 1280.0,
+            "employes_salaries": 20875.0,
+            "taux_postes_vacants": 5.8,
+            "salaire_horaire_offert": 32.25
+          },
+          {
+            "periode": "2023-04",
+            "postes_vacants": 450.0,
+            "employes_salaries": 20145.0,
+            "taux_postes_vacants": 2.2,
+            "salaire_horaire_offert": 34.5
+          },
+          {
+            "periode": "2023-07",
+            "postes_vacants": null,
+            "employes_salaries": 16210.0,
+            "taux_postes_vacants": null,
+            "salaire_horaire_offert": 21.75
+          },
+          {
+            "periode": "2023-10",
+            "postes_vacants": 275.0,
+            "employes_salaries": 16960.0,
+            "taux_postes_vacants": 1.6,
+            "salaire_horaire_offert": 26.6
+          },
+          {
+            "periode": "2024-01",
+            "postes_vacants": 255.0,
+            "employes_salaries": 15585.0,
+            "taux_postes_vacants": 1.6,
+            "salaire_horaire_offert": 31.75
+          },
+          {
+            "periode": "2024-04",
+            "postes_vacants": 150.0,
+            "employes_salaries": 14580.0,
+            "taux_postes_vacants": 1.0,
+            "salaire_horaire_offert": 33.5
+          },
+          {
+            "periode": "2024-07",
+            "postes_vacants": 215.0,
+            "employes_salaries": 14880.0,
+            "taux_postes_vacants": 1.4,
+            "salaire_horaire_offert": 36.7
+          },
+          {
+            "periode": "2024-10",
+            "postes_vacants": 200.0,
+            "employes_salaries": 18060.0,
+            "taux_postes_vacants": 1.1,
+            "salaire_horaire_offert": 37.75
+          },
+          {
+            "periode": "2025-01",
+            "postes_vacants": 265.0,
+            "employes_salaries": 15460.0,
+            "taux_postes_vacants": 1.7,
+            "salaire_horaire_offert": 37.15
+          },
+          {
+            "periode": "2025-04",
+            "postes_vacants": 110.0,
+            "employes_salaries": 13840.0,
+            "taux_postes_vacants": 0.8,
+            "salaire_horaire_offert": 38.05
+          },
+          {
+            "periode": "2025-07",
+            "postes_vacants": null,
+            "employes_salaries": 19050.0,
+            "taux_postes_vacants": null,
+            "salaire_horaire_offert": 47.9
+          },
+          {
+            "periode": "2025-10",
+            "postes_vacants": null,
+            "employes_salaries": 20525.0,
+            "taux_postes_vacants": 1.3,
+            "salaire_horaire_offert": 46.05
+          },
+          {
+            "periode": "2026-01",
+            "postes_vacants": 220.0,
+            "employes_salaries": 14355.0,
+            "taux_postes_vacants": 1.5,
+            "salaire_horaire_offert": 37.95
+          }
+        ],
+        "moyennes_5_derniers_trimestres": {
+          "postes_vacants": 198.33,
+          "employes_salaries": 16646.0,
+          "taux_postes_vacants": 1.32,
+          "salaire_horaire_offert": 41.42,
+          "n_trimestres": 5,
+          "periodes_couvertes": [
+            "2025-01",
+            "2025-04",
+            "2025-07",
+            "2025-10",
+            "2026-01"
+          ]
+        }
+      },
+      {
+        "code_scian": "513",
+        "libelle": "Édition",
+        "serie_trimestrielle": [
+          {
+            "periode": "2015-01",
+            "postes_vacants": 690.0,
+            "employes_salaries": 31280.0,
+            "taux_postes_vacants": 2.2,
+            "salaire_horaire_offert": 30.3
+          },
+          {
+            "periode": "2015-04",
+            "postes_vacants": 1020.0,
+            "employes_salaries": 29035.0,
+            "taux_postes_vacants": 3.4,
+            "salaire_horaire_offert": 25.25
+          },
+          {
+            "periode": "2015-07",
+            "postes_vacants": 675.0,
+            "employes_salaries": 25320.0,
+            "taux_postes_vacants": 2.6,
+            "salaire_horaire_offert": 28.95
+          },
+          {
+            "periode": "2015-10",
+            "postes_vacants": 465.0,
+            "employes_salaries": 18095.0,
+            "taux_postes_vacants": 2.5,
+            "salaire_horaire_offert": 27.15
+          },
+          {
+            "periode": "2016-01",
+            "postes_vacants": 420.0,
+            "employes_salaries": 14230.0,
+            "taux_postes_vacants": 2.9,
+            "salaire_horaire_offert": 28.3
+          },
+          {
+            "periode": "2016-04",
+            "postes_vacants": 560.0,
+            "employes_salaries": 17530.0,
+            "taux_postes_vacants": 3.1,
+            "salaire_horaire_offert": 26.9
+          },
+          {
+            "periode": "2016-07",
+            "postes_vacants": 675.0,
+            "employes_salaries": 22810.0,
+            "taux_postes_vacants": 2.9,
+            "salaire_horaire_offert": 28.4
+          },
+          {
+            "periode": "2016-10",
+            "postes_vacants": 670.0,
+            "employes_salaries": 27210.0,
+            "taux_postes_vacants": 2.4,
+            "salaire_horaire_offert": 29.25
+          },
+          {
+            "periode": "2017-01",
+            "postes_vacants": 375.0,
+            "employes_salaries": 15770.0,
+            "taux_postes_vacants": 2.3,
+            "salaire_horaire_offert": 28.0
+          },
+          {
+            "periode": "2017-04",
+            "postes_vacants": 475.0,
+            "employes_salaries": 17170.0,
+            "taux_postes_vacants": 2.7,
+            "salaire_horaire_offert": 29.8
+          },
+          {
+            "periode": "2017-07",
+            "postes_vacants": 500.0,
+            "employes_salaries": 18805.0,
+            "taux_postes_vacants": 2.6,
+            "salaire_horaire_offert": 29.5
+          },
+          {
+            "periode": "2017-10",
+            "postes_vacants": 490.0,
+            "employes_salaries": 17205.0,
+            "taux_postes_vacants": 2.8,
+            "salaire_horaire_offert": 29.4
+          },
+          {
+            "periode": "2018-01",
+            "postes_vacants": 810.0,
+            "employes_salaries": 20320.0,
+            "taux_postes_vacants": 3.8,
+            "salaire_horaire_offert": 29.8
+          },
+          {
+            "periode": "2018-04",
+            "postes_vacants": 985.0,
+            "employes_salaries": 22160.0,
+            "taux_postes_vacants": 4.2,
+            "salaire_horaire_offert": 30.8
+          },
+          {
+            "periode": "2018-07",
+            "postes_vacants": 1065.0,
+            "employes_salaries": 21150.0,
+            "taux_postes_vacants": 4.8,
+            "salaire_horaire_offert": 32.4
+          },
+          {
+            "periode": "2018-10",
+            "postes_vacants": 745.0,
+            "employes_salaries": 18810.0,
+            "taux_postes_vacants": 3.8,
+            "salaire_horaire_offert": 32.15
+          },
+          {
+            "periode": "2019-01",
+            "postes_vacants": 730.0,
+            "employes_salaries": 15885.0,
+            "taux_postes_vacants": 4.4,
+            "salaire_horaire_offert": 31.0
+          },
+          {
+            "periode": "2019-04",
+            "postes_vacants": 725.0,
+            "employes_salaries": 19570.0,
+            "taux_postes_vacants": 3.6,
+            "salaire_horaire_offert": 30.0
+          },
+          {
+            "periode": "2019-07",
+            "postes_vacants": 1060.0,
+            "employes_salaries": 21965.0,
+            "taux_postes_vacants": 4.6,
+            "salaire_horaire_offert": 30.25
+          },
+          {
+            "periode": "2019-10",
+            "postes_vacants": 1245.0,
+            "employes_salaries": 19755.0,
+            "taux_postes_vacants": 5.9,
+            "salaire_horaire_offert": 32.2
+          },
+          {
+            "periode": "2020-01",
+            "postes_vacants": 895.0,
+            "employes_salaries": 19010.0,
+            "taux_postes_vacants": 4.5,
+            "salaire_horaire_offert": 29.9
+          },
+          {
+            "periode": "2020-10",
+            "postes_vacants": 645.0,
+            "employes_salaries": 19355.0,
+            "taux_postes_vacants": 3.2,
+            "salaire_horaire_offert": 31.95
+          },
+          {
+            "periode": "2021-01",
+            "postes_vacants": 770.0,
+            "employes_salaries": 19845.0,
+            "taux_postes_vacants": 3.7,
+            "salaire_horaire_offert": 30.05
+          },
+          {
+            "periode": "2021-04",
+            "postes_vacants": 870.0,
+            "employes_salaries": 19230.0,
+            "taux_postes_vacants": 4.3,
+            "salaire_horaire_offert": 35.35
+          },
+          {
+            "periode": "2021-07",
+            "postes_vacants": 1150.0,
+            "employes_salaries": 23130.0,
+            "taux_postes_vacants": 4.7,
+            "salaire_horaire_offert": 31.9
+          },
+          {
+            "periode": "2021-10",
+            "postes_vacants": 1170.0,
+            "employes_salaries": 22510.0,
+            "taux_postes_vacants": 4.9,
+            "salaire_horaire_offert": 34.95
+          },
+          {
+            "periode": "2022-01",
+            "postes_vacants": 1195.0,
+            "employes_salaries": 21610.0,
+            "taux_postes_vacants": 5.2,
+            "salaire_horaire_offert": 35.05
+          },
+          {
+            "periode": "2022-04",
+            "postes_vacants": 1270.0,
+            "employes_salaries": 23090.0,
+            "taux_postes_vacants": 5.2,
+            "salaire_horaire_offert": 35.5
+          },
+          {
+            "periode": "2022-07",
+            "postes_vacants": 1100.0,
+            "employes_salaries": 18910.0,
+            "taux_postes_vacants": 5.5,
+            "salaire_horaire_offert": 35.3
+          },
+          {
+            "periode": "2022-10",
+            "postes_vacants": 895.0,
+            "employes_salaries": 20590.0,
+            "taux_postes_vacants": 4.2,
+            "salaire_horaire_offert": 34.4
+          },
+          {
+            "periode": "2023-01",
+            "postes_vacants": 600.0,
+            "employes_salaries": 17800.0,
+            "taux_postes_vacants": 3.3,
+            "salaire_horaire_offert": 37.6
+          },
+          {
+            "periode": "2023-04",
+            "postes_vacants": 540.0,
+            "employes_salaries": 17035.0,
+            "taux_postes_vacants": 3.1,
+            "salaire_horaire_offert": 32.75
+          },
+          {
+            "periode": "2023-07",
+            "postes_vacants": 485.0,
+            "employes_salaries": 17885.0,
+            "taux_postes_vacants": 2.6,
+            "salaire_horaire_offert": 35.3
+          },
+          {
+            "periode": "2023-10",
+            "postes_vacants": 520.0,
+            "employes_salaries": 18025.0,
+            "taux_postes_vacants": 2.8,
+            "salaire_horaire_offert": 36.55
+          },
+          {
+            "periode": "2024-01",
+            "postes_vacants": 560.0,
+            "employes_salaries": 15665.0,
+            "taux_postes_vacants": 3.4,
+            "salaire_horaire_offert": 39.35
+          },
+          {
+            "periode": "2024-04",
+            "postes_vacants": 620.0,
+            "employes_salaries": 18960.0,
+            "taux_postes_vacants": 3.2,
+            "salaire_horaire_offert": 39.95
+          },
+          {
+            "periode": "2024-07",
+            "postes_vacants": 385.0,
+            "employes_salaries": 20785.0,
+            "taux_postes_vacants": 1.8,
+            "salaire_horaire_offert": 41.55
+          },
+          {
+            "periode": "2024-10",
+            "postes_vacants": 480.0,
+            "employes_salaries": 18800.0,
+            "taux_postes_vacants": 2.5,
+            "salaire_horaire_offert": 40.15
+          },
+          {
+            "periode": "2025-01",
+            "postes_vacants": 520.0,
+            "employes_salaries": 17885.0,
+            "taux_postes_vacants": 2.8,
+            "salaire_horaire_offert": 37.55
+          },
+          {
+            "periode": "2025-04",
+            "postes_vacants": 450.0,
+            "employes_salaries": 18780.0,
+            "taux_postes_vacants": 2.3,
+            "salaire_horaire_offert": 34.6
+          },
+          {
+            "periode": "2025-07",
+            "postes_vacants": 415.0,
+            "employes_salaries": 16350.0,
+            "taux_postes_vacants": 2.5,
+            "salaire_horaire_offert": 36.7
+          },
+          {
+            "periode": "2025-10",
+            "postes_vacants": 440.0,
+            "employes_salaries": 16465.0,
+            "taux_postes_vacants": 2.6,
+            "salaire_horaire_offert": 40.2
+          },
+          {
+            "periode": "2026-01",
+            "postes_vacants": 475.0,
+            "employes_salaries": 18065.0,
+            "taux_postes_vacants": 2.6,
+            "salaire_horaire_offert": 43.45
+          }
+        ],
+        "moyennes_5_derniers_trimestres": {
+          "postes_vacants": 460.0,
+          "employes_salaries": 17509.0,
+          "taux_postes_vacants": 2.56,
+          "salaire_horaire_offert": 38.5,
+          "n_trimestres": 5,
+          "periodes_couvertes": [
+            "2025-01",
+            "2025-04",
+            "2025-07",
+            "2025-10",
+            "2026-01"
+          ]
+        }
+      },
+      {
+        "code_scian": "515",
+        "libelle": "Radiotélévision (sauf par Internet)",
+        "statut": "non_couvert",
+        "note": "Aucune observation disponible pour SCIAN [515] au Québec dans la table."
+      },
+      {
+        "code_scian": "516",
+        "libelle": "Radiotélévision et fournisseurs de contenu par Internet",
+        "serie_trimestrielle": [
+          {
+            "periode": "2015-01",
+            "postes_vacants": null,
+            "employes_salaries": null,
+            "taux_postes_vacants": null,
+            "salaire_horaire_offert": null
+          },
+          {
+            "periode": "2015-04",
+            "postes_vacants": null,
+            "employes_salaries": null,
+            "taux_postes_vacants": null,
+            "salaire_horaire_offert": null
+          },
+          {
+            "periode": "2015-07",
+            "postes_vacants": 90.0,
+            "employes_salaries": null,
+            "taux_postes_vacants": 0.8,
+            "salaire_horaire_offert": 26.55
+          },
+          {
+            "periode": "2015-10",
+            "postes_vacants": null,
+            "employes_salaries": 9340.0,
+            "taux_postes_vacants": null,
+            "salaire_horaire_offert": 21.45
+          },
+          {
+            "periode": "2016-01",
+            "postes_vacants": 60.0,
+            "employes_salaries": null,
+            "taux_postes_vacants": 0.7,
+            "salaire_horaire_offert": 24.8
+          },
+          {
+            "periode": "2016-04",
+            "postes_vacants": 150.0,
+            "employes_salaries": 18870.0,
+            "taux_postes_vacants": 0.8,
+            "salaire_horaire_offert": 23.25
+          },
+          {
+            "periode": "2016-07",
+            "postes_vacants": 75.0,
+            "employes_salaries": 15180.0,
+            "taux_postes_vacants": 0.5,
+            "salaire_horaire_offert": 20.7
+          },
+          {
+            "periode": "2016-10",
+            "postes_vacants": 120.0,
+            "employes_salaries": 13370.0,
+            "taux_postes_vacants": 0.9,
+            "salaire_horaire_offert": 27.55
+          },
+          {
+            "periode": "2017-01",
+            "postes_vacants": 180.0,
+            "employes_salaries": 11160.0,
+            "taux_postes_vacants": 1.6,
+            "salaire_horaire_offert": 25.85
+          },
+          {
+            "periode": "2017-04",
+            "postes_vacants": 215.0,
+            "employes_salaries": 11210.0,
+            "taux_postes_vacants": 1.9,
+            "salaire_horaire_offert": 30.15
+          },
+          {
+            "periode": "2017-07",
+            "postes_vacants": null,
+            "employes_salaries": 10040.0,
+            "taux_postes_vacants": 0.8,
+            "salaire_horaire_offert": 21.55
+          },
+          {
+            "periode": "2017-10",
+            "postes_vacants": 155.0,
+            "employes_salaries": 12270.0,
+            "taux_postes_vacants": 1.3,
+            "salaire_horaire_offert": 26.9
+          },
+          {
+            "periode": "2018-01",
+            "postes_vacants": null,
+            "employes_salaries": 13920.0,
+            "taux_postes_vacants": null,
+            "salaire_horaire_offert": null
+          },
+          {
+            "periode": "2018-04",
+            "postes_vacants": null,
+            "employes_salaries": 11835.0,
+            "taux_postes_vacants": null,
+            "salaire_horaire_offert": 27.8
+          },
+          {
+            "periode": "2018-07",
+            "postes_vacants": 230.0,
+            "employes_salaries": 11985.0,
+            "taux_postes_vacants": 1.9,
+            "salaire_horaire_offert": 26.25
+          },
+          {
+            "periode": "2018-10",
+            "postes_vacants": 205.0,
+            "employes_salaries": 9985.0,
+            "taux_postes_vacants": 2.0,
+            "salaire_horaire_offert": 28.7
+          },
+          {
+            "periode": "2019-01",
+            "postes_vacants": 185.0,
+            "employes_salaries": 10605.0,
+            "taux_postes_vacants": 1.7,
+            "salaire_horaire_offert": 24.2
+          },
+          {
+            "periode": "2019-04",
+            "postes_vacants": 175.0,
+            "employes_salaries": 9490.0,
+            "taux_postes_vacants": 1.8,
+            "salaire_horaire_offert": 23.05
+          },
+          {
+            "periode": "2019-07",
+            "postes_vacants": 135.0,
+            "employes_salaries": 9120.0,
+            "taux_postes_vacants": 1.5,
+            "salaire_horaire_offert": 23.75
+          },
+          {
+            "periode": "2019-10",
+            "postes_vacants": 130.0,
+            "employes_salaries": 10125.0,
+            "taux_postes_vacants": 1.3,
+            "salaire_horaire_offert": 34.4
+          },
+          {
+            "periode": "2020-01",
+            "postes_vacants": 145.0,
+            "employes_salaries": 9165.0,
+            "taux_postes_vacants": 1.6,
+            "salaire_horaire_offert": 23.95
+          },
+          {
+            "periode": "2020-10",
+            "postes_vacants": 200.0,
+            "employes_salaries": 8745.0,
+            "taux_postes_vacants": 2.3,
+            "salaire_horaire_offert": 30.25
+          },
+          {
+            "periode": "2021-01",
+            "postes_vacants": 180.0,
+            "employes_salaries": 8690.0,
+            "taux_postes_vacants": 2.0,
+            "salaire_horaire_offert": 27.25
+          },
+          {
+            "periode": "2021-04",
+            "postes_vacants": null,
+            "employes_salaries": 11070.0,
+            "taux_postes_vacants": null,
+            "salaire_horaire_offert": null
+          },
+          {
+            "periode": "2021-07",
+            "postes_vacants": 295.0,
+            "employes_salaries": 11655.0,
+            "taux_postes_vacants": 2.5,
+            "salaire_horaire_offert": 25.85
+          },
+          {
+            "periode": "2021-10",
+            "postes_vacants": 300.0,
+            "employes_salaries": 10430.0,
+            "taux_postes_vacants": 2.8,
+            "salaire_horaire_offert": 28.8
+          },
+          {
+            "periode": "2022-01",
+            "postes_vacants": 300.0,
+            "employes_salaries": 13520.0,
+            "taux_postes_vacants": 2.2,
+            "salaire_horaire_offert": 32.2
+          },
+          {
+            "periode": "2022-04",
+            "postes_vacants": 270.0,
+            "employes_salaries": 15445.0,
+            "taux_postes_vacants": 1.7,
+            "salaire_horaire_offert": 33.3
+          },
+          {
+            "periode": "2022-07",
+            "postes_vacants": 280.0,
+            "employes_salaries": null,
+            "taux_postes_vacants": 1.9,
+            "salaire_horaire_offert": 30.5
+          },
+          {
+            "periode": "2022-10",
+            "postes_vacants": null,
+            "employes_salaries": null,
+            "taux_postes_vacants": 1.0,
+            "salaire_horaire_offert": 33.15
+          },
+          {
+            "periode": "2023-01",
+            "postes_vacants": 355.0,
+            "employes_salaries": 11015.0,
+            "taux_postes_vacants": 3.1,
+            "salaire_horaire_offert": 30.4
+          },
+          {
+            "periode": "2023-04",
+            "postes_vacants": 180.0,
+            "employes_salaries": 11595.0,
+            "taux_postes_vacants": 1.5,
+            "salaire_horaire_offert": 35.7
+          },
+          {
+            "periode": "2023-07",
+            "postes_vacants": null,
+            "employes_salaries": null,
+            "taux_postes_vacants": null,
+            "salaire_horaire_offert": 39.55
+          },
+          {
+            "periode": "2023-10",
+            "postes_vacants": 135.0,
+            "employes_salaries": 12730.0,
+            "taux_postes_vacants": 1.0,
+            "salaire_horaire_offert": 30.25
+          },
+          {
+            "periode": "2024-01",
+            "postes_vacants": 135.0,
+            "employes_salaries": 12415.0,
+            "taux_postes_vacants": 1.1,
+            "salaire_horaire_offert": 33.55
+          },
+          {
+            "periode": "2024-04",
+            "postes_vacants": 90.0,
+            "employes_salaries": 10955.0,
+            "taux_postes_vacants": 0.8,
+            "salaire_horaire_offert": 35.75
+          },
+          {
+            "periode": "2024-07",
+            "postes_vacants": 85.0,
+            "employes_salaries": 11600.0,
+            "taux_postes_vacants": 0.7,
+            "salaire_horaire_offert": 35.65
+          },
+          {
+            "periode": "2024-10",
+            "postes_vacants": 85.0,
+            "employes_salaries": 10255.0,
+            "taux_postes_vacants": 0.8,
+            "salaire_horaire_offert": 38.7
+          },
+          {
+            "periode": "2025-01",
+            "postes_vacants": 75.0,
+            "employes_salaries": 10080.0,
+            "taux_postes_vacants": 0.7,
+            "salaire_horaire_offert": 41.15
+          },
+          {
+            "periode": "2025-04",
+            "postes_vacants": 70.0,
+            "employes_salaries": 10885.0,
+            "taux_postes_vacants": 0.7,
+            "salaire_horaire_offert": 32.85
+          },
+          {
+            "periode": "2025-07",
+            "postes_vacants": 80.0,
+            "employes_salaries": 8920.0,
+            "taux_postes_vacants": 0.9,
+            "salaire_horaire_offert": 35.7
+          },
+          {
+            "periode": "2025-10",
+            "postes_vacants": null,
+            "employes_salaries": null,
+            "taux_postes_vacants": null,
+            "salaire_horaire_offert": 37.2
+          },
+          {
+            "periode": "2026-01",
+            "postes_vacants": 150.0,
+            "employes_salaries": 11015.0,
+            "taux_postes_vacants": 1.3,
+            "salaire_horaire_offert": 39.2
+          }
+        ],
+        "moyennes_5_derniers_trimestres": {
+          "postes_vacants": 93.75,
+          "employes_salaries": 10225.0,
+          "taux_postes_vacants": 0.9,
+          "salaire_horaire_offert": 37.22,
+          "n_trimestres": 5,
+          "periodes_couvertes": [
+            "2025-01",
+            "2025-04",
+            "2025-07",
+            "2025-10",
+            "2026-01"
+          ]
+        }
+      },
+      {
+        "code_scian": "519",
+        "libelle": "Portails de recherche Web, bibliothèques, archives",
+        "serie_trimestrielle": [
+          {
+            "periode": "2015-01",
+            "postes_vacants": null,
+            "employes_salaries": null,
+            "taux_postes_vacants": null,
+            "salaire_horaire_offert": null
+          },
+          {
+            "periode": "2015-04",
+            "postes_vacants": null,
+            "employes_salaries": 2410.0,
+            "taux_postes_vacants": 1.9,
+            "salaire_horaire_offert": 19.95
+          },
+          {
+            "periode": "2015-07",
+            "postes_vacants": 75.0,
+            "employes_salaries": 2905.0,
+            "taux_postes_vacants": 2.4,
+            "salaire_horaire_offert": 22.15
+          },
+          {
+            "periode": "2015-10",
+            "postes_vacants": null,
+            "employes_salaries": 4165.0,
+            "taux_postes_vacants": 2.8,
+            "salaire_horaire_offert": 23.1
+          },
+          {
+            "periode": "2016-01",
+            "postes_vacants": null,
+            "employes_salaries": null,
+            "taux_postes_vacants": 3.7,
+            "salaire_horaire_offert": 25.0
+          },
+          {
+            "periode": "2016-04",
+            "postes_vacants": null,
+            "employes_salaries": 2650.0,
+            "taux_postes_vacants": 3.5,
+            "salaire_horaire_offert": 22.05
+          },
+          {
+            "periode": "2016-07",
+            "postes_vacants": 115.0,
+            "employes_salaries": 4115.0,
+            "taux_postes_vacants": 2.7,
+            "salaire_horaire_offert": 25.05
+          },
+          {
+            "periode": "2016-10",
+            "postes_vacants": null,
+            "employes_salaries": 3985.0,
+            "taux_postes_vacants": null,
+            "salaire_horaire_offert": 15.7
+          },
+          {
+            "periode": "2017-01",
+            "postes_vacants": 125.0,
+            "employes_salaries": 3820.0,
+            "taux_postes_vacants": 3.2,
+            "salaire_horaire_offert": 21.2
+          },
+          {
+            "periode": "2017-04",
+            "postes_vacants": null,
+            "employes_salaries": 3860.0,
+            "taux_postes_vacants": null,
+            "salaire_horaire_offert": null
+          },
+          {
+            "periode": "2017-07",
+            "postes_vacants": 85.0,
+            "employes_salaries": 3425.0,
+            "taux_postes_vacants": 2.4,
+            "salaire_horaire_offert": 21.4
+          },
+          {
+            "periode": "2017-10",
+            "postes_vacants": 80.0,
+            "employes_salaries": 2870.0,
+            "taux_postes_vacants": 2.7,
+            "salaire_horaire_offert": 22.6
+          },
+          {
+            "periode": "2018-01",
+            "postes_vacants": null,
+            "employes_salaries": null,
+            "taux_postes_vacants": null,
+            "salaire_horaire_offert": 25.15
+          },
+          {
+            "periode": "2018-04",
+            "postes_vacants": null,
+            "employes_salaries": 2035.0,
+            "taux_postes_vacants": null,
+            "salaire_horaire_offert": 27.8
+          },
+          {
+            "periode": "2018-07",
+            "postes_vacants": null,
+            "employes_salaries": 1945.0,
+            "taux_postes_vacants": null,
+            "salaire_horaire_offert": 32.5
+          },
+          {
+            "periode": "2018-10",
+            "postes_vacants": null,
+            "employes_salaries": 1935.0,
+            "taux_postes_vacants": null,
+            "salaire_horaire_offert": null
+          },
+          {
+            "periode": "2019-01",
+            "postes_vacants": null,
+            "employes_salaries": 2050.0,
+            "taux_postes_vacants": null,
+            "salaire_horaire_offert": 19.85
+          },
+          {
+            "periode": "2019-04",
+            "postes_vacants": null,
+            "employes_salaries": null,
+            "taux_postes_vacants": null,
+            "salaire_horaire_offert": null
+          },
+          {
+            "periode": "2019-07",
+            "postes_vacants": 110.0,
+            "employes_salaries": 2045.0,
+            "taux_postes_vacants": 5.2,
+            "salaire_horaire_offert": 22.75
+          },
+          {
+            "periode": "2019-10",
+            "postes_vacants": null,
+            "employes_salaries": 2020.0,
+            "taux_postes_vacants": 2.6,
+            "salaire_horaire_offert": 22.4
+          },
+          {
+            "periode": "2020-01",
+            "postes_vacants": null,
+            "employes_salaries": 2135.0,
+            "taux_postes_vacants": 6.1,
+            "salaire_horaire_offert": 20.65
+          },
+          {
+            "periode": "2020-10",
+            "postes_vacants": null,
+            "employes_salaries": 1885.0,
+            "taux_postes_vacants": null,
+            "salaire_horaire_offert": 23.1
+          },
+          {
+            "periode": "2021-01",
+            "postes_vacants": null,
+            "employes_salaries": 2430.0,
+            "taux_postes_vacants": null,
+            "salaire_horaire_offert": 25.75
+          },
+          {
+            "periode": "2021-04",
+            "postes_vacants": null,
+            "employes_salaries": 1815.0,
+            "taux_postes_vacants": null,
+            "salaire_horaire_offert": null
+          },
+          {
+            "periode": "2021-07",
+            "postes_vacants": 125.0,
+            "employes_salaries": 2000.0,
+            "taux_postes_vacants": 5.8,
+            "salaire_horaire_offert": 29.1
+          },
+          {
+            "periode": "2021-10",
+            "postes_vacants": 125.0,
+            "employes_salaries": 2330.0,
+            "taux_postes_vacants": 5.0,
+            "salaire_horaire_offert": 32.35
+          },
+          {
+            "periode": "2022-01",
+            "postes_vacants": null,
+            "employes_salaries": 2340.0,
+            "taux_postes_vacants": null,
+            "salaire_horaire_offert": 29.55
+          },
+          {
+            "periode": "2022-04",
+            "postes_vacants": 75.0,
+            "employes_salaries": 2545.0,
+            "taux_postes_vacants": 2.8,
+            "salaire_horaire_offert": 35.3
+          },
+          {
+            "periode": "2022-07",
+            "postes_vacants": null,
+            "employes_salaries": 1790.0,
+            "taux_postes_vacants": 3.6,
+            "salaire_horaire_offert": 23.6
+          },
+          {
+            "periode": "2022-10",
+            "postes_vacants": null,
+            "employes_salaries": 1510.0,
+            "taux_postes_vacants": null,
+            "salaire_horaire_offert": null
+          },
+          {
+            "periode": "2023-01",
+            "postes_vacants": null,
+            "employes_salaries": 1875.0,
+            "taux_postes_vacants": 1.7,
+            "salaire_horaire_offert": 29.7
+          },
+          {
+            "periode": "2023-04",
+            "postes_vacants": null,
+            "employes_salaries": 1510.0,
+            "taux_postes_vacants": 6.0,
+            "salaire_horaire_offert": null
+          },
+          {
+            "periode": "2023-07",
+            "postes_vacants": null,
+            "employes_salaries": 2195.0,
+            "taux_postes_vacants": null,
+            "salaire_horaire_offert": 30.55
+          },
+          {
+            "periode": "2023-10",
+            "postes_vacants": null,
+            "employes_salaries": 1805.0,
+            "taux_postes_vacants": null,
+            "salaire_horaire_offert": null
+          },
+          {
+            "periode": "2024-01",
+            "postes_vacants": null,
+            "employes_salaries": 2080.0,
+            "taux_postes_vacants": null,
+            "salaire_horaire_offert": 37.3
+          },
+          {
+            "periode": "2024-04",
+            "postes_vacants": null,
+            "employes_salaries": 2000.0,
+            "taux_postes_vacants": null,
+            "salaire_horaire_offert": 23.25
+          },
+          {
+            "periode": "2024-07",
+            "postes_vacants": null,
+            "employes_salaries": 2240.0,
+            "taux_postes_vacants": null,
+            "salaire_horaire_offert": 36.0
+          },
+          {
+            "periode": "2024-10",
+            "postes_vacants": null,
+            "employes_salaries": null,
+            "taux_postes_vacants": null,
+            "salaire_horaire_offert": null
+          },
+          {
+            "periode": "2025-01",
+            "postes_vacants": null,
+            "employes_salaries": 2065.0,
+            "taux_postes_vacants": 5.6,
+            "salaire_horaire_offert": 37.65
+          },
+          {
+            "periode": "2025-04",
+            "postes_vacants": null,
+            "employes_salaries": 2330.0,
+            "taux_postes_vacants": null,
+            "salaire_horaire_offert": 24.4
+          },
+          {
+            "periode": "2025-07",
+            "postes_vacants": null,
+            "employes_salaries": 1670.0,
+            "taux_postes_vacants": null,
+            "salaire_horaire_offert": 24.6
+          },
+          {
+            "periode": "2025-10",
+            "postes_vacants": null,
+            "employes_salaries": 1870.0,
+            "taux_postes_vacants": null,
+            "salaire_horaire_offert": null
+          },
+          {
+            "periode": "2026-01",
+            "postes_vacants": null,
+            "employes_salaries": 1585.0,
+            "taux_postes_vacants": 4.5,
+            "salaire_horaire_offert": 38.4
+          }
+        ],
+        "moyennes_5_derniers_trimestres": {
+          "postes_vacants": null,
+          "employes_salaries": 1904.0,
+          "taux_postes_vacants": 5.05,
+          "salaire_horaire_offert": 31.26,
+          "n_trimestres": 5,
+          "periodes_couvertes": [
+            "2025-01",
+            "2025-04",
+            "2025-07",
+            "2025-10",
+            "2026-01"
+          ]
+        }
+      },
+      {
+        "code_scian": "711",
+        "libelle": "Arts d'interprétation, sports-spectacles et activités connexes",
+        "serie_trimestrielle": [
+          {
+            "periode": "2015-01",
+            "postes_vacants": null,
+            "employes_salaries": null,
+            "taux_postes_vacants": null,
+            "salaire_horaire_offert": 23.05
+          },
+          {
+            "periode": "2015-04",
+            "postes_vacants": 290.0,
+            "employes_salaries": 10680.0,
+            "taux_postes_vacants": 2.6,
+            "salaire_horaire_offert": 15.8
+          },
+          {
+            "periode": "2015-07",
+            "postes_vacants": 190.0,
+            "employes_salaries": 10635.0,
+            "taux_postes_vacants": 1.8,
+            "salaire_horaire_offert": 16.35
+          },
+          {
+            "periode": "2015-10",
+            "postes_vacants": 60.0,
+            "employes_salaries": 10040.0,
+            "taux_postes_vacants": 0.6,
+            "salaire_horaire_offert": 18.6
+          },
+          {
+            "periode": "2016-01",
+            "postes_vacants": 105.0,
+            "employes_salaries": 9925.0,
+            "taux_postes_vacants": 1.1,
+            "salaire_horaire_offert": 23.8
+          },
+          {
+            "periode": "2016-04",
+            "postes_vacants": 285.0,
+            "employes_salaries": 10400.0,
+            "taux_postes_vacants": 2.7,
+            "salaire_horaire_offert": 19.65
+          },
+          {
+            "periode": "2016-07",
+            "postes_vacants": 225.0,
+            "employes_salaries": 9995.0,
+            "taux_postes_vacants": 2.2,
+            "salaire_horaire_offert": 17.25
+          },
+          {
+            "periode": "2016-10",
+            "postes_vacants": 100.0,
+            "employes_salaries": 10835.0,
+            "taux_postes_vacants": 0.9,
+            "salaire_horaire_offert": 22.3
+          },
+          {
+            "periode": "2017-01",
+            "postes_vacants": 85.0,
+            "employes_salaries": 10145.0,
+            "taux_postes_vacants": 0.8,
+            "salaire_horaire_offert": 22.25
+          },
+          {
+            "periode": "2017-04",
+            "postes_vacants": 105.0,
+            "employes_salaries": 9100.0,
+            "taux_postes_vacants": 1.2,
+            "salaire_horaire_offert": 21.65
+          },
+          {
+            "periode": "2017-07",
+            "postes_vacants": null,
+            "employes_salaries": 12635.0,
+            "taux_postes_vacants": null,
+            "salaire_horaire_offert": 17.85
+          },
+          {
+            "periode": "2017-10",
+            "postes_vacants": 165.0,
+            "employes_salaries": 12570.0,
+            "taux_postes_vacants": 1.3,
+            "salaire_horaire_offert": 23.85
+          },
+          {
+            "periode": "2018-01",
+            "postes_vacants": null,
+            "employes_salaries": 9665.0,
+            "taux_postes_vacants": null,
+            "salaire_horaire_offert": 15.9
+          },
+          {
+            "periode": "2018-04",
+            "postes_vacants": 450.0,
+            "employes_salaries": 11230.0,
+            "taux_postes_vacants": 3.9,
+            "salaire_horaire_offert": 15.1
+          },
+          {
+            "periode": "2018-07",
+            "postes_vacants": null,
+            "employes_salaries": 15120.0,
+            "taux_postes_vacants": null,
+            "salaire_horaire_offert": 15.05
+          },
+          {
+            "periode": "2018-10",
+            "postes_vacants": 250.0,
+            "employes_salaries": 15640.0,
+            "taux_postes_vacants": 1.6,
+            "salaire_horaire_offert": 21.95
+          },
+          {
+            "periode": "2019-01",
+            "postes_vacants": 350.0,
+            "employes_salaries": 14100.0,
+            "taux_postes_vacants": 2.4,
+            "salaire_horaire_offert": 21.65
+          },
+          {
+            "periode": "2019-04",
+            "postes_vacants": 415.0,
+            "employes_salaries": 13535.0,
+            "taux_postes_vacants": 3.0,
+            "salaire_horaire_offert": 16.75
+          },
+          {
+            "periode": "2019-07",
+            "postes_vacants": null,
+            "employes_salaries": 14700.0,
+            "taux_postes_vacants": null,
+            "salaire_horaire_offert": 14.95
+          },
+          {
+            "periode": "2019-10",
+            "postes_vacants": 155.0,
+            "employes_salaries": 15335.0,
+            "taux_postes_vacants": 1.0,
+            "salaire_horaire_offert": 20.85
+          },
+          {
+            "periode": "2020-01",
+            "postes_vacants": 250.0,
+            "employes_salaries": 13680.0,
+            "taux_postes_vacants": 1.8,
+            "salaire_horaire_offert": 20.6
+          },
+          {
+            "periode": "2020-10",
+            "postes_vacants": 240.0,
+            "employes_salaries": 10795.0,
+            "taux_postes_vacants": 2.2,
+            "salaire_horaire_offert": 20.65
+          },
+          {
+            "periode": "2021-01",
+            "postes_vacants": 245.0,
+            "employes_salaries": 9000.0,
+            "taux_postes_vacants": 2.7,
+            "salaire_horaire_offert": 22.15
+          },
+          {
+            "periode": "2021-04",
+            "postes_vacants": 785.0,
+            "employes_salaries": 8775.0,
+            "taux_postes_vacants": 8.2,
+            "salaire_horaire_offert": 22.55
+          },
+          {
+            "periode": "2021-07",
+            "postes_vacants": 640.0,
+            "employes_salaries": 11040.0,
+            "taux_postes_vacants": 5.5,
+            "salaire_horaire_offert": 19.9
+          },
+          {
+            "periode": "2021-10",
+            "postes_vacants": 655.0,
+            "employes_salaries": 11990.0,
+            "taux_postes_vacants": 5.2,
+            "salaire_horaire_offert": 22.9
+          },
+          {
+            "periode": "2022-01",
+            "postes_vacants": 485.0,
+            "employes_salaries": 8920.0,
+            "taux_postes_vacants": 5.2,
+            "salaire_horaire_offert": 23.25
+          },
+          {
+            "periode": "2022-04",
+            "postes_vacants": 745.0,
+            "employes_salaries": 8900.0,
+            "taux_postes_vacants": 7.7,
+            "salaire_horaire_offert": 19.85
+          },
+          {
+            "periode": "2022-07",
+            "postes_vacants": 680.0,
+            "employes_salaries": 12145.0,
+            "taux_postes_vacants": 5.3,
+            "salaire_horaire_offert": 25.2
+          },
+          {
+            "periode": "2022-10",
+            "postes_vacants": 525.0,
+            "employes_salaries": 13150.0,
+            "taux_postes_vacants": 3.8,
+            "salaire_horaire_offert": 23.45
+          },
+          {
+            "periode": "2023-01",
+            "postes_vacants": 395.0,
+            "employes_salaries": 19225.0,
+            "taux_postes_vacants": null,
+            "salaire_horaire_offert": 23.8
+          },
+          {
+            "periode": "2023-04",
+            "postes_vacants": 525.0,
+            "employes_salaries": 12165.0,
+            "taux_postes_vacants": 4.1,
+            "salaire_horaire_offert": 22.4
+          },
+          {
+            "periode": "2023-07",
+            "postes_vacants": 225.0,
+            "employes_salaries": 13270.0,
+            "taux_postes_vacants": 1.7,
+            "salaire_horaire_offert": 24.3
+          },
+          {
+            "periode": "2023-10",
+            "postes_vacants": 270.0,
+            "employes_salaries": 14340.0,
+            "taux_postes_vacants": 1.8,
+            "salaire_horaire_offert": 22.85
+          },
+          {
+            "periode": "2024-01",
+            "postes_vacants": 305.0,
+            "employes_salaries": 11325.0,
+            "taux_postes_vacants": 2.6,
+            "salaire_horaire_offert": 25.85
+          },
+          {
+            "periode": "2024-04",
+            "postes_vacants": 190.0,
+            "employes_salaries": 12550.0,
+            "taux_postes_vacants": 1.5,
+            "salaire_horaire_offert": 28.95
+          },
+          {
+            "periode": "2024-07",
+            "postes_vacants": 270.0,
+            "employes_salaries": 15310.0,
+            "taux_postes_vacants": 1.7,
+            "salaire_horaire_offert": 28.9
+          },
+          {
+            "periode": "2024-10",
+            "postes_vacants": 195.0,
+            "employes_salaries": 15885.0,
+            "taux_postes_vacants": 1.2,
+            "salaire_horaire_offert": 28.75
+          },
+          {
+            "periode": "2025-01",
+            "postes_vacants": 200.0,
+            "employes_salaries": 16665.0,
+            "taux_postes_vacants": 1.2,
+            "salaire_horaire_offert": 28.25
+          },
+          {
+            "periode": "2025-04",
+            "postes_vacants": 200.0,
+            "employes_salaries": 15850.0,
+            "taux_postes_vacants": 1.2,
+            "salaire_horaire_offert": 27.4
+          },
+          {
+            "periode": "2025-07",
+            "postes_vacants": 220.0,
+            "employes_salaries": 18530.0,
+            "taux_postes_vacants": 1.2,
+            "salaire_horaire_offert": 21.85
+          },
+          {
+            "periode": "2025-10",
+            "postes_vacants": 280.0,
+            "employes_salaries": 16290.0,
+            "taux_postes_vacants": 1.7,
+            "salaire_horaire_offert": 32.65
+          },
+          {
+            "periode": "2026-01",
+            "postes_vacants": 305.0,
+            "employes_salaries": 14705.0,
+            "taux_postes_vacants": 2.0,
+            "salaire_horaire_offert": 28.25
+          }
+        ],
+        "moyennes_5_derniers_trimestres": {
+          "postes_vacants": 241.0,
+          "employes_salaries": 16408.0,
+          "taux_postes_vacants": 1.46,
+          "salaire_horaire_offert": 27.68,
+          "n_trimestres": 5,
+          "periodes_couvertes": [
+            "2025-01",
+            "2025-04",
+            "2025-07",
+            "2025-10",
+            "2026-01"
+          ]
+        }
+      },
+      {
+        "code_scian": "712",
+        "libelle": "Établissements du patrimoine",
+        "serie_trimestrielle": [
+          {
+            "periode": "2015-01",
+            "postes_vacants": null,
+            "employes_salaries": 4905.0,
+            "taux_postes_vacants": null,
+            "salaire_horaire_offert": 17.6
+          },
+          {
+            "periode": "2015-04",
+            "postes_vacants": null,
+            "employes_salaries": 4170.0,
+            "taux_postes_vacants": null,
+            "salaire_horaire_offert": 13.1
+          },
+          {
+            "periode": "2015-07",
+            "postes_vacants": 50.0,
+            "employes_salaries": 7050.0,
+            "taux_postes_vacants": 0.7,
+            "salaire_horaire_offert": 18.05
+          },
+          {
+            "periode": "2015-10",
+            "postes_vacants": null,
+            "employes_salaries": 5210.0,
+            "taux_postes_vacants": null,
+            "salaire_horaire_offert": 19.45
+          },
+          {
+            "periode": "2016-01",
+            "postes_vacants": 60.0,
+            "employes_salaries": 3615.0,
+            "taux_postes_vacants": 1.6,
+            "salaire_horaire_offert": 18.8
+          },
+          {
+            "periode": "2016-04",
+            "postes_vacants": 115.0,
+            "employes_salaries": 3300.0,
+            "taux_postes_vacants": 3.4,
+            "salaire_horaire_offert": 13.0
+          },
+          {
+            "periode": "2016-07",
+            "postes_vacants": 30.0,
+            "employes_salaries": 6870.0,
+            "taux_postes_vacants": 0.4,
+            "salaire_horaire_offert": 21.4
+          },
+          {
+            "periode": "2016-10",
+            "postes_vacants": 35.0,
+            "employes_salaries": 4940.0,
+            "taux_postes_vacants": 0.7,
+            "salaire_horaire_offert": 22.95
+          },
+          {
+            "periode": "2017-01",
+            "postes_vacants": 100.0,
+            "employes_salaries": 4270.0,
+            "taux_postes_vacants": 2.3,
+            "salaire_horaire_offert": 16.3
+          },
+          {
+            "periode": "2017-04",
+            "postes_vacants": 175.0,
+            "employes_salaries": 5850.0,
+            "taux_postes_vacants": 2.9,
+            "salaire_horaire_offert": 15.65
+          },
+          {
+            "periode": "2017-07",
+            "postes_vacants": 75.0,
+            "employes_salaries": 7820.0,
+            "taux_postes_vacants": 0.9,
+            "salaire_horaire_offert": 17.4
+          },
+          {
+            "periode": "2017-10",
+            "postes_vacants": null,
+            "employes_salaries": 6535.0,
+            "taux_postes_vacants": 1.4,
+            "salaire_horaire_offert": 17.05
+          },
+          {
+            "periode": "2018-01",
+            "postes_vacants": 100.0,
+            "employes_salaries": 3965.0,
+            "taux_postes_vacants": 2.4,
+            "salaire_horaire_offert": 15.85
+          },
+          {
+            "periode": "2018-04",
+            "postes_vacants": 235.0,
+            "employes_salaries": 5595.0,
+            "taux_postes_vacants": 4.0,
+            "salaire_horaire_offert": 15.7
+          },
+          {
+            "periode": "2018-07",
+            "postes_vacants": 210.0,
+            "employes_salaries": 8650.0,
+            "taux_postes_vacants": 2.4,
+            "salaire_horaire_offert": 17.2
+          },
+          {
+            "periode": "2018-10",
+            "postes_vacants": 195.0,
+            "employes_salaries": 6275.0,
+            "taux_postes_vacants": 3.0,
+            "salaire_horaire_offert": 18.85
+          },
+          {
+            "periode": "2019-01",
+            "postes_vacants": 285.0,
+            "employes_salaries": 4670.0,
+            "taux_postes_vacants": 5.7,
+            "salaire_horaire_offert": 16.4
+          },
+          {
+            "periode": "2019-04",
+            "postes_vacants": 185.0,
+            "employes_salaries": 5760.0,
+            "taux_postes_vacants": 3.1,
+            "salaire_horaire_offert": 16.2
+          },
+          {
+            "periode": "2019-07",
+            "postes_vacants": 90.0,
+            "employes_salaries": 7620.0,
+            "taux_postes_vacants": 1.1,
+            "salaire_horaire_offert": 19.05
+          },
+          {
+            "periode": "2019-10",
+            "postes_vacants": 165.0,
+            "employes_salaries": 6420.0,
+            "taux_postes_vacants": 2.5,
+            "salaire_horaire_offert": 16.7
+          },
+          {
+            "periode": "2020-01",
+            "postes_vacants": 490.0,
+            "employes_salaries": 5070.0,
+            "taux_postes_vacants": 8.9,
+            "salaire_horaire_offert": 15.4
+          },
+          {
+            "periode": "2020-10",
+            "postes_vacants": 110.0,
+            "employes_salaries": 6120.0,
+            "taux_postes_vacants": 1.8,
+            "salaire_horaire_offert": 20.15
+          },
+          {
+            "periode": "2021-01",
+            "postes_vacants": 290.0,
+            "employes_salaries": 5175.0,
+            "taux_postes_vacants": 5.3,
+            "salaire_horaire_offert": 18.65
+          },
+          {
+            "periode": "2021-04",
+            "postes_vacants": 340.0,
+            "employes_salaries": 6740.0,
+            "taux_postes_vacants": 4.8,
+            "salaire_horaire_offert": 17.65
+          },
+          {
+            "periode": "2021-07",
+            "postes_vacants": 360.0,
+            "employes_salaries": 8220.0,
+            "taux_postes_vacants": 4.2,
+            "salaire_horaire_offert": 17.8
+          },
+          {
+            "periode": "2021-10",
+            "postes_vacants": 295.0,
+            "employes_salaries": 6735.0,
+            "taux_postes_vacants": 4.2,
+            "salaire_horaire_offert": 17.75
+          },
+          {
+            "periode": "2022-01",
+            "postes_vacants": 475.0,
+            "employes_salaries": 5325.0,
+            "taux_postes_vacants": 8.2,
+            "salaire_horaire_offert": 18.2
+          },
+          {
+            "periode": "2022-04",
+            "postes_vacants": 470.0,
+            "employes_salaries": 4970.0,
+            "taux_postes_vacants": 8.6,
+            "salaire_horaire_offert": 18.85
+          },
+          {
+            "periode": "2022-07",
+            "postes_vacants": 445.0,
+            "employes_salaries": 8645.0,
+            "taux_postes_vacants": 4.9,
+            "salaire_horaire_offert": 22.15
+          },
+          {
+            "periode": "2022-10",
+            "postes_vacants": 525.0,
+            "employes_salaries": 9020.0,
+            "taux_postes_vacants": 5.5,
+            "salaire_horaire_offert": 20.6
+          },
+          {
+            "periode": "2023-01",
+            "postes_vacants": 295.0,
+            "employes_salaries": 4840.0,
+            "taux_postes_vacants": 5.8,
+            "salaire_horaire_offert": 20.55
+          },
+          {
+            "periode": "2023-04",
+            "postes_vacants": 515.0,
+            "employes_salaries": 9290.0,
+            "taux_postes_vacants": 5.3,
+            "salaire_horaire_offert": 20.95
+          },
+          {
+            "periode": "2023-07",
+            "postes_vacants": 225.0,
+            "employes_salaries": 8475.0,
+            "taux_postes_vacants": 2.6,
+            "salaire_horaire_offert": 25.85
+          },
+          {
+            "periode": "2023-10",
+            "postes_vacants": 205.0,
+            "employes_salaries": 9375.0,
+            "taux_postes_vacants": 2.1,
+            "salaire_horaire_offert": 24.8
+          },
+          {
+            "periode": "2024-01",
+            "postes_vacants": 255.0,
+            "employes_salaries": 7025.0,
+            "taux_postes_vacants": 3.5,
+            "salaire_horaire_offert": 22.75
+          },
+          {
+            "periode": "2024-04",
+            "postes_vacants": 245.0,
+            "employes_salaries": 6830.0,
+            "taux_postes_vacants": 3.5,
+            "salaire_horaire_offert": 22.0
+          },
+          {
+            "periode": "2024-07",
+            "postes_vacants": 170.0,
+            "employes_salaries": 9245.0,
+            "taux_postes_vacants": 1.8,
+            "salaire_horaire_offert": 23.75
+          },
+          {
+            "periode": "2024-10",
+            "postes_vacants": 280.0,
+            "employes_salaries": 8725.0,
+            "taux_postes_vacants": 3.1,
+            "salaire_horaire_offert": 22.35
+          },
+          {
+            "periode": "2025-01",
+            "postes_vacants": 245.0,
+            "employes_salaries": 7800.0,
+            "taux_postes_vacants": 3.0,
+            "salaire_horaire_offert": 23.6
+          },
+          {
+            "periode": "2025-04",
+            "postes_vacants": 315.0,
+            "employes_salaries": 8035.0,
+            "taux_postes_vacants": 3.8,
+            "salaire_horaire_offert": 22.25
+          },
+          {
+            "periode": "2025-07",
+            "postes_vacants": 205.0,
+            "employes_salaries": 7325.0,
+            "taux_postes_vacants": 2.7,
+            "salaire_horaire_offert": 23.25
+          },
+          {
+            "periode": "2025-10",
+            "postes_vacants": 215.0,
+            "employes_salaries": 8025.0,
+            "taux_postes_vacants": 2.6,
+            "salaire_horaire_offert": 24.2
+          },
+          {
+            "periode": "2026-01",
+            "postes_vacants": 180.0,
+            "employes_salaries": 4995.0,
+            "taux_postes_vacants": 3.5,
+            "salaire_horaire_offert": 23.95
+          }
+        ],
+        "moyennes_5_derniers_trimestres": {
+          "postes_vacants": 232.0,
+          "employes_salaries": 7236.0,
+          "taux_postes_vacants": 3.12,
+          "salaire_horaire_offert": 23.45,
+          "n_trimestres": 5,
+          "periodes_couvertes": [
+            "2025-01",
+            "2025-04",
+            "2025-07",
+            "2025-10",
+            "2026-01"
+          ]
+        }
+      }
+    ]
   }
 }
