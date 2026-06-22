@@ -196,6 +196,57 @@ def test_remunerations_eerh_statcan_secteur_71_stable(raw_dir):
     assert abs(rem[2025]['valeur'] - rem[2024]['valeur']) < 10  # variation < 10 $
 
 
+def test_ai_exposure_culture_perimetre(raw_dir):
+    """Sous-lentille 1a « demande experte » — indice C-AIOE pour les
+    industries culturelles canadiennes.
+
+    Source : Statistique Canada, Mehdi, Allen, Lesica & Watt (mars 2026).
+    Cinq industries culturelles + une catégorie de référence (autres).
+    Pattern attendu : video game publishers/design est le plus exposé
+    (substitution potentielle ≈ 75 %), motion picture le moins du groupe
+    culturel (≈ 54 %), autres industries en référence (≈ 34 %).
+    """
+    f = find_source_file(raw_dir, 'ai_exposure_culture*.csv')
+    assert f is not None, "Fichier ai_exposure_culture manquant"
+    data = extract.extract_ai_exposure_culture(f)
+    assert data['pays'] == 'Canada (national)'
+    assert 'C-AIOE' in data['methode']
+    # 5 industries culturelles + 1 catégorie de référence
+    codes = [ind['code'] for ind in data['industries']]
+    assert '513212+541515' in codes  # video game
+    assert '513_hors_513212' in codes  # publishing
+    assert '5122+71113' in codes  # sound recording + musical
+    assert '5121' in codes  # motion picture
+    assert 'autres' in codes  # référence
+    # Le tri doit placer video game en tête (HE_LC le plus élevé)
+    assert data['industries'][0]['code'] == '513212+541515'
+    # Et "autres" en dernier (référence)
+    assert data['industries'][-1]['code'] == 'autres'
+
+
+def test_ai_exposure_culture_video_game(raw_dir):
+    """Video game publishers + design : 75,2 % moyenne hommes/femmes de
+    substitution potentielle (78,8 % H, 71,6 % F) — le plus exposé du périmètre.
+    """
+    f = find_source_file(raw_dir, 'ai_exposure_culture*.csv')
+    data = extract.extract_ai_exposure_culture(f)
+    vg = next(i for i in data['industries'] if i['code'] == '513212+541515')
+    assert vg['men+']['he_lc_pct'] == 78.8
+    assert vg['women+']['he_lc_pct'] == 71.6
+    assert vg['moyenne_sexes']['he_lc_pct'] == 75.2
+
+
+def test_ai_exposure_culture_motion_picture(raw_dir):
+    """Motion picture : 54 % moyenne de substitution potentielle, mais
+    14,4 % en faible exposition (le plus de "low exposure" du groupe culturel).
+    """
+    f = find_source_file(raw_dir, 'ai_exposure_culture*.csv')
+    data = extract.extract_ai_exposure_culture(f)
+    mp = next(i for i in data['industries'] if i['code'] == '5121')
+    assert mp['moyenne_sexes']['he_lc_pct'] == 54.0
+    assert mp['moyenne_sexes']['le_pct'] == 14.4
+
+
 def test_job_vacancy_quebec_perimetre(raw_dir):
     """Sous-lentille 1b « demande marché » — JVWS Québec, 5 derniers trimestres.
 

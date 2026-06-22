@@ -464,6 +464,56 @@ a{color:inherit;text-decoration:none}
 }
 .l1b-method-note strong{color:var(--cb-400);font-weight:700}
 
+/* LENTILLE 1a DEMANDE EXPERTE — Une card avec barres empilées d'exposition */
+.l1a-card{
+  background:var(--surface);
+  border-radius:var(--radius);
+  padding:20px 24px;
+  box-shadow:var(--shadow-sm);
+  border:1px solid var(--border);
+  border-left:4px solid var(--bo-500);
+  display:flex;flex-direction:column;gap:14px;
+}
+.l1a-table-head{
+  display:grid;grid-template-columns:1fr 320px 60px;gap:14px;
+  font-size:10.5px;text-transform:uppercase;letter-spacing:0.06em;font-weight:700;
+  color:var(--text-soft);padding-bottom:6px;border-bottom:2px solid var(--border);
+}
+.l1a-row{
+  display:grid;grid-template-columns:1fr 320px 60px;gap:14px;
+  align-items:center;padding:8px 0;
+  border-bottom:1px solid var(--border);
+}
+.l1a-row:last-child{border-bottom:none}
+.l1a-row.reference{background:#f9fafc;padding-left:8px;padding-right:8px;border-radius:6px;border-bottom:none;margin-top:4px;font-style:italic}
+.l1a-row .libelle{font-size:13px;color:var(--cb-300);font-weight:600;line-height:1.3}
+.l1a-row .scian{font-size:10.5px;color:var(--text-soft);font-weight:600;margin-top:2px}
+.l1a-row .total{font-family:'Nunito',sans-serif;font-weight:800;font-size:18px;color:var(--cb-300);text-align:right}
+.l1a-bar{
+  height:30px;border-radius:6px;overflow:hidden;display:flex;
+  background:#f0f2f5;
+  box-shadow:inset 0 1px 2px rgba(0,0,0,0.05);
+}
+.l1a-seg{display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;letter-spacing:0.04em}
+.l1a-seg.he_lc{background:var(--bo-500)}
+.l1a-seg.he_hc{background:var(--sr-400)}
+.l1a-seg.le{background:var(--cb-700)}
+.l1a-seg.suppr{background:#e2e6ec;color:var(--text-soft);font-style:italic;font-weight:500}
+.l1a-legend{display:flex;gap:18px;flex-wrap:wrap;font-size:11.5px;color:var(--text-muted);margin-bottom:4px}
+.l1a-legend-item{display:inline-flex;align-items:center;gap:6px;line-height:1.4}
+.l1a-legend-dot{display:inline-block;width:11px;height:11px;border-radius:50%;flex-shrink:0}
+.l1a-legend-dot.he_lc{background:var(--bo-500)}
+.l1a-legend-dot.he_hc{background:var(--sr-400)}
+.l1a-legend-dot.le{background:var(--cb-700)}
+.l1a-method-note{
+  margin-top:16px;padding:12px 18px;
+  background:#f5f7fb;
+  border:1px solid var(--border);
+  border-radius:var(--radius-sm);
+  font-size:11.5px;line-height:1.55;color:var(--text-muted);
+}
+.l1a-method-note strong{color:var(--cb-400);font-weight:700}
+
 /* TIMELINE */
 .timeline-wrap{
   background:var(--surface);border-radius:var(--radius);padding:24px 28px;
@@ -681,6 +731,10 @@ a{color:inherit;text-decoration:none}
     <a href="#lentille1b" data-section="lentille1b">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M7 14l4-4 4 4 5-5"/></svg>
       Lentille 1b — demande marché <span class="nav-num">2</span>
+    </a>
+    <a href="#lentille1a" data-section="lentille1a">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9 9l6 6M9 15l6-6"/></svg>
+      Lentille 1a — demande experte <span class="nav-num">1</span>
     </a>
     <a href="#vue-ensemble" class="active" data-section="vue-ensemble">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
@@ -1066,6 +1120,40 @@ a{color:inherit;text-decoration:none}
 
       <div class="l1b-method-note">
         <strong>Caveats.</strong> <strong>1)</strong> Le salaire affiché est celui que l'employeur <em>offre</em> dans le poste vacant, pas celui effectivement versé aux salariés en place (mesuré par la lentille 3 EERH). L'écart entre les deux est lui-même un signal de tension salariale, à explorer dans une itération ultérieure. <strong>2)</strong> Granularité SCIAN 3 chiffres. SCIAN 515 (Radiotélévision hors Internet) archivé chez StatCan, série non disponible. <strong>3)</strong> Données non désaisonnalisées&nbsp;; les comparaisons trimestre par trimestre sont sensibles aux effets saisonniers (les arts d'interprétation, par exemple, recrutent plus en été). Les moyennes 5 trimestres lissent partiellement cet effet.
+      </div>
+    </section>
+
+    <!-- LENTILLE 1a DEMANDE EXPERTE — Dérivation auxiliaire hors protocole -->
+    <section id="lentille1a" class="section">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title"><span class="star">⊗</span>Lentille 1a &mdash; demande experte (indice C-AIOE, industries culturelles canadiennes)</h2>
+          <p class="section-sub">Évaluation experte de l'exposition à l'IA pour les industries culturelles canadiennes, selon l'indice <em>complementarity-adjusted AI occupational exposure</em> (Felten et al. 2021 + Pizzinelli et al. 2023). Source&nbsp;: Statistique Canada, Mehdi, Allen, Lesica &amp; Watt (mars 2026), <a href="https://www150.statcan.gc.ca/n1/pub/36-28-0001/2026003/article/00003-eng.htm" target="_blank" rel="noopener"><em>Potential occupational exposure to AI across selected cultural industries in Canada</em></a>.</p>
+        </div>
+      </div>
+
+      <div class="l3-statut-banner">
+        <strong>Dérivation auxiliaire &mdash; hors protocole.</strong> Cette section présente la sous-lentille 1a «&nbsp;demande experte&nbsp;» de la méthode AI-exposure. Elle n'est pas un repère gelé du Protocole v1.1.0. Granularité Canada national (pas de coupe Québec dans la publication StatCan ; limite cohérente avec la lentille 2 AEI). Données 2021 (recensement + CEEDD), à actualiser à la prochaine vague StatCan. Donnée auditable&nbsp;: clé <code>lentille_1a_demande_experte</code> dans <a href="reperes_2025.json" target="_blank" rel="noopener">reperes_2025.json</a>.
+      </div>
+
+      <div class="l1a-card">
+        <div class="l1a-legend">
+          <span class="l1a-legend-item"><span class="l1a-legend-dot he_lc"></span><strong>Substitution potentielle</strong> &mdash; haute exposition + faible complémentarité (l'IA peut remplacer)</span>
+          <span class="l1a-legend-item"><span class="l1a-legend-dot he_hc"></span><strong>Augmentation potentielle</strong> &mdash; haute exposition + haute complémentarité (l'IA peut enrichir)</span>
+          <span class="l1a-legend-item"><span class="l1a-legend-dot le"></span><strong>Faible exposition</strong> &mdash; peu de transformation prévue</span>
+        </div>
+
+        <div class="l1a-table-head">
+          <div>Industrie (NAICS 2022)</div>
+          <div>Répartition de l'emploi par catégorie d'exposition AI</div>
+          <div style="text-align:right">Substit.</div>
+        </div>
+
+        <div id="l1a-rows"></div>
+      </div>
+
+      <div class="l1a-method-note">
+        <strong>Lecture.</strong> Plus de la moitié des emplois dans chaque industrie culturelle canadienne sélectionnée sont classés en <em>haute exposition + faible complémentarité</em> (potentiel de substitution par l'IA), contre environ un tiers dans les autres industries. Les jeux vidéo sont l'industrie la plus exposée (75 % moyen). Mais une part substantielle des emplois (~30 % dans publishing et motion picture) est aussi en <em>haute complémentarité</em> &mdash; potentiel d'augmentation par l'IA plutôt que de remplacement. <strong>Caveats à connaître.</strong> <strong>1)</strong> Estimation basée sur la faisabilité technologique de remplacer les tâches, pas sur le comportement réel des employeurs (qui peut être ralenti par contraintes financières, légales, institutionnelles). <strong>2)</strong> «&nbsp;Exposition&nbsp;» n'implique pas perte d'emploi&nbsp;; au minimum, c'est de la <em>transformation potentielle</em> des tâches. <strong>3)</strong> Données 2021&nbsp;; les comportements ont pu évoluer avec l'arrivée massive de ChatGPT en novembre 2022.
       </div>
     </section>
 
@@ -1820,6 +1908,91 @@ const C = {
       salaireEl.appendChild(row);
     });
   }
+})();
+
+// === LENTILLE 1a DEMANDE EXPERTE — Population de la card unique ===
+// La donnée vient de l'extracteur extract_ai_exposure_culture (src/extract.py)
+// qui lit le CSV compilé à partir de l'article StatCan Mehdi et al. 2026.
+// Chaque ligne est une industrie ventilée en trois catégories d'exposition AI
+// (substitution / augmentation / faible) selon l'indice C-AIOE.
+(function(){
+  const L1a = D.reperes && D.reperes.lentille_1a_demande_experte;
+  if (!L1a || !L1a.industries) return;
+
+  const fmt = (n, dec) => (n == null) ? '—' : Number(n).toLocaleString('fr-CA',
+      {minimumFractionDigits: dec, maximumFractionDigits: dec});
+
+  const rowsEl = document.getElementById('l1a-rows');
+  if (!rowsEl) return;
+  rowsEl.innerHTML = '';
+
+  L1a.industries.forEach(ind => {
+    const m = ind.moyenne_sexes || {};
+    const he_lc = m.he_lc_pct;
+    const he_hc = m.he_hc_pct;
+    const le = m.le_pct;
+    const isRef = ind.code === 'autres';
+
+    const row = document.createElement('div');
+    row.className = 'l1a-row' + (isRef ? ' reference' : '');
+
+    // Libellé + code SCIAN
+    const libelleCell = document.createElement('div');
+    const libelleHTML = isRef
+      ? `<div class="libelle">${ind.libelle}</div><div class="scian">référence — secteur commercial hors culture</div>`
+      : `<div class="libelle">${ind.libelle.slice(0, 70)}</div><div class="scian">NAICS ${ind.code}</div>`;
+    libelleCell.innerHTML = libelleHTML;
+    row.appendChild(libelleCell);
+
+    // Barre empilée
+    const barCell = document.createElement('div');
+    const bar = document.createElement('div');
+    bar.className = 'l1a-bar';
+
+    const total = (he_lc || 0) + (he_hc || 0) + (le || 0);
+    const sumKnown = total;
+    const suppr = (he_hc === null && le === null && he_lc !== null);
+
+    if (suppr) {
+      // Cas Sound recording + musical : HE_HC et LE supprimés pour confidentialité
+      const segHE = document.createElement('div');
+      segHE.className = 'l1a-seg he_lc';
+      segHE.style.width = he_lc + '%';
+      segHE.textContent = he_lc + '%';
+      bar.appendChild(segHE);
+      const segSup = document.createElement('div');
+      segSup.className = 'l1a-seg suppr';
+      segSup.style.width = (100 - he_lc) + '%';
+      segSup.textContent = 'données suppr. (conf.)';
+      bar.appendChild(segSup);
+    } else {
+      const mkSeg = (cls, val) => {
+        const seg = document.createElement('div');
+        seg.className = 'l1a-seg ' + cls;
+        const pct = (val == null || total === 0) ? 0 : (val / total * 100);
+        seg.style.width = pct + '%';
+        if (pct >= 7) {
+          seg.textContent = fmt(val, 1).replace('.', ',') + '%';
+        }
+        return seg;
+      };
+      bar.appendChild(mkSeg('he_lc', he_lc));
+      bar.appendChild(mkSeg('he_hc', he_hc));
+      bar.appendChild(mkSeg('le', le));
+    }
+    barCell.appendChild(bar);
+    row.appendChild(barCell);
+
+    // Total substitution (HE_LC) en valeur affichée à droite
+    const totalCell = document.createElement('div');
+    totalCell.className = 'total';
+    totalCell.textContent = he_lc == null
+      ? '—'
+      : fmt(he_lc, 1).replace('.', ',') + '%';
+    row.appendChild(totalCell);
+
+    rowsEl.appendChild(row);
+  });
 })();
 
 // === SPARKLINES (SVG inline) ===

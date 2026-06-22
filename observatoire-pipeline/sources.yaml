@@ -114,6 +114,15 @@ sources:
     axe_tdb: ["ecosysteme"]
     notes: "Sert la sous-lentille 1b « demande marché » de l'analyse AI-exposure. Granularité SCIAN 3 chiffres, intermédiaire entre les effectifs ISQ niveau 4 et la rémunération EERH niveau 2. Couvre 512, 513, 516, 519, 711, 712 ; SCIAN 515 archivé. Métrique clé : « moyenne du salaire horaire offert » dans les postes vacants — distinct du salaire EERH versé aux salariés en place. L'écart entre les deux est un signal de tension du marché."
 
+  ai_exposure_culture:
+    label: "Exposition occupationnelle à l'IA dans les industries culturelles — Canada, indice C-AIOE"
+    file_pattern: "ai_exposure_culture*.csv"
+    isq_url: "https://www150.statcan.gc.ca/n1/pub/36-28-0001/2026003/article/00003-eng.htm"
+    classification: "Statistique Canada Economic and Social Reports — Mehdi, Allen, Lesica & Watt (mars 2026) ; indice C-AIOE Felten + Pizzinelli ; données 2021 Census + CEEDD ; ventilation par industrie et par sexe"
+    extractor: extract_ai_exposure_culture
+    axe_tdb: ["ecosysteme"]
+    notes: "Sert la sous-lentille 1a « demande experte » de l'analyse AI-exposure. Cinq industries culturelles canadiennes ventilées en trois catégories d'exposition (substitution potentielle, augmentation potentielle, faible exposition). Granularité Canada national (pas de Québec). Données 2021. Le fichier CSV est compilé à partir du tableau Chart 1 de l'article StatCan, sous licence ouverte Statistics Canada. À actualiser quand StatCan publiera la prochaine vague."
+
   ventes_livres:
     label: "Variations mensuelles et annuelles des ventes de livres neufs"
     isq_table_id: "2342"

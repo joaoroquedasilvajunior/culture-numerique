@@ -479,6 +479,11 @@ def derive_all(combined: dict, annee: int = 2025) -> dict:
     # sur les 5 derniers trimestres.
     lentille_1b = combined.get('job_vacancy_quebec')
 
+    # Bloc auxiliaire — sous-lentille 1a « demande experte » (hors protocole)
+    # Lecture directe de l'extraction StatCan C-AIOE pour les industries
+    # culturelles canadiennes. Ferme la grille à trois lentilles AI-exposure.
+    lentille_1a = combined.get('ai_exposure_culture')
+
     payload = {
         "annee": annee,
         "date_calcul": dt.datetime.now().isoformat(timespec='seconds'),
@@ -507,5 +512,15 @@ def derive_all(combined: dict, annee: int = 2025) -> dict:
                             'embaucher dans les industries culturelles, à quel '
                             'salaire, à quel taux de vacance.'),
             **lentille_1b,
+        }
+    if lentille_1a is not None:
+        payload["lentille_1a_demande_experte"] = {
+            'statut': 'auxiliaire_provisoire',
+            'note_statut': ('Dérivation analytique hors protocole v1.1.0. Pas un '
+                            'repère gelé. Sert la sous-lentille 1a « demande '
+                            'experte » de l\'analyse AI-exposure : indice C-AIOE '
+                            '(Felten + Pizzinelli) appliqué aux industries '
+                            'culturelles canadiennes par Statistique Canada.'),
+            **lentille_1a,
         }
     return payload

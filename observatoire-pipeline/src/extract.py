@@ -887,6 +887,118 @@ def extract_remunerations_eerh_statcan(path: Path) -> dict:
     }
 
 
+def extract_ai_exposure_culture(path: Path) -> dict:
+    """Indice C-AIOE (complementarity-adjusted AI occupational exposure) pour
+    les industries culturelles canadiennes, d'après Mehdi, Allen, Lesica & Watt
+    (Statistique Canada, mars 2026).
+
+    Sert la **sous-lentille 1a « demande experte »** de l'analyse AI-exposure.
+    Mesure prospective : pour chaque industrie culturelle, pourcentage des
+    emplois classés en trois catégories selon l'indice de Felten et al. (2021)
+    et Pizzinelli et al. (2023) :
+
+      * **HE_LC** = Haute exposition + Faible complémentarité → potentiel de
+        substitution AI (l'IA peut remplacer le travail humain)
+      * **HE_HC** = Haute exposition + Haute complémentarité → potentiel
+        d'augmentation (l'IA enrichit le travail humain)
+      * **LE**    = Faible exposition à l'IA (peu de transformation prévue)
+
+    Données 2021 (recensement + CEEDD), classification NAICS 2022, sexe (men+
+    et women+ depuis 2021). Source : Statistique Canada, Economic and Social
+    Reports, 25 mars 2026, sous licence ouverte.
+
+    Granularité : Canada national. Pas de coupe Québec disponible dans la
+    publication ; limite cohérente avec la lentille 2 AEI (Anthropic Economic
+    Index Canada).
+    """
+    industries_data = defaultdict(lambda: {'men+': None, 'women+': None})
+
+    with open(path, encoding='utf-8') as fh:
+        reader = csv.reader(fh)
+        for row in reader:
+            if not row or row[0].startswith('#'):
+                continue
+            if row[0] == 'industrie_code':  # header
+                continue
+            if len(row) < 6:
+                continue
+            code, libelle, sexe, he_lc, he_hc, le = row[:6]
+            if not code:
+                continue
+            scores = {
+                'he_lc_pct': float(he_lc) if he_lc.strip() else None,
+                'he_hc_pct': float(he_hc) if he_hc.strip() else None,
+                'le_pct': float(le) if le.strip() else None,
+            }
+            # libellé est répété ; on garde
+            industries_data[(code, libelle)][sexe] = scores
+
+    # Reformater en liste d'industries
+    industries_out = []
+    for (code, libelle), par_sexe in industries_data.items():
+        # Calcul d'agrégat hommes+femmes (moyenne simple, faute d'avoir les
+        # parts de chaque sexe dans l'industrie) — à interpréter avec prudence
+        h = par_sexe.get('men+') or {}
+        f = par_sexe.get('women+') or {}
+        def _moy(k):
+            vh, vf = h.get(k), f.get(k)
+            if vh is None and vf is None:
+                return None
+            if vh is None:
+                return vf
+            if vf is None:
+                return vh
+            return round((vh + vf) / 2, 1)
+        industries_out.append({
+            'code': code,
+            'libelle': libelle,
+            'men+': par_sexe.get('men+'),
+            'women+': par_sexe.get('women+'),
+            'moyenne_sexes': {
+                'he_lc_pct': _moy('he_lc_pct'),
+                'he_hc_pct': _moy('he_hc_pct'),
+                'le_pct': _moy('le_pct'),
+            },
+        })
+
+    # Tri : industries culturelles d'abord (par taux HE_LC moyen décroissant),
+    # puis « autres industries » en référence à la fin
+    def _tri_key(ind):
+        is_autre = ind['code'] == 'autres'
+        he_lc = ind['moyenne_sexes']['he_lc_pct'] or 0
+        return (is_autre, -he_lc)
+    industries_out.sort(key=_tri_key)
+
+    return {
+        'source': ('Statistique Canada — Mehdi, Allen, Lesica & Watt (2026), '
+                   '« Potential occupational exposure to artificial intelligence '
+                   'across selected cultural industries in Canada », Economic and '
+                   'Social Reports, 25 mars 2026'),
+        'doi': '10.25318/36280001202600300003-eng',
+        'url': ('https://www150.statcan.gc.ca/n1/pub/36-28-0001/2026003/article/'
+                '00003-eng.htm'),
+        'methode': ('Indice C-AIOE (complementarity-adjusted AI occupational '
+                    'exposure), Felten, Raj & Seamans (2021) et Pizzinelli et '
+                    'al. (2023). Classification des emplois en trois catégories : '
+                    'HE_LC (haute exposition + faible complémentarité → '
+                    'substitution potentielle), HE_HC (haute exposition + haute '
+                    'complémentarité → augmentation potentielle), LE (faible '
+                    'exposition à l\'IA).'),
+        'periode_reference': 'Mai 2021 (Census + CEEDD)',
+        'pays': 'Canada (national)',
+        'note_limites': ('Granularité Canada national, pas de coupe Québec dans '
+                         "la publication. Sample : employés 18-64 ans, secteur "
+                         "commercial seulement (hors admin. publique, services "
+                         "éducatifs, santé). Estimation basée sur la faisabilité "
+                         "technologique de remplacer les tâches, pas sur le "
+                         "comportement réel des employeurs. Exposition n'implique "
+                         "pas perte d'emploi : transformation potentielle des "
+                         "tâches uniquement. Données 2021, à actualiser quand "
+                         "StatCan publiera la prochaine vague."),
+        'industries': industries_out,
+    }
+
+
 def extract_job_vacancy_quebec(path: Path) -> dict:
     """Table StatCan CANSIM 14-10-0442 — Postes vacants, employés salariés,
     taux de postes vacants et salaire horaire offert moyen, par SCIAN 3 chiffres,
@@ -1209,4 +1321,5 @@ EXTRACTORS = {
     'extract_remunerations_eerh_statcan': extract_remunerations_eerh_statcan,
     'extract_aei_canada': extract_aei_canada,
     'extract_job_vacancy_quebec': extract_job_vacancy_quebec,
+    'extract_ai_exposure_culture': extract_ai_exposure_culture,
 }
