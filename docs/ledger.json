@@ -1,5 +1,5 @@
 {
-  "build_iso": "2026-06-22T20:12:19.525737+00:00",
+  "build_iso": "2026-06-22T20:46:56.603385+00:00",
   "pipeline_version": "1.0.0",
   "sources_used": [
     {
@@ -91,6 +91,15 @@
       "mtime_iso": "2026-06-22T19:52:25.588132+00:00",
       "source_key": "job_vacancy_quebec",
       "label": "Postes vacants, taux et salaire horaire offert (JVWS) — Québec, SCIAN 3 chiffres, trimestriel"
+    },
+    {
+      "path": "/Users/joaoroque/Documents/Claude/Projects/Culture Québec en donnée/Données Québec/ai_exposure_culture_canada_2026.csv",
+      "name": "ai_exposure_culture_canada_2026.csv",
+      "sha256": "ac0b8a477930b14c67d868bb037b0394c6f6b5eb62042d82a3cbd48b3d2bae84",
+      "size_bytes": 2416,
+      "mtime_iso": "2026-06-22T20:18:38.093913+00:00",
+      "source_key": "ai_exposure_culture",
+      "label": "Exposition occupationnelle à l'IA dans les industries culturelles — Canada, indice C-AIOE"
     },
     {
       "path": "/Users/joaoroque/Documents/Claude/Projects/Culture Québec en donnée/Données Québec/Variations mensuelles et annuelles des ventes de livres neufs, Québec.xlsx",

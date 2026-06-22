@@ -1,6 +1,6 @@
 {
   "annee": 2025,
-  "date_calcul": "2026-06-22T16:12:19",
+  "date_calcul": "2026-06-22T16:46:56",
   "protocole_version": "1.1.0",
   "reperes": {
     "r1_ecart_decouvrabilite": {
@@ -2282,6 +2282,114 @@
             "2025-10",
             "2026-01"
           ]
+        }
+      }
+    ]
+  },
+  "lentille_1a_demande_experte": {
+    "statut": "auxiliaire_provisoire",
+    "note_statut": "Dérivation analytique hors protocole v1.1.0. Pas un repère gelé. Sert la sous-lentille 1a « demande experte » de l'analyse AI-exposure : indice C-AIOE (Felten + Pizzinelli) appliqué aux industries culturelles canadiennes par Statistique Canada.",
+    "source": "Statistique Canada — Mehdi, Allen, Lesica & Watt (2026), « Potential occupational exposure to artificial intelligence across selected cultural industries in Canada », Economic and Social Reports, 25 mars 2026",
+    "doi": "10.25318/36280001202600300003-eng",
+    "url": "https://www150.statcan.gc.ca/n1/pub/36-28-0001/2026003/article/00003-eng.htm",
+    "methode": "Indice C-AIOE (complementarity-adjusted AI occupational exposure), Felten, Raj & Seamans (2021) et Pizzinelli et al. (2023). Classification des emplois en trois catégories : HE_LC (haute exposition + faible complémentarité → substitution potentielle), HE_HC (haute exposition + haute complémentarité → augmentation potentielle), LE (faible exposition à l'IA).",
+    "periode_reference": "Mai 2021 (Census + CEEDD)",
+    "pays": "Canada (national)",
+    "note_limites": "Granularité Canada national, pas de coupe Québec dans la publication. Sample : employés 18-64 ans, secteur commercial seulement (hors admin. publique, services éducatifs, santé). Estimation basée sur la faisabilité technologique de remplacer les tâches, pas sur le comportement réel des employeurs. Exposition n'implique pas perte d'emploi : transformation potentielle des tâches uniquement. Données 2021, à actualiser quand StatCan publiera la prochaine vague.",
+    "industries": [
+      {
+        "code": "513212+541515",
+        "libelle": "Video game publishers et video game design and development services",
+        "men+": {
+          "he_lc_pct": 78.8,
+          "he_hc_pct": 18.0,
+          "le_pct": 3.2
+        },
+        "women+": {
+          "he_lc_pct": 71.6,
+          "he_hc_pct": 25.2,
+          "le_pct": 3.2
+        },
+        "moyenne_sexes": {
+          "he_lc_pct": 75.2,
+          "he_hc_pct": 21.6,
+          "le_pct": 3.2
+        }
+      },
+      {
+        "code": "513_hors_513212",
+        "libelle": "Publishing industries (sauf video game publishers)",
+        "men+": {
+          "he_lc_pct": 59.1,
+          "he_hc_pct": 31.9,
+          "le_pct": 9.0
+        },
+        "women+": {
+          "he_lc_pct": 59.4,
+          "he_hc_pct": 35.3,
+          "le_pct": 5.3
+        },
+        "moyenne_sexes": {
+          "he_lc_pct": 59.2,
+          "he_hc_pct": 33.6,
+          "le_pct": 7.2
+        }
+      },
+      {
+        "code": "5122+71113",
+        "libelle": "Sound recording industries et musical groups and artists",
+        "men+": {
+          "he_lc_pct": 58.8,
+          "he_hc_pct": null,
+          "le_pct": null
+        },
+        "women+": {
+          "he_lc_pct": 59.6,
+          "he_hc_pct": null,
+          "le_pct": null
+        },
+        "moyenne_sexes": {
+          "he_lc_pct": 59.2,
+          "he_hc_pct": null,
+          "le_pct": null
+        }
+      },
+      {
+        "code": "5121",
+        "libelle": "Motion picture and video industries",
+        "men+": {
+          "he_lc_pct": 55.2,
+          "he_hc_pct": 29.2,
+          "le_pct": 15.6
+        },
+        "women+": {
+          "he_lc_pct": 52.7,
+          "he_hc_pct": 34.0,
+          "le_pct": 13.3
+        },
+        "moyenne_sexes": {
+          "he_lc_pct": 54.0,
+          "he_hc_pct": 31.6,
+          "le_pct": 14.4
+        }
+      },
+      {
+        "code": "autres",
+        "libelle": "Autres industries (commercial sector hors culture)",
+        "men+": {
+          "he_lc_pct": 22.4,
+          "he_hc_pct": 23.9,
+          "le_pct": 53.7
+        },
+        "women+": {
+          "he_lc_pct": 44.6,
+          "he_hc_pct": 24.5,
+          "le_pct": 30.9
+        },
+        "moyenne_sexes": {
+          "he_lc_pct": 33.5,
+          "he_hc_pct": 24.2,
+          "le_pct": 42.3
         }
       }
     ]
