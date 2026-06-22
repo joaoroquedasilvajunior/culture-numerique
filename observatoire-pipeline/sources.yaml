@@ -87,6 +87,15 @@ sources:
     axe_tdb: ["ecosysteme"]
     notes: "Série annuelle EERH portée par le Québec. Sert de baseline figée pour les variations 2025 quand le fichier mensuel passe en année courante (YTD)."
 
+  remunerations_eerh_statcan:
+    label: "Rémunération hebdomadaire moyenne (EERH) — Québec, secteurs SCIAN 2 chiffres, mensuel désaisonnalisé"
+    file_pattern: "14100223*.zip"
+    isq_url: "https://www150.statcan.gc.ca/t1/tbl1/fr/tv.action?pid=1410022301"
+    classification: "Statistique Canada CANSIM 14-10-0223 — EERH ; mensuel désaisonnalisé ; SCIAN 2 chiffres provincial"
+    extractor: extract_remunerations_eerh_statcan
+    axe_tdb: ["ecosysteme"]
+    notes: "Source Statistique Canada (et non ISQ) parce que l'ISQ ne diffuse pas le volet rémunération de l'EERH pour le Québec dans le thème culture. Limite : granularité SCIAN 2 chiffres uniquement ([51] Information/culture, [71] Arts-spectacles-loisirs). Sert la lentille 3 « rémunération » de l'analyse AI-exposure, en complément des effectifs de emplois_eerh_annuel (qui descend au niveau 4 chiffres mais ne contient pas la rémunération)."
+
   ventes_livres:
     label: "Variations mensuelles et annuelles des ventes de livres neufs"
     isq_table_id: "2342"

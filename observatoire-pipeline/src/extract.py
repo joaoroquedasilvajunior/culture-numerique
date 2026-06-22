@@ -17,7 +17,11 @@ ces marqueurs après en avoir extrait le niveau hiérarchique.
 """
 
 from __future__ import annotations
+import csv
+import io
 import re
+import zipfile
+from collections import defaultdict
 from pathlib import Path
 from openpyxl import load_workbook
 
@@ -767,6 +771,122 @@ def extract_cinema_pays_annuel(path: Path) -> dict:
     return base
 
 
+def extract_remunerations_eerh_statcan(path: Path) -> dict:
+    """Table StatCan CANSIM 14-10-0223 « Emploi et rémunération hebdomadaire
+    moyenne (incluant le temps supplémentaire) pour l'ensemble des salariés
+    selon la province et le territoire, données mensuelles, désaisonnalisées ».
+
+    Format : zip contenant un CSV en format long (≈ 47 Mo non compressé) avec
+    les colonnes PÉRIODE DE RÉFÉRENCE, GÉO, Estimation, SCIAN, ..., VALEUR.
+    L'extracteur stream-parse le CSV en filtrant uniquement les lignes Québec
+    × secteurs SCIAN suivis (niveau 2 chiffres).
+
+    **Limite de granularité importante** : la table n'est diffusée qu'au niveau
+    SCIAN 2 chiffres pour les coupes provinciales. Les secteurs culturels
+    précis qu'on suit ailleurs dans le pipeline (5121 film, 5162 streaming,
+    7111 arts d'interprétation, etc.) sont ici agrégés dans [51] et [71].
+    C'est documenté dans le champ `note_granularite` du retour.
+
+    Sert la lentille 3 « rémunération » de l'analyse AI-exposure, en
+    complément des effectifs de `emplois_eerh_annuel` (ISQ, niveau 4 chiffres).
+    """
+    # Secteurs SCIAN à 2 chiffres pertinents pour la lentille 3
+    SECTEURS = {
+        '51': "Industrie de l'information et industrie culturelle",
+        '71': 'Arts, spectacles et loisirs',
+    }
+    # Libellés StatCan des deux estimations (matching par sous-chaîne robuste)
+    EST_EMPLOI = 'Emploi'
+    EST_REMU = 'Rémunération'
+
+    # Collecte : (code, mesure_key) -> liste [(periode, valeur)]
+    serie = defaultdict(list)
+
+    with zipfile.ZipFile(path) as z:
+        csv_name = [n for n in z.namelist()
+                    if n.endswith('.csv') and 'MetaData' not in n]
+        if not csv_name:
+            raise ValueError(f"Aucun CSV de données dans {path.name}")
+        with z.open(csv_name[0]) as fh:
+            text = io.TextIOWrapper(fh, encoding='utf-8-sig', newline='')
+            reader = csv.reader(text, delimiter=';')
+            next(reader)  # header
+            for row in reader:
+                if len(row) < 12:
+                    continue
+                periode, geo, _, estim, scian = row[:5]
+                if geo != 'Québec':
+                    continue
+                m = re.search(r'\[([^\]]+)\]', scian)
+                code = m.group(1).strip() if m else ''
+                if code not in SECTEURS:
+                    continue
+                if EST_EMPLOI in estim:
+                    mesure = 'effectifs'
+                elif EST_REMU in estim:
+                    mesure = 'remuneration_hebdo'
+                else:
+                    continue
+                val = _to_num(row[11])
+                serie[(code, mesure)].append((periode, val))
+
+    # Agrégations annuelles (moyenne arithmétique mensuelle)
+    moyennes = defaultdict(dict)  # (code, mesure) -> {annee: moyenne}
+    n_mois = defaultdict(dict)    # (code, mesure) -> {annee: nombre_mois}
+    for key, observations in serie.items():
+        by_year = defaultdict(list)
+        for per, v in observations:
+            if v is None:
+                continue
+            try:
+                an = int(per.split('-')[0])
+                by_year[an].append(v)
+            except (ValueError, IndexError):
+                pass
+        for an, vals in by_year.items():
+            moyennes[key][an] = round(sum(vals) / len(vals), 2)
+            n_mois[key][an] = len(vals)
+
+    # Détecter la plage globale
+    toutes_periodes = sorted({p for obs in serie.values() for p, _ in obs})
+    periode_min = toutes_periodes[0] if toutes_periodes else None
+    periode_max = toutes_periodes[-1] if toutes_periodes else None
+
+    # Assembler la sortie
+    secteurs_out = []
+    for code, libelle in SECTEURS.items():
+        bloc = {'code_scian': code, 'libelle': libelle, 'mesures': {}}
+        for mesure in ('effectifs', 'remuneration_hebdo'):
+            key = (code, mesure)
+            if key not in serie:
+                continue
+            bloc['mesures'][mesure] = {
+                'serie_mensuelle': [
+                    {'periode': p, 'valeur': v} for p, v in serie[key]
+                ],
+                'moyennes_annuelles': [
+                    {'annee': an, 'valeur': moyennes[key][an],
+                     'n_mois': n_mois[key][an]}
+                    for an in sorted(moyennes[key].keys())
+                ],
+            }
+        secteurs_out.append(bloc)
+
+    return {
+        'source': ('Statistique Canada — CANSIM 14-10-0223 (Emploi et rémunération '
+                   'hebdomadaire moyenne, EERH, données mensuelles désaisonnalisées)'),
+        'tableau': '14-10-0223',
+        'periode_min': periode_min,
+        'periode_max': periode_max,
+        'note_granularite': ('SCIAN niveau 2 chiffres uniquement pour les coupes '
+                             'provinciales. Les sous-secteurs culture précis '
+                             '(5121 film, 5162 streaming, 7111 arts d\'interprétation, etc.) '
+                             'sont agrégés ici dans [51] et [71]. Pour la granularité '
+                             'fine, utiliser emplois_eerh_annuel (ISQ).'),
+        'secteurs': secteurs_out,
+    }
+
+
 # ---------- Registry ----------
 
 EXTRACTORS = {
@@ -784,4 +904,5 @@ EXTRACTORS = {
     'extract_cinema_classement': extract_cinema_classement,
     'extract_cinema_pays_annuel': extract_cinema_pays_annuel,
     'extract_emplois_eerh_annuel': extract_emplois_eerh_annuel,
+    'extract_remunerations_eerh_statcan': extract_remunerations_eerh_statcan,
 }

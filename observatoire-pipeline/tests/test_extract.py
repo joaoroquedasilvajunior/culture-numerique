@@ -146,6 +146,70 @@ def test_emplois_eerh_annuel_5121_baseline_2025(raw_dir):
     assert rec['annees'][-1] == 2025
 
 
+def test_remunerations_eerh_statcan_secteur_51_consolidation(raw_dir):
+    """Lentille 3 améliorée — Secteur [51] Information et culture, Québec :
+    effectifs reculent (−5,4 %) ET rémunération hebdo moyenne monte (+4,3 %)
+    entre 2024 et 2025. Pattern de consolidation cohérent avec une capture
+    de valeur côté survivants, à interpréter avec prudence (effet de composition
+    interne possible vu la granularité SCIAN 2 chiffres seulement).
+
+    Source : Statistique Canada CANSIM 14-10-0223, dump complet 2026-05-28.
+    """
+    f = find_source_file(raw_dir, '14100223*.zip')
+    assert f is not None, "Dump CANSIM 14-10-0223 manquant"
+    data = extract.extract_remunerations_eerh_statcan(f)
+    assert data['tableau'] == '14-10-0223'
+    sect_51 = next(s for s in data['secteurs'] if s['code_scian'] == '51')
+    # Effectifs : moyenne annuelle 2024 et 2025
+    eff = {m['annee']: m for m in sect_51['mesures']['effectifs']['moyennes_annuelles']}
+    assert eff[2024]['valeur'] == 74287.58
+    assert eff[2024]['n_mois'] == 12
+    assert eff[2025]['valeur'] == 70294.33
+    assert eff[2025]['n_mois'] == 12
+    # Rémunération hebdo : moyennes annuelles
+    rem = {m['annee']: m for m in sect_51['mesures']['remuneration_hebdo']['moyennes_annuelles']}
+    assert rem[2024]['valeur'] == 1673.04
+    assert rem[2025]['valeur'] == 1744.35
+    # Pattern de consolidation : effectifs ↓, rémunération ↑
+    assert eff[2025]['valeur'] < eff[2024]['valeur']
+    assert rem[2025]['valeur'] > rem[2024]['valeur']
+
+
+def test_remunerations_eerh_statcan_secteur_71_stable(raw_dir):
+    """Lentille 3 améliorée — Secteur [71] Arts, spectacles, loisirs, Québec :
+    effectifs en légère hausse, rémunération hebdo quasi stable. Pattern
+    distinct du secteur 51 — moins de pression structurelle.
+
+    Source : Statistique Canada CANSIM 14-10-0223.
+    """
+    f = find_source_file(raw_dir, '14100223*.zip')
+    data = extract.extract_remunerations_eerh_statcan(f)
+    sect_71 = next(s for s in data['secteurs'] if s['code_scian'] == '71')
+    eff = {m['annee']: m for m in sect_71['mesures']['effectifs']['moyennes_annuelles']}
+    rem = {m['annee']: m for m in sect_71['mesures']['remuneration_hebdo']['moyennes_annuelles']}
+    assert eff[2024]['valeur'] == 67866.75
+    assert eff[2025]['valeur'] == 69045.58
+    assert rem[2024]['valeur'] == 782.46
+    assert rem[2025]['valeur'] == 787.95
+    # Pattern stable : effectifs en très légère hausse, rémunération quasi stable
+    assert eff[2025]['valeur'] > eff[2024]['valeur']
+    assert abs(rem[2025]['valeur'] - rem[2024]['valeur']) < 10  # variation < 10 $
+
+
+def test_remunerations_eerh_statcan_periode_couverte(raw_dir):
+    """La table CANSIM démarre en janvier 2001 et la diffusion 2026-05-28 va
+    jusqu'à mars 2026 (3 mois d'année partielle 2026)."""
+    f = find_source_file(raw_dir, '14100223*.zip')
+    data = extract.extract_remunerations_eerh_statcan(f)
+    assert data['periode_min'] == '2001-01'
+    assert data['periode_max'] == '2026-03'
+    sect_51 = next(s for s in data['secteurs'] if s['code_scian'] == '51')
+    moy_2026 = {m['annee']: m for m in
+                sect_51['mesures']['effectifs']['moyennes_annuelles']}.get(2026)
+    assert moy_2026 is not None
+    assert moy_2026['n_mois'] == 3  # Jan + Fév + Mars 2026
+
+
 def test_emplois_eerh_annuel_5162_baseline_2025(raw_dir):
     """Baseline figée — distribution contenu en continu (5162) : TCA 2025 = +5,2 %.
 

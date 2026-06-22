@@ -1,5 +1,5 @@
 {
-  "build_iso": "2026-06-19T13:50:52.409921+00:00",
+  "build_iso": "2026-06-22T18:04:29.586059+00:00",
   "pipeline_version": "1.0.0",
   "sources_used": [
     {
@@ -48,22 +48,31 @@
       "label": "Évolution de statistiques clés de la culture et des communications"
     },
     {
-      "path": "/Users/joaoroque/Documents/Claude/Projects/Culture Québec en donnée/Données Québec/Emplois salariés dans certaines industries de la culture et des communications selon l'Enquête sur l'emploi, la rémunération et les heures de travail (EERH), données mensuelles désaisonnalisées en moyennes mobiles de trois mois.xlsx",
-      "name": "Emplois salariés dans certaines industries de la culture et des communications selon l'Enquête sur l'emploi, la rémunération et les heures de travail (EERH), données mensuelles désaisonnalisées en moyennes mobiles de trois mois.xlsx",
-      "sha256": "4bb9199bd1bea22ff784e9f4941953fa9ec59d98f40a46da56e8d6f9c7919f18",
+      "path": "/Users/joaoroque/Documents/Claude/Projects/Culture Québec en donnée/Données Québec/Emplois salariés dans certaines industries de la cut et des comm selon l'Enquête sur l'emploi, la rémunération et les heures de travail (EERH), données mensuelles désaisonnalisées en moyennes mobiles de trois mois, Canada et provinces.xlsx",
+      "name": "Emplois salariés dans certaines industries de la cut et des comm selon l'Enquête sur l'emploi, la rémunération et les heures de travail (EERH), données mensuelles désaisonnalisées en moyennes mobiles de trois mois, Canada et provinces.xlsx",
+      "sha256": "cf8a91e0e229dfc695483918ee6e7067bf560b8fd47ac0ae2a61eae2f55cf2f2",
       "size_bytes": 12953,
-      "mtime_iso": "2026-06-10T17:08:30.847703+00:00",
+      "mtime_iso": "2026-06-22T17:26:45.285900+00:00",
       "source_key": "emplois_eerh",
       "label": "Emplois salariés dans certaines industries de la culture et des communications (EERH) — données mensuelles MM3"
     },
     {
-      "path": "/Users/joaoroque/Documents/Claude/Projects/Culture Québec en donnée/Données Québec/Emplois salariés dans certaines industries de la culture et des communications selon l'Enquête sur l'emploi, la rémunération et les heures de travail (EERH), Canada et provinces, données annuelles, 2001-2025.xlsx",
-      "name": "Emplois salariés dans certaines industries de la culture et des communications selon l'Enquête sur l'emploi, la rémunération et les heures de travail (EERH), Canada et provinces, données annuelles, 2001-2025.xlsx",
-      "sha256": "799b06f47890c89496da817a6f3cb14f11c47dd198bda965af9f9e66a326e22f",
-      "size_bytes": 20362,
-      "mtime_iso": "2026-06-10T23:17:54.526598+00:00",
+      "path": "/Users/joaoroque/Documents/Claude/Projects/Culture Québec en donnée/Données Québec/Emplois salariés dans certaines industries de la culture et des communications selon l'Enquête sur l'emploi, la rémunération et les heures de travail (EERH), Canada et provinces, données annuelles, 2001-2025_2.xlsx",
+      "name": "Emplois salariés dans certaines industries de la culture et des communications selon l'Enquête sur l'emploi, la rémunération et les heures de travail (EERH), Canada et provinces, données annuelles, 2001-2025_2.xlsx",
+      "sha256": "4929d5a1bd9f242cb5cbc0a4c0b459f9efcebcbaa09ca4429df92249c9268136",
+      "size_bytes": 20364,
+      "mtime_iso": "2026-06-22T17:28:08.570547+00:00",
       "source_key": "emplois_eerh_annuel",
       "label": "Emplois salariés dans certaines industries de la culture et des communications (EERH) — données annuelles 2001-2025"
+    },
+    {
+      "path": "/Users/joaoroque/Documents/Claude/Projects/Culture Québec en donnée/Données Québec/14100223-fra.zip",
+      "name": "14100223-fra.zip",
+      "sha256": "b78bbb070dccd1bb15ba1ea1240a07a8a5555422588f808bf69812d168d4d189",
+      "size_bytes": 3316156,
+      "mtime_iso": "2026-06-22T17:53:09.873552+00:00",
+      "source_key": "remunerations_eerh_statcan",
+      "label": "Rémunération hebdomadaire moyenne (EERH) — Québec, secteurs SCIAN 2 chiffres, mensuel désaisonnalisé"
     },
     {
       "path": "/Users/joaoroque/Documents/Claude/Projects/Culture Québec en donnée/Données Québec/Variations mensuelles et annuelles des ventes de livres neufs, Québec.xlsx",
