@@ -336,6 +336,72 @@ a{color:inherit;text-decoration:none}
 }
 .l3-method-note strong{color:var(--cb-400);font-weight:700}
 
+/* LENTILLE 2 USAGE RÉVÉLÉ — Deux cards (collaboration Canada + périmètre créatif) */
+.lentille2-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:18px}
+.l2-card{
+  background:var(--surface);
+  border-radius:var(--radius);
+  padding:20px 22px;
+  box-shadow:var(--shadow-sm);
+  border:1px solid var(--border);
+  border-left:4px solid var(--bb-500);
+  display:flex;flex-direction:column;gap:14px;
+  transition:transform 0.2s,box-shadow 0.2s;
+}
+.l2-card:hover{transform:translateY(-1px);box-shadow:var(--shadow-md)}
+.l2-card.collab{border-left-color:var(--hb-400)}
+.l2-card.creatif{border-left-color:var(--sr-400)}
+.l2-card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.l2-card-title{font-family:'Nunito',sans-serif;font-size:15px;font-weight:700;color:var(--cb-300);line-height:1.3}
+.l2-card-sub{font-size:11.5px;color:var(--text-soft);margin-top:2px}
+.l2-card-badge{
+  font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;
+  padding:3px 9px;border-radius:10px;white-space:nowrap;
+  background:var(--cb-900);color:var(--cb-300);border:1px solid var(--cb-800);
+}
+.l2-big{
+  display:flex;align-items:baseline;gap:14px;margin-top:4px;
+  padding:14px 16px;background:#f9fafc;border-radius:var(--radius-sm);
+}
+.l2-big-value{font-family:'Nunito',sans-serif;font-size:30px;font-weight:800;color:var(--cb-300);letter-spacing:-0.02em;line-height:1}
+.l2-big-label{font-size:12px;color:var(--text-muted);font-weight:600}
+.l2-collab-bar{
+  height:24px;border-radius:12px;overflow:hidden;display:flex;
+  background:#f0f2f5;
+  box-shadow:inset 0 1px 2px rgba(0,0,0,0.05);
+}
+.l2-collab-seg{display:flex;align-items:center;justify-content:center;font-size:10.5px;font-weight:700;color:#fff;letter-spacing:0.04em;transition:opacity 0.2s}
+.l2-collab-seg:hover{opacity:0.85}
+.l2-collab-seg.productif{background:var(--hb-400)}
+.l2-collab-seg.apprentissage{background:var(--sr-400)}
+.l2-collab-seg.none{background:var(--text-soft)}
+.l2-collab-legend{display:flex;gap:14px;flex-wrap:wrap;font-size:11.5px;margin-top:6px}
+.l2-legend-dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;vertical-align:middle}
+.l2-legend-dot.productif{background:var(--hb-400)}
+.l2-legend-dot.apprentissage{background:var(--sr-400)}
+.l2-legend-dot.none{background:var(--text-soft)}
+.l2-modes-detail{display:grid;grid-template-columns:1fr 1fr;gap:6px 14px;font-size:11.5px;color:var(--text-muted)}
+.l2-mode-row{display:flex;justify-content:space-between;padding:2px 0}
+.l2-mode-row .name{color:var(--cb-400)}
+.l2-mode-row .val{font-family:'Nunito',sans-serif;font-weight:700;color:var(--cb-300)}
+.l2-creatif-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:6px}
+.l2-creatif-stat{padding:12px 14px;background:#f9fafc;border-radius:var(--radius-sm);text-align:center}
+.l2-creatif-stat-value{font-family:'Nunito',sans-serif;font-size:22px;font-weight:800;color:var(--cb-300);line-height:1}
+.l2-creatif-stat-label{font-size:10.5px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.04em;font-weight:600;margin-top:4px}
+.l2-tasks-block{margin-top:4px}
+.l2-tasks-title{font-size:10.5px;text-transform:uppercase;letter-spacing:0.06em;font-weight:700;color:var(--text-soft);margin-bottom:6px}
+.l2-task-row{display:flex;gap:10px;align-items:flex-start;padding:3px 0;font-size:11.5px;line-height:1.4}
+.l2-task-row .pct{font-family:'Nunito',sans-serif;font-weight:700;color:var(--cb-300);min-width:42px;text-align:right}
+.l2-task-row .libelle{color:var(--text-muted);flex:1}
+.l2-method-note{
+  margin-top:16px;padding:12px 18px;
+  background:#f5f7fb;
+  border:1px solid var(--border);
+  border-radius:var(--radius-sm);
+  font-size:11.5px;line-height:1.55;color:var(--text-muted);
+}
+.l2-method-note strong{color:var(--cb-400);font-weight:700}
+
 /* TIMELINE */
 .timeline-wrap{
   background:var(--surface);border-radius:var(--radius);padding:24px 28px;
@@ -545,6 +611,10 @@ a{color:inherit;text-decoration:none}
     <a href="#lentille3" data-section="lentille3">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12h6l3-8 4 16 3-8h4"/></svg>
       Lentille 3 améliorée <span class="nav-num">2</span>
+    </a>
+    <a href="#lentille2" data-section="lentille2">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/></svg>
+      Lentille 2 — usage révélé <span class="nav-num">2</span>
     </a>
     <a href="#vue-ensemble" class="active" data-section="vue-ensemble">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
@@ -765,7 +835,105 @@ a{color:inherit;text-decoration:none}
       </div>
 
       <div class="l3-method-note">
-        <strong>Caveat de granularité.</strong> La rémunération hebdomadaire moyenne n'est diffusée par Statistique Canada qu'au niveau SCIAN 2&nbsp;chiffres pour les coupes provinciales (CANSIM 14-10-0223). On ne peut donc pas distinguer dans la rémunération ce qui se passe spécifiquement sur 5121 (film) vs 5162 (streaming). Les composantes ISQ niveau 4 chiffres exposées ci-dessus apportent le contexte effectifs, mais pas la rémunération désagrégée. <strong>Trois lectures restent possibles</strong> du pattern «&nbsp;consolidation&nbsp;» observé sur le secteur 51&nbsp;: capture de valeur côté survivants, effet de composition interne, ou hausse salariale réelle des survivants. La lentille 3 seule ne tranche pas&nbsp;; lentilles 1 (demande experte) et 2 (usage révélé) à instrumenter pour fermer le gap.
+        <strong>Caveat de granularité.</strong> La rémunération hebdomadaire moyenne n'est diffusée par Statistique Canada qu'au niveau SCIAN 2&nbsp;chiffres pour les coupes provinciales (CANSIM 14-10-0223). On ne peut donc pas distinguer dans la rémunération ce qui se passe spécifiquement sur 5121 (film) vs 5162 (streaming). Les composantes ISQ niveau 4 chiffres exposées ci-dessus apportent le contexte effectifs, mais pas la rémunération désagrégée. <strong>Trois lectures restent possibles</strong> du pattern «&nbsp;consolidation&nbsp;» observé sur le secteur 51&nbsp;: capture de valeur côté survivants, effet de composition interne, ou hausse salariale réelle des survivants. La lentille 3 seule ne tranche pas&nbsp;; la lentille 2 (usage révélé, instrumentée ci-dessous) apporte un éclairage complémentaire mais ne ferme pas non plus le gap. Lentille 1 (demande experte) à instrumenter.
+      </div>
+    </section>
+
+    <!-- LENTILLE 2 USAGE RÉVÉLÉ — Dérivation auxiliaire hors protocole -->
+    <section id="lentille2" class="section">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title"><span class="star">⊙</span>Lentille 2 &mdash; usage révélé (Claude.ai Canada)</h2>
+          <p class="section-sub">Ce que les utilisateurs canadiens de Claude.ai font réellement avec l'IA, ventilé par mode de collaboration et par tâche O*NET. Source&nbsp;: Anthropic Economic Index, 5ᵉ édition (publiée le 24 mars 2026, données du 5 au 12 février 2026).</p>
+        </div>
+      </div>
+
+      <div class="l3-statut-banner">
+        <strong>Dérivation auxiliaire &mdash; hors protocole.</strong> Cette section présente la lentille 2 «&nbsp;usage révélé&nbsp;» de la méthode AI-exposure. Elle n'est pas un repère gelé du Protocole v1.1.0. La granularité géographique est le Canada national (pas de coupe Québec dans la release Anthropic). Période d'observation&nbsp;: une seule semaine. Donnée auditable&nbsp;: clé <code>lentille_2_usage_revele</code> dans <a href="reperes_2025.json" target="_blank" rel="noopener">reperes_2025.json</a>.
+      </div>
+
+      <div class="lentille2-grid">
+
+        <!-- L2 card 1 : Collaboration Canada toutes tâches -->
+        <div class="l2-card collab">
+          <div class="l2-card-head">
+            <div>
+              <div class="l2-card-title">Collaboration Canada &mdash; toutes tâches</div>
+              <div class="l2-card-sub">Ratio productif vs apprentissage chez les utilisateurs canadiens de Claude.ai</div>
+            </div>
+            <span class="l2-card-badge" id="l2-collab-badge">5-12 fév. 2026</span>
+          </div>
+
+          <div class="l2-big">
+            <div>
+              <div class="l2-big-value" id="l2-ratio">—</div>
+              <div class="l2-big-label">ratio productif&nbsp;/ apprentissage</div>
+            </div>
+          </div>
+
+          <div class="l2-collab-bar" id="l2-collab-bar">
+            <div class="l2-collab-seg productif" id="l2-seg-productif"></div>
+            <div class="l2-collab-seg apprentissage" id="l2-seg-apprentissage"></div>
+            <div class="l2-collab-seg none" id="l2-seg-none"></div>
+          </div>
+
+          <div class="l2-collab-legend">
+            <span><span class="l2-legend-dot productif"></span>Productif <span id="l2-prod-pct">—</span></span>
+            <span><span class="l2-legend-dot apprentissage"></span>Apprentissage <span id="l2-appr-pct">—</span></span>
+            <span><span class="l2-legend-dot none"></span>Aucune <span id="l2-none-pct">—</span></span>
+          </div>
+
+          <div class="l2-tasks-title" style="margin-top:6px">Détail des modes</div>
+          <div class="l2-modes-detail">
+            <div class="l2-mode-row"><span class="name">Directive</span><span class="val" id="l2-mode-directive">—</span></div>
+            <div class="l2-mode-row"><span class="name">Task iteration</span><span class="val" id="l2-mode-task_iteration">—</span></div>
+            <div class="l2-mode-row"><span class="name">Feedback loop</span><span class="val" id="l2-mode-feedback_loop">—</span></div>
+            <div class="l2-mode-row"><span class="name">Learning</span><span class="val" id="l2-mode-learning">—</span></div>
+            <div class="l2-mode-row"><span class="name">Validation</span><span class="val" id="l2-mode-validation">—</span></div>
+            <div class="l2-mode-row"><span class="name">None</span><span class="val" id="l2-mode-none">—</span></div>
+          </div>
+        </div>
+
+        <!-- L2 card 2 : Périmètre créatif au Canada -->
+        <div class="l2-card creatif">
+          <div class="l2-card-head">
+            <div>
+              <div class="l2-card-title">Périmètre créatif au Canada</div>
+              <div class="l2-card-sub">Part des conversations canadiennes sur des tâches culturelles au sens du Carnet (13 tâches O*NET retenues)</div>
+            </div>
+            <span class="l2-card-badge">13 tâches</span>
+          </div>
+
+          <div class="l2-creatif-stats">
+            <div class="l2-creatif-stat">
+              <div class="l2-creatif-stat-value" id="l2-pct-coeur">—</div>
+              <div class="l2-creatif-stat-label">Cœur culturel</div>
+            </div>
+            <div class="l2-creatif-stat">
+              <div class="l2-creatif-stat-value" id="l2-pct-contenu">—</div>
+              <div class="l2-creatif-stat-label">Contenu écrit</div>
+            </div>
+            <div class="l2-creatif-stat">
+              <div class="l2-creatif-stat-value" id="l2-pct-total">—</div>
+              <div class="l2-creatif-stat-label">Total créatif</div>
+            </div>
+          </div>
+
+          <div class="l2-tasks-block">
+            <div class="l2-tasks-title">Cœur culturel (illustration, animation, art visuel, design mode, édition de manuscrits, critique)</div>
+            <div id="l2-tasks-coeur"></div>
+          </div>
+
+          <div class="l2-tasks-block">
+            <div class="l2-tasks-title">Contenu écrit (rédaction publicitaire, édition de copie, design éditorial, web content)</div>
+            <div id="l2-tasks-contenu"></div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="l2-method-note">
+        <strong>Caveats à connaître.</strong> Trois limites de la lentille 2 sur cette release. <strong>1)</strong> Granularité géographique&nbsp;: Canada national, pas de coupe Québec dans la release Anthropic. <strong>2)</strong> Aucune ventilation collaboration par tâche au Canada (l'intersection <code>onet_task::collaboration</code> n'est exposée par Anthropic que pour la géographie <code>GLOBAL</code>, filtre vie privée). Le ratio productif/apprentissage est donc agrégé toutes tâches confondues. <strong>3)</strong> Une seule semaine d'observation&nbsp;; pas de tendance temporelle possible avec ce seul fichier. Pour suivre l'évolution, il faudra intégrer les releases futures de l'AEI au fil de leur publication trimestrielle.
       </div>
     </section>
 
@@ -1327,6 +1495,84 @@ const C = {
       });
     }
   });
+})();
+
+// === LENTILLE 2 USAGE RÉVÉLÉ — Population des deux cards (Canada AEI) ===
+// La donnée vient de l'extracteur extract_aei_canada (src/extract.py) qui filtre
+// le dump CSV de l'Anthropic Economic Index sur geo_id=='CA' et identifie les
+// 13 tâches O*NET retenues comme créatives au sens du Carnet (7 cœur culturel
+// + 6 contenu écrit). Si la donnée est absente, la section reste à l'état
+// statique avec des « — ».
+(function(){
+  const L2 = D.reperes && D.reperes.lentille_2_usage_revele;
+  if (!L2) return;
+
+  const fmt = (n, dec) => (n == null) ? '—' : Number(n).toLocaleString('fr-CA',
+      {minimumFractionDigits: dec, maximumFractionDigits: dec});
+  const setText = (id, val) => { const el = document.getElementById(id);
+                                  if (el) el.textContent = val; };
+  const fmtPct = (v, dec) => (v == null) ? '—' : fmt(v, dec == null ? 1 : dec).replace('.', ',') + ' %';
+
+  // --- Card 1 : Collaboration Canada ---
+  const ag = L2.agregats_collaboration || {};
+  const prod = ag.productif_pct || 0;
+  const appr = ag.apprentissage_pct || 0;
+  const none = ag.none_pct || 0;
+  // Badge période
+  setText('l2-collab-badge',
+          (L2.periode_start || '') && (L2.periode_end || '')
+            ? `${L2.periode_start} → ${L2.periode_end}`
+            : '5-12 fév. 2026');
+  // Ratio + breakdown agrégé
+  const ratio = ag.ratio_productif_apprentissage;
+  setText('l2-ratio', ratio == null ? '—' : fmt(ratio, 1).replace('.', ',') + '×');
+  setText('l2-prod-pct', fmtPct(prod));
+  setText('l2-appr-pct', fmtPct(appr));
+  setText('l2-none-pct', fmtPct(none));
+  // Barre empilée (3 segments en %)
+  const total = prod + appr + none;
+  if (total > 0) {
+    const setSeg = (id, val) => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const pct = (val / total * 100);
+      el.style.width = pct + '%';
+      el.textContent = pct >= 8 ? Math.round(pct) + ' %' : '';
+    };
+    setSeg('l2-seg-productif', prod);
+    setSeg('l2-seg-apprentissage', appr);
+    setSeg('l2-seg-none', none);
+  }
+  // Détail des 6 modes
+  const collab = L2.collaboration_canada || {};
+  setText('l2-mode-directive', fmtPct(collab.directive));
+  setText('l2-mode-task_iteration', fmtPct(collab['task iteration']));
+  setText('l2-mode-feedback_loop', fmtPct(collab['feedback loop']));
+  setText('l2-mode-learning', fmtPct(collab.learning));
+  setText('l2-mode-validation', fmtPct(collab.validation));
+  setText('l2-mode-none', fmtPct(collab.none));
+
+  // --- Card 2 : Périmètre créatif Canada ---
+  const crea = L2.taches_creatives || {};
+  setText('l2-pct-coeur', fmtPct(crea.pct_total_coeur_culturel, 2));
+  setText('l2-pct-contenu', fmtPct(crea.pct_total_contenu_ecrit, 2));
+  setText('l2-pct-total', fmtPct(crea.pct_total_creatif, 2));
+  // Listes de tâches
+  const renderTasks = (containerId, list) => {
+    const el = document.getElementById(containerId);
+    if (!el || !list) return;
+    el.innerHTML = '';
+    list.forEach(t => {
+      const row = document.createElement('div');
+      row.className = 'l2-task-row';
+      const lib = (t.tache_onet || '').slice(0, 90);
+      row.innerHTML = `<span class="pct">${fmtPct(t.pct_total_canada, 2)}</span>` +
+                      `<span class="libelle">${lib}</span>`;
+      el.appendChild(row);
+    });
+  };
+  renderTasks('l2-tasks-coeur', crea.coeur_culturel);
+  renderTasks('l2-tasks-contenu', crea.contenu_ecrit);
 })();
 
 // === SPARKLINES (SVG inline) ===
