@@ -1,6 +1,6 @@
 {
   "annee": 2025,
-  "date_calcul": "2026-06-29T11:06:12",
+  "date_calcul": "2026-06-29T11:24:03",
   "protocole_version": "1.1.0",
   "reperes": {
     "r1_ecart_decouvrabilite": {
@@ -2393,5 +2393,144 @@
         }
       }
     ]
+  },
+  "livre_papier_vs_numerique": {
+    "statut": "auxiliaire_provisoire",
+    "note_statut": "Dérivation analytique hors protocole v1.1.0. Pas un repère gelé. Croise les ventes finales de livres neufs (papier, ISQ Évolution) avec les ventes de livres numériques (ISQ tableau 3408) pour outiller la question substitution vs addition sur la période 2014-2025.",
+    "source_papier": "ISQ Évolution de statistiques clés — Ventes finales de livres neufs, $ courants",
+    "source_numerique": "ISQ tableau 3408 — Ventes de livres numériques, données annuelles, $ courants",
+    "unite": "$ courants (non corrigés de l'inflation)",
+    "serie": [
+      {
+        "annee": 2014,
+        "valeur_papier": 625204614.0,
+        "valeur_numerique": 7168471.0,
+        "valeur_totale": 632373085.0,
+        "part_numerique_pct": 1.134,
+        "var_papier_pct": null,
+        "var_numerique_pct": null,
+        "var_totale_pct": null
+      },
+      {
+        "annee": 2015,
+        "valeur_papier": 608166794.0,
+        "valeur_numerique": 7431371.0,
+        "valeur_totale": 615598165.0,
+        "part_numerique_pct": 1.207,
+        "var_papier_pct": -2.73,
+        "var_numerique_pct": 3.67,
+        "var_totale_pct": -2.65
+      },
+      {
+        "annee": 2016,
+        "valeur_papier": 607047345.0,
+        "valeur_numerique": 7764445.0,
+        "valeur_totale": 614811790.0,
+        "part_numerique_pct": 1.263,
+        "var_papier_pct": -0.18,
+        "var_numerique_pct": 4.48,
+        "var_totale_pct": -0.13
+      },
+      {
+        "annee": 2017,
+        "valeur_papier": 622232341.0,
+        "valeur_numerique": 6621342.0,
+        "valeur_totale": 628853683.0,
+        "part_numerique_pct": 1.053,
+        "var_papier_pct": 2.5,
+        "var_numerique_pct": -14.72,
+        "var_totale_pct": 2.28
+      },
+      {
+        "annee": 2018,
+        "valeur_papier": 616081680.0,
+        "valeur_numerique": 5785331.0,
+        "valeur_totale": 621867011.0,
+        "part_numerique_pct": 0.93,
+        "var_papier_pct": -0.99,
+        "var_numerique_pct": -12.63,
+        "var_totale_pct": -1.11
+      },
+      {
+        "annee": 2019,
+        "valeur_papier": 598584486.0,
+        "valeur_numerique": 6201527.0,
+        "valeur_totale": 604786013.0,
+        "part_numerique_pct": 1.025,
+        "var_papier_pct": -2.84,
+        "var_numerique_pct": 7.19,
+        "var_totale_pct": -2.75
+      },
+      {
+        "annee": 2020,
+        "valeur_papier": 582285509.0,
+        "valeur_numerique": 10501605.0,
+        "valeur_totale": 592787114.0,
+        "part_numerique_pct": 1.772,
+        "var_papier_pct": -2.72,
+        "var_numerique_pct": 69.34,
+        "var_totale_pct": -1.98
+      },
+      {
+        "annee": 2021,
+        "valeur_papier": 660351747.0,
+        "valeur_numerique": 10111411.0,
+        "valeur_totale": 670463158.0,
+        "part_numerique_pct": 1.508,
+        "var_papier_pct": 13.41,
+        "var_numerique_pct": -3.72,
+        "var_totale_pct": 13.1
+      },
+      {
+        "annee": 2022,
+        "valeur_papier": 678396848.0,
+        "valeur_numerique": 9828815.0,
+        "valeur_totale": 688225663.0,
+        "part_numerique_pct": 1.428,
+        "var_papier_pct": 2.73,
+        "var_numerique_pct": -2.79,
+        "var_totale_pct": 2.65
+      },
+      {
+        "annee": 2023,
+        "valeur_papier": 677343462.0,
+        "valeur_numerique": 10260590.0,
+        "valeur_totale": 687604052.0,
+        "part_numerique_pct": 1.492,
+        "var_papier_pct": -0.16,
+        "var_numerique_pct": 4.39,
+        "var_totale_pct": -0.09
+      },
+      {
+        "annee": 2024,
+        "valeur_papier": 704810212.0,
+        "valeur_numerique": 10943532.0,
+        "valeur_totale": 715753744.0,
+        "part_numerique_pct": 1.529,
+        "var_papier_pct": 4.06,
+        "var_numerique_pct": 6.66,
+        "var_totale_pct": 4.09
+      },
+      {
+        "annee": 2025,
+        "valeur_papier": null,
+        "valeur_numerique": 9767653.0,
+        "valeur_totale": null,
+        "part_numerique_pct": null,
+        "var_papier_pct": null,
+        "var_numerique_pct": -10.74,
+        "var_totale_pct": null
+      }
+    ],
+    "synthese": {
+      "periode_complete": "2014-2024",
+      "croissance_papier_pct": 12.73,
+      "croissance_numerique_pct": 52.66,
+      "croissance_totale_pct": 13.19,
+      "part_numerique_debut_pct": 1.134,
+      "part_numerique_fin_pct": 1.529,
+      "lecture": "addition"
+    },
+    "limites": "Données 2025 papier non publiées au moment de l'extraction. Comparaison en dollars courants : la croissance nominale inclut l'effet inflation. Le marché du livre papier est ~60× plus gros en valeur que le numérique au Québec, ce qui rend la part numérique sensible aux fluctuations relatives."
   }
 }

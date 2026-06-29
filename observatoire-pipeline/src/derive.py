@@ -419,6 +419,118 @@ def derive_r5() -> dict:
 
 # === Orchestration ===========================================================
 
+def derive_livre_papier_vs_numerique(evolution_stats: dict,
+                                     ventes_livres_numeriques: dict) -> dict:
+    """
+    Croise la série annuelle « Ventes finales de livres neufs » (papier, $ courants,
+    tableau ISQ via evolution_stats) avec la série « Ventes de livres numériques »
+    (numérique, $ courants, tableau ISQ 3408) pour calculer pour chaque année
+    2014-2025 :
+
+      - valeur_papier ($, peut être None si .. ISQ)
+      - valeur_numerique ($)
+      - valeur_totale ($, papier+num quand papier disponible, sinon None)
+      - part_numerique_pct (% du total, quand papier disponible)
+      - var_papier_pct (YoY)
+      - var_numerique_pct (YoY)
+      - var_totale_pct (YoY)
+
+    Question de recherche outillée : substitution (papier ↘ pendant num ↗)
+    ou addition (les deux ↗) ? La part numérique reste très faible en $ courants
+    (~1-2 % du marché total) ; les variations relatives racontent l'histoire.
+
+    Limites : 2025 papier n'est pas encore publié par l'ISQ (.. dans le tableau
+    Évolution). L'année 2025 est donc renvoyée avec valeur_papier=None, et
+    les indicateurs comparatifs (total, part) sont None pour cette année.
+    """
+    # Index papier : {annee: valeur} depuis evolution_stats.indicateurs.livre_ventes
+    indicateurs = evolution_stats.get('indicateurs', {})
+    livre_serie = indicateurs.get('livre_ventes', {}).get('serie', [])
+    papier_par_annee = {pt['annee']: pt['valeur'] for pt in livre_serie}
+
+    # Série numérique
+    annees_num = ventes_livres_numeriques.get('annees', [])
+    valeurs_num = ventes_livres_numeriques.get('series', {}).get('valeur_ventes', {}).get('valeurs', [])
+    num_par_annee = dict(zip(annees_num, valeurs_num))
+
+    # Périmètre commun : on prend toutes les années où le numérique existe
+    # (le numérique commence en 2014, plus court que le papier qui démarre en 2002)
+    annees_communes = sorted(num_par_annee.keys())
+
+    serie = []
+    prev_papier = None
+    prev_num = None
+    prev_total = None
+    for an in annees_communes:
+        papier = papier_par_annee.get(an)
+        num = num_par_annee.get(an)
+        total = (papier + num) if (papier is not None and num is not None) else None
+        part_num = (num / total * 100) if (total is not None and total > 0 and num is not None) else None
+
+        def _var(prev, cur):
+            if prev is None or cur is None or prev == 0:
+                return None
+            return (cur - prev) / prev * 100
+
+        serie.append({
+            'annee': an,
+            'valeur_papier': papier,
+            'valeur_numerique': num,
+            'valeur_totale': total,
+            'part_numerique_pct': round(part_num, 3) if part_num is not None else None,
+            'var_papier_pct': round(_var(prev_papier, papier), 2) if _var(prev_papier, papier) is not None else None,
+            'var_numerique_pct': round(_var(prev_num, num), 2) if _var(prev_num, num) is not None else None,
+            'var_totale_pct': round(_var(prev_total, total), 2) if _var(prev_total, total) is not None else None,
+        })
+        prev_papier = papier
+        prev_num = num
+        prev_total = total
+
+    # Synthèse : variation cumulée 2014 → dernière année avec papier disponible
+    annees_avec_papier = [s for s in serie if s['valeur_papier'] is not None]
+    synthese = {}
+    if len(annees_avec_papier) >= 2:
+        debut = annees_avec_papier[0]
+        fin = annees_avec_papier[-1]
+        synthese = {
+            'periode_complete': f"{debut['annee']}-{fin['annee']}",
+            'croissance_papier_pct': round(
+                (fin['valeur_papier'] - debut['valeur_papier']) / debut['valeur_papier'] * 100, 2),
+            'croissance_numerique_pct': round(
+                (fin['valeur_numerique'] - debut['valeur_numerique']) / debut['valeur_numerique'] * 100, 2),
+            'croissance_totale_pct': round(
+                (fin['valeur_totale'] - debut['valeur_totale']) / debut['valeur_totale'] * 100, 2),
+            'part_numerique_debut_pct': debut['part_numerique_pct'],
+            'part_numerique_fin_pct': fin['part_numerique_pct'],
+        }
+        # Lecture : addition vs substitution
+        # Si les deux croissent : addition. Si papier décroît et num croît : substitution.
+        croissance_papier = synthese['croissance_papier_pct']
+        croissance_num = synthese['croissance_numerique_pct']
+        if croissance_papier > 0 and croissance_num > 0:
+            verdict = 'addition'  # les deux croissent
+        elif croissance_papier < 0 and croissance_num > 0:
+            verdict = 'substitution_partielle'  # numérique gagne, papier perd
+        elif croissance_papier > 0 and croissance_num < 0:
+            verdict = 'recul_numerique'  # configuration inverse, atypique
+        else:
+            verdict = 'contraction_marche'  # les deux décroissent
+        synthese['lecture'] = verdict
+
+    return {
+        'source_papier': 'ISQ Évolution de statistiques clés — Ventes finales de livres neufs, $ courants',
+        'source_numerique': 'ISQ tableau 3408 — Ventes de livres numériques, données annuelles, $ courants',
+        'unite': '$ courants (non corrigés de l\'inflation)',
+        'serie': serie,
+        'synthese': synthese,
+        'limites': ('Données 2025 papier non publiées au moment de l\'extraction. '
+                    'Comparaison en dollars courants : la croissance nominale '
+                    'inclut l\'effet inflation. Le marché du livre papier est ~60× '
+                    'plus gros en valeur que le numérique au Québec, ce qui rend '
+                    'la part numérique sensible aux fluctuations relatives.'),
+    }
+
+
 def derive_all(combined: dict, annee: int = 2025) -> dict:
     """Calcule les cinq repères à partir du dict combiné produit par le pipeline.
 
@@ -484,6 +596,18 @@ def derive_all(combined: dict, annee: int = 2025) -> dict:
     # culturelles canadiennes. Ferme la grille à trois lentilles AI-exposure.
     lentille_1a = combined.get('ai_exposure_culture')
 
+    # Bloc auxiliaire — Livre papier vs numérique (hors protocole)
+    # Croise la série ISQ « Ventes finales de livres neufs » (papier)
+    # avec le tableau 3408 « Ventes de livres numériques » pour répondre
+    # à la question substitution vs addition.
+    livre_papier_vs_num = None
+    if ('evolution_stats' in combined
+            and 'ventes_livres_numeriques' in combined):
+        livre_papier_vs_num = derive_livre_papier_vs_numerique(
+            combined['evolution_stats'],
+            combined['ventes_livres_numeriques']
+        )
+
     payload = {
         "annee": annee,
         "date_calcul": dt.datetime.now().isoformat(timespec='seconds'),
@@ -522,5 +646,16 @@ def derive_all(combined: dict, annee: int = 2025) -> dict:
                             '(Felten + Pizzinelli) appliqué aux industries '
                             'culturelles canadiennes par Statistique Canada.'),
             **lentille_1a,
+        }
+    if livre_papier_vs_num is not None:
+        payload["livre_papier_vs_numerique"] = {
+            'statut': 'auxiliaire_provisoire',
+            'note_statut': ('Dérivation analytique hors protocole v1.1.0. Pas un '
+                            'repère gelé. Croise les ventes finales de livres '
+                            'neufs (papier, ISQ Évolution) avec les ventes de '
+                            'livres numériques (ISQ tableau 3408) pour outiller '
+                            'la question substitution vs addition sur la période '
+                            '2014-2025.'),
+            **livre_papier_vs_num,
         }
     return payload

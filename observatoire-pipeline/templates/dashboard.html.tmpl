@@ -1449,6 +1449,31 @@ a{color:inherit;text-decoration:none}
         <div class="card-body"><div class="chart-wrap"><canvas id="chart_livres_num_prix"></canvas></div></div>
         <div class="card-foot" id="foot_livres_num_prix"></div>
       </div>
+
+      <h3 style="margin:28px 0 16px;font-family:'Nunito',sans-serif;font-size:15px;color:var(--cb-300);font-weight:700">Croisé papier vs numérique : substitution ou addition ?</h3>
+
+      <div class="card">
+        <div class="card-head">
+          <div>
+            <div class="card-title">Ventes de livres neufs au Québec — papier et numérique, 2014-2025</div>
+            <div class="card-sub" id="sub_papier_num">Sources : ISQ Évolution (papier) + ISQ tableau 3408 (numérique) · $ courants · papier 2025 non encore publié</div>
+          </div>
+          <div id="verdict_papier_num" style="font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;padding:6px 12px;border-radius:6px;background:var(--cb-100);color:var(--cb-700);align-self:flex-start"></div>
+        </div>
+        <div class="card-body"><div class="chart-wrap"><canvas id="chart_papier_num"></canvas></div></div>
+        <div class="card-foot" id="foot_papier_num"></div>
+      </div>
+
+      <div class="card" style="margin-top:20px">
+        <div class="card-head">
+          <div>
+            <div class="card-title">Part du numérique dans le marché total du livre — % en valeur</div>
+            <div class="card-sub">Le numérique reste sous 2 % du marché en $ courants. Pic 2020 à 1,77 % (confinement).</div>
+          </div>
+        </div>
+        <div class="card-body"><div class="chart-wrap"><canvas id="chart_part_num"></canvas></div></div>
+        <div class="card-foot" id="foot_part_num"></div>
+      </div>
     </section>
 
     <!-- ÉCOSYSTÈME -->
@@ -2378,6 +2403,114 @@ spark('spark4', [0, -2, -4, -7, -10, -11.6], C.bo);
       foot.textContent = 'Évolution 2014 → 2025 : ' + (evo >= 0 ? '+' : '') + evo.toFixed(1) + ' %'
         + ' (de ' + pm_2014.toFixed(2).replace('.', ',') + ' $ à ' + pm_2025.toFixed(2).replace('.', ',') + ' $).';
     }
+  }
+})();
+
+// === CHART 9quater: Livre papier vs numérique — séries empilées, $ courants ===
+(function(){
+  const L = D.reperes && D.reperes.livre_papier_vs_numerique;
+  if (!L || !L.serie) return;
+  const el = document.getElementById('chart_papier_num');
+  if (!el) return;
+  const annees = L.serie.map(s => s.annee);
+  const papier = L.serie.map(s => s.valeur_papier == null ? null : s.valeur_papier / 1e6);
+  const num    = L.serie.map(s => s.valeur_numerique == null ? null : s.valeur_numerique / 1e6);
+  new Chart(el, {
+    type: 'bar',
+    data: { labels: annees, datasets: [
+      { label: 'Papier (M$)',    data: papier, backgroundColor: C.cb700, borderRadius: 4, borderSkipped: false, stack: 's' },
+      { label: 'Numérique (M$)', data: num,    backgroundColor: C.bo,    borderRadius: 4, borderSkipped: false, stack: 's' }
+    ]},
+    options: { responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { position: 'bottom', labels: { boxWidth: 12, padding: 12, font: { size: 11 }, usePointStyle: true }},
+        tooltip: { callbacks: { label: c => {
+          if (c.parsed.y == null) return c.dataset.label + ' : non disponible';
+          return c.dataset.label + ' : ' + c.parsed.y.toLocaleString('fr-CA', {maximumFractionDigits: 1}) + ' M$';
+        }}}},
+      scales: {
+        x: { stacked: true, grid: { display: false }},
+        y: { stacked: true, grid: { color: '#f0f4f8' }, ticks: { callback: val => val.toLocaleString('fr-CA') + ' M$' }}
+      }
+    }
+  });
+  // Verdict en chip + foot avec synthèse chiffrée
+  const verdictEl = document.getElementById('verdict_papier_num');
+  const synth = L.synthese || {};
+  const verdictMap = {
+    'addition': { lib: 'Addition (2014-2024)', cls: 'green' },
+    'substitution_partielle': { lib: 'Substitution partielle', cls: 'bo' },
+    'recul_numerique': { lib: 'Recul numérique', cls: 'bo' },
+    'contraction_marche': { lib: 'Contraction du marché', cls: 'bo' },
+  };
+  const v = verdictMap[synth.lecture] || { lib: '—', cls: 'flat' };
+  if (verdictEl) {
+    verdictEl.textContent = v.lib;
+    if (v.cls === 'green') {
+      verdictEl.style.background = 'rgba(34, 161, 84, 0.12)';
+      verdictEl.style.color = '#22a154';
+    } else if (v.cls === 'bo') {
+      verdictEl.style.background = 'rgba(214, 96, 60, 0.12)';
+      verdictEl.style.color = '#d6603c';
+    }
+  }
+  const foot = document.getElementById('foot_papier_num');
+  if (foot && synth.croissance_papier_pct != null) {
+    const fmt = (n) => (n >= 0 ? '+' : '') + n.toLocaleString('fr-CA', {maximumFractionDigits: 1}) + ' %';
+    foot.innerHTML = 'Sur ' + synth.periode_complete + ' : papier ' + fmt(synth.croissance_papier_pct)
+      + ' · numérique ' + fmt(synth.croissance_numerique_pct)
+      + ' · total ' + fmt(synth.croissance_totale_pct) + '.'
+      + ' <em>Le numérique progresse 4× plus vite que le papier mais part d\'une base 60× plus petite ; le papier reste l\'essentiel du marché.</em>';
+  }
+})();
+
+// === CHART 9quinquies: Part du numérique en % du marché total ===
+(function(){
+  const L = D.reperes && D.reperes.livre_papier_vs_numerique;
+  if (!L || !L.serie) return;
+  const el = document.getElementById('chart_part_num');
+  if (!el) return;
+  const annees = L.serie.map(s => s.annee);
+  const parts  = L.serie.map(s => s.part_numerique_pct);
+  // Marqueur spécial pour 2020 (pic à 1,77 %)
+  const pointColors = annees.map(a => a === 2020 ? C.bo : C.cb700);
+  const pointRadii  = annees.map(a => a === 2020 ? 7 : 4);
+  new Chart(el, {
+    type: 'line',
+    data: { labels: annees, datasets: [
+      { label: 'Part numérique (%)',
+        data: parts,
+        borderColor: C.cb700,
+        backgroundColor: 'rgba(38, 70, 83, 0.08)',
+        borderWidth: 2.5,
+        pointBackgroundColor: pointColors,
+        pointBorderColor: pointColors,
+        pointRadius: pointRadii,
+        pointHoverRadius: 8,
+        tension: 0.25,
+        fill: true,
+        spanGaps: false }
+    ]},
+    options: { responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: c => c.parsed.y == null ? 'Donnée non disponible' :
+          'Part numérique ' + c.label + ' : ' + c.parsed.y.toLocaleString('fr-CA', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + ' %' }}},
+      scales: {
+        x: { grid: { display: false }},
+        y: { grid: { color: '#f0f4f8' },
+          ticks: { callback: val => val.toLocaleString('fr-CA', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + ' %' },
+          beginAtZero: true,
+          suggestedMax: 2.0 }
+      }
+    }
+  });
+  const foot = document.getElementById('foot_part_num');
+  if (foot) {
+    foot.innerHTML = 'Lecture : trois sous-périodes se dégagent. '
+      + '<strong>2014-2019</strong> : stagnation autour de 1 %, marché en lent recul. '
+      + '<strong>2020</strong> : pic conjoncturel à 1,77 % (confinement, livres gratuits). '
+      + '<strong>2021-2024</strong> : palier stable autour de 1,5 %, papier rebondit et entraîne le total.';
   }
 })();
 

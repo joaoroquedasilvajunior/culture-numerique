@@ -575,3 +575,81 @@ def test_ventes_livres_numeriques_palier_post_covid(raw_dir):
     # Prix moyen 2025
     pm_2025 = data['series']['prix_moyen']['valeurs'][annees.index(2025)]
     assert pm_2025 == 19.42
+
+
+# === Dériveur croisé livre papier vs numérique ===
+
+def test_livre_papier_vs_numerique_perimetre(raw_dir):
+    """Vérifie que le dériveur produit une série 2014-2025 avec papier et
+    numérique alignés, et la synthèse comparative.
+    """
+    from src import extract
+    from src.derive import derive_livre_papier_vs_numerique
+    fp_ev = find_source_file(raw_dir, "Évolution de statistiques clés*.xlsx")
+    fp_num = find_source_file(raw_dir, "Ventes de livres numériques*.xlsx")
+    assert fp_ev is not None and fp_num is not None
+    ev = extract.extract_evolution(fp_ev)
+    num = extract.extract_ventes_livres_numeriques(fp_num)
+    out = derive_livre_papier_vs_numerique(ev, num)
+    # Série
+    assert 'serie' in out
+    assert out['serie'][0]['annee'] == 2014
+    assert out['serie'][-1]['annee'] == 2025
+    assert len(out['serie']) == 12
+    # Synthèse
+    assert out['synthese']['periode_complete'] == '2014-2024'
+    assert out['synthese']['lecture'] == 'addition'
+
+
+def test_livre_papier_vs_numerique_pic_2020(raw_dir):
+    """En 2020, le numérique bondit (+69,3 %) pendant que le papier
+    décroche (-2,7 %). C'est le seul point de substitution observable
+    dans la série, et il est conjoncturel (COVID).
+    """
+    from src import extract
+    from src.derive import derive_livre_papier_vs_numerique
+    fp_ev = find_source_file(raw_dir, "Évolution de statistiques clés*.xlsx")
+    fp_num = find_source_file(raw_dir, "Ventes de livres numériques*.xlsx")
+    ev = extract.extract_evolution(fp_ev)
+    num = extract.extract_ventes_livres_numeriques(fp_num)
+    out = derive_livre_papier_vs_numerique(ev, num)
+    pt_2020 = next(s for s in out['serie'] if s['annee'] == 2020)
+    assert pt_2020['var_papier_pct'] is not None and pt_2020['var_papier_pct'] < 0
+    assert pt_2020['var_numerique_pct'] is not None and pt_2020['var_numerique_pct'] > 50
+
+
+def test_livre_papier_vs_numerique_part_marginale(raw_dir):
+    """La part du numérique dans le marché total reste sous 2 % en valeur
+    sur toute la période. C'est la limite à signaler en interprétation :
+    la part est sensible aux fluctuations relatives mais le numérique
+    n'a pas fondamentalement déplacé le marché en $.
+    """
+    from src import extract
+    from src.derive import derive_livre_papier_vs_numerique
+    fp_ev = find_source_file(raw_dir, "Évolution de statistiques clés*.xlsx")
+    fp_num = find_source_file(raw_dir, "Ventes de livres numériques*.xlsx")
+    ev = extract.extract_evolution(fp_ev)
+    num = extract.extract_ventes_livres_numeriques(fp_num)
+    out = derive_livre_papier_vs_numerique(ev, num)
+    parts = [s['part_numerique_pct'] for s in out['serie'] if s['part_numerique_pct'] is not None]
+    assert max(parts) < 2.0  # jamais au-dessus de 2 %
+    assert min(parts) > 0.5  # jamais sous 0,5 %
+
+
+def test_livre_papier_vs_numerique_2025_papier_manquant(raw_dir):
+    """L'ISQ n'a pas encore publié les ventes papier 2025 dans Évolution.
+    Le dériveur doit gérer ce trou en mettant valeur_papier et part_numerique
+    à None pour 2025, sans planter.
+    """
+    from src import extract
+    from src.derive import derive_livre_papier_vs_numerique
+    fp_ev = find_source_file(raw_dir, "Évolution de statistiques clés*.xlsx")
+    fp_num = find_source_file(raw_dir, "Ventes de livres numériques*.xlsx")
+    ev = extract.extract_evolution(fp_ev)
+    num = extract.extract_ventes_livres_numeriques(fp_num)
+    out = derive_livre_papier_vs_numerique(ev, num)
+    pt_2025 = next(s for s in out['serie'] if s['annee'] == 2025)
+    assert pt_2025['valeur_papier'] is None
+    assert pt_2025['valeur_numerique'] is not None
+    assert pt_2025['valeur_totale'] is None
+    assert pt_2025['part_numerique_pct'] is None
