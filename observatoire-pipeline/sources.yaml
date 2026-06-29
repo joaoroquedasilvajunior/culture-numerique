@@ -142,6 +142,16 @@ sources:
     axe_tdb: ["consommation", "ecosysteme"]
     notes: "Série mensuelle ventilée par catégorie de points de vente : éditeurs, distributeurs, librairies (agréées / à succursales / indépendantes), grande diffusion. Tableau ISQ 2341."
 
+  ventes_livres_numeriques:
+    label: "Ventes de livres numériques, données annuelles, Québec"
+    isq_table_id: "3408"
+    file_pattern: "Ventes de livres numériques*.xlsx"
+    isq_url: "https://statistique.quebec.ca/fr/produit/tableau/3408"
+    classification: "OCCQ — séries annuelles 2014-2025 ; valeur au prix consommateur avant taxes ; inclut gratuit et autoédités"
+    extractor: extract_ventes_livres_numeriques
+    axe_tdb: ["consommation", "ecosysteme"]
+    notes: "Méthodologie Optique culture no 41. Trois métriques : nombre d'exemplaires, valeur des ventes en $, prix moyen en $. La série fait apparaître un pic massif en 2020 (894 531 exemplaires, prix moyen 11,74 $) qui combine effet confinement et forte part de gratuits — à interpréter avec prudence dans les comparaisons annuelles."
+
   etablissements:
     label: "Nombre d'établissements culturels de certains types"
     isq_table_id: "929"

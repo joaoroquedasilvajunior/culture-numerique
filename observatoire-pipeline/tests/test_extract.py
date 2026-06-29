@@ -511,3 +511,67 @@ def test_cinema_pays_annuel_quebec_2025(raw_dir):
     # Part annuelle QC ≈ 9,04 %
     part_qc = val_qc / val_total
     assert 0.090 < part_qc < 0.091
+
+
+def test_ventes_livres_numeriques_perimetre(raw_dir):
+    """Source ISQ « Ventes de livres numériques, données annuelles, Québec »
+    (tableau 3408). Série 2014-2025, 3 métriques.
+
+    Méthodologie : Optique culture no 41. Inclut les ventes gratuites et
+    les autoédités. Valeur exprimée au prix payé par le consommateur avant
+    taxes.
+    """
+    f = find_source_file(raw_dir, "Ventes de livres numériques*.xlsx")
+    assert f is not None, "Fichier livres numériques annuel manquant"
+    data = extract.extract_ventes_livres_numeriques(f)
+    # Périmètre temporel : 12 années 2014-2025
+    assert data['annees'][0] == 2014
+    assert data['annees'][-1] == 2025
+    assert len(data['annees']) == 12
+    # Trois séries
+    assert set(data['series'].keys()) == {'exemplaires', 'valeur_ventes', 'prix_moyen'}
+    # Métadonnées éditoriales
+    assert '3408' in data['lien_permanent']
+    assert data['mise_a_jour'] == '29 juin 2026'
+
+
+def test_ventes_livres_numeriques_pic_2020(raw_dir):
+    """Le pic d'exemplaires 2020 (confinement + livres gratuits)
+    est le marqueur historique de cette série.
+
+    En 2020 : 894 531 exemplaires (vs ~400 k en 2019), prix moyen
+    qui chute à 11,74 $ (vs 15,48 $ en 2019).
+    """
+    f = find_source_file(raw_dir, "Ventes de livres numériques*.xlsx")
+    data = extract.extract_ventes_livres_numeriques(f)
+    idx_2020 = data['annees'].index(2020)
+    idx_2019 = data['annees'].index(2019)
+    # Pic d'exemplaires
+    ex_2020 = data['series']['exemplaires']['valeurs'][idx_2020]
+    ex_2019 = data['series']['exemplaires']['valeurs'][idx_2019]
+    assert ex_2020 == 894531.0
+    assert ex_2020 > 2 * ex_2019  # pic > x2 vs l'année précédente
+    # Chute du prix moyen
+    pm_2020 = data['series']['prix_moyen']['valeurs'][idx_2020]
+    pm_2019 = data['series']['prix_moyen']['valeurs'][idx_2019]
+    assert pm_2020 == 11.74
+    assert pm_2020 < pm_2019
+
+
+def test_ventes_livres_numeriques_palier_post_covid(raw_dir):
+    """Lecture interprétative : la valeur des ventes reste sur un palier
+    autour de 10 M$ après 2020, alors que le nombre d'exemplaires retombe.
+    C'est le prix moyen qui porte la valeur (de 11,74 $ en 2020 à
+    19,42 $ en 2025).
+    """
+    f = find_source_file(raw_dir, "Ventes de livres numériques*.xlsx")
+    data = extract.extract_ventes_livres_numeriques(f)
+    valeurs = data['series']['valeur_ventes']['valeurs']
+    annees = data['annees']
+    # Toutes les années 2020-2025 au-dessus de 9,5 M$
+    for an in [2020, 2021, 2022, 2023, 2024, 2025]:
+        v = valeurs[annees.index(an)]
+        assert v > 9_500_000, f"Valeur {an} = {v}, attendue > 9,5 M$"
+    # Prix moyen 2025
+    pm_2025 = data['series']['prix_moyen']['valeurs'][annees.index(2025)]
+    assert pm_2025 == 19.42

@@ -1425,6 +1425,30 @@ a{color:inherit;text-decoration:none}
         <div class="card-body"><div class="chart-wrap"><canvas id="chart_ventes_livres"></canvas></div></div>
         <div class="card-foot" id="foot_ventes_livres"></div>
       </div>
+
+      <h3 style="margin:28px 0 16px;font-family:'Nunito',sans-serif;font-size:15px;color:var(--cb-300);font-weight:700">Livres numériques : trajectoire annuelle</h3>
+
+      <div class="card">
+        <div class="card-head">
+          <div>
+            <div class="card-title">Exemplaires vendus et valeur des ventes — Québec, 2014-2025</div>
+            <div class="card-sub" id="sub_livres_num">ISQ tableau 3408 · données annuelles · prix consommateur avant taxes</div>
+          </div>
+        </div>
+        <div class="card-body"><div class="chart-wrap"><canvas id="chart_livres_num"></canvas></div></div>
+        <div class="card-foot" id="foot_livres_num"></div>
+      </div>
+
+      <div class="card" style="margin-top:20px">
+        <div class="card-head">
+          <div>
+            <div class="card-title">Prix moyen du livre numérique — Québec, 2014-2025</div>
+            <div class="card-sub">Effet 2020 : exemplaires ×2, prix moyen ↘ 11,74 $ (part forte de gratuits / promo confinement)</div>
+          </div>
+        </div>
+        <div class="card-body"><div class="chart-wrap"><canvas id="chart_livres_num_prix"></canvas></div></div>
+        <div class="card-foot" id="foot_livres_num_prix"></div>
+      </div>
     </section>
 
     <!-- ÉCOSYSTÈME -->
@@ -2269,6 +2293,91 @@ spark('spark4', [0, -2, -4, -7, -10, -11.6], C.bo);
         + (agr.cumul / tot.cumul * 100).toLocaleString('fr-CA', {maximumFractionDigits: 1}) + ' %.';
     }
     foot.textContent = txt;
+  }
+})();
+
+// === CHART 9bis: Livres numériques — exemplaires + valeur des ventes (axes doubles) ===
+(function(){
+  const v = D.ventes_livres_numeriques;
+  const el = document.getElementById('chart_livres_num');
+  if (!v || !v.series || !el) return;
+  const ex = v.series.exemplaires.valeurs.map(x => x == null ? null : x / 1000);  // milliers
+  const va = v.series.valeur_ventes.valeurs.map(x => x == null ? null : x / 1e6);  // millions $
+  new Chart(el, {
+    type: 'bar',
+    data: { labels: v.annees, datasets: [
+      { type: 'bar', label: "Exemplaires (milliers)", data: ex,
+        backgroundColor: C.cb700, borderRadius: 4, borderSkipped: false, yAxisID: 'y' },
+      { type: 'line', label: "Valeur des ventes (M$)", data: va,
+        borderColor: C.bo, backgroundColor: C.bo, borderWidth: 2.5,
+        pointRadius: 4, pointHoverRadius: 6, tension: 0.25, yAxisID: 'y1' }
+    ]},
+    options: { responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { position: 'bottom', labels: { boxWidth: 12, padding: 12, font: { size: 11 }, usePointStyle: true }},
+        tooltip: { callbacks: { label: c => {
+          if (c.dataset.yAxisID === 'y1') return c.dataset.label + ' : ' + c.parsed.y.toLocaleString('fr-CA', {maximumFractionDigits: 2}) + ' M$';
+          return c.dataset.label + ' : ' + c.parsed.y.toLocaleString('fr-CA', {maximumFractionDigits: 0}) + ' k';
+        }}}},
+      scales: {
+        x: { grid: { display: false }},
+        y: { position: 'left', grid: { color: '#f0f4f8' },
+          ticks: { callback: val => val + ' k' },
+          title: { display: true, text: 'Exemplaires (milliers)', font: { size: 11 }}},
+        y1: { position: 'right', grid: { display: false },
+          ticks: { callback: val => val + ' M$' },
+          title: { display: true, text: 'Valeur (M$)', font: { size: 11 }}}
+      }
+    }
+  });
+  // Pied : mise à jour + lien permanent
+  const foot = document.getElementById('foot_livres_num');
+  if (foot) {
+    foot.innerHTML = "Mise à jour : " + (v.mise_a_jour || '—')
+      + ' · <a href="https://' + (v.lien_permanent || '') + '" target="_blank" rel="noopener" style="color:var(--cb-500);text-decoration:underline">'
+      + (v.lien_permanent || 'lien ISQ') + '</a>'
+      + ' · ' + (v.note_methodo || '');
+  }
+})();
+
+// === CHART 9ter: Livres numériques — prix moyen annuel ===
+(function(){
+  const v = D.ventes_livres_numeriques;
+  const el = document.getElementById('chart_livres_num_prix');
+  if (!v || !v.series || !el) return;
+  const pm = v.series.prix_moyen.valeurs;
+  // Couleur spéciale pour 2020 (pic à 11,74 $) : marqueur rouge
+  const pointColors = v.annees.map(a => a === 2020 ? C.bo : C.cb700);
+  const pointRadii  = v.annees.map(a => a === 2020 ? 7 : 4);
+  new Chart(el, {
+    type: 'line',
+    data: { labels: v.annees, datasets: [
+      { label: 'Prix moyen ($)', data: pm,
+        borderColor: C.cb700, backgroundColor: C.cb700, borderWidth: 2.5,
+        pointBackgroundColor: pointColors, pointBorderColor: pointColors,
+        pointRadius: pointRadii, pointHoverRadius: 8, tension: 0.25, fill: false }
+    ]},
+    options: { responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: c => 'Prix moyen ' + c.label + ' : ' + c.parsed.y.toLocaleString('fr-CA', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + ' $' }}},
+      scales: {
+        x: { grid: { display: false }},
+        y: { grid: { color: '#f0f4f8' },
+          ticks: { callback: val => val.toLocaleString('fr-CA') + ' $' },
+          beginAtZero: false }
+      }
+    }
+  });
+  const foot = document.getElementById('foot_livres_num_prix');
+  if (foot) {
+    const pm_2025 = pm[v.annees.indexOf(2025)];
+    const pm_2014 = pm[v.annees.indexOf(2014)];
+    if (pm_2025 != null && pm_2014 != null) {
+      const evo = ((pm_2025 - pm_2014) / pm_2014 * 100);
+      foot.textContent = 'Évolution 2014 → 2025 : ' + (evo >= 0 ? '+' : '') + evo.toFixed(1) + ' %'
+        + ' (de ' + pm_2014.toFixed(2).replace('.', ',') + ' $ à ' + pm_2025.toFixed(2).replace('.', ',') + ' $).';
+    }
   }
 })();
 

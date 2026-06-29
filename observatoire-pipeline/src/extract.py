@@ -1301,6 +1301,89 @@ def extract_aei_canada(path: Path) -> dict:
     }
 
 
+def extract_ventes_livres_numeriques(path: Path) -> dict:
+    """
+    Tableau ISQ « Ventes de livres numériques, données annuelles, Québec »
+    (URL permanente : statistique.quebec.ca/fr/produit/tableau/3408).
+    Méthodologie : Optique culture no 41. Inclut les ventes gratuites et autoédités.
+    Valeur exprimée au prix payé par le consommateur avant taxes.
+
+    Layout :
+      L1 = titre, L4 = en-tête années (cols pairs 3,5,7... = années ; cols impairs = marqueurs ISQ)
+      L6 = Nombre d'exemplaires (unité n)
+      L7 = Valeur des ventes (unité $)
+      L8 = Prix moyen (unité $)
+    """
+    wb = load_workbook(path, data_only=True)
+    ws = wb['Tableau']
+
+    # En-tête : lire les années dans la ligne 4 (colonnes paires à partir de 3)
+    annees = []
+    cols_annees = []
+    for c in range(3, (ws.max_column or 3) + 1):
+        v = ws.cell(row=4, column=c).value
+        if v is None or str(v).strip() == '':
+            continue
+        try:
+            an = int(str(v).strip())
+            annees.append(an)
+            cols_annees.append(c)
+        except ValueError:
+            continue
+
+    # Trois métriques fixes : exemplaires (L6), valeur (L7), prix moyen (L8)
+    def _serie(row_num):
+        return [_to_num(ws.cell(row=row_num, column=c).value) for c in cols_annees]
+
+    series = {
+        'exemplaires': {
+            'libelle': "Nombre d'exemplaires",
+            'unite': 'n',
+            'valeurs': _serie(6),
+        },
+        'valeur_ventes': {
+            'libelle': 'Valeur des ventes',
+            'unite': '$',
+            'valeurs': _serie(7),
+        },
+        'prix_moyen': {
+            'libelle': 'Prix moyen',
+            'unite': '$',
+            'valeurs': _serie(8),
+        },
+    }
+
+    # Métadonnées éditoriales : lien permanent et date de maj dans les notes
+    notes_raw = ws.cell(row=11, column=1).value or ''
+    lien = ''
+    maj = ''
+    for line in str(notes_raw).split('\n'):
+        line = line.strip()
+        if 'statistique.quebec.ca' in line:
+            lien = line
+        # capture du format "29 juin 2026" sous "Mise à jour :"
+    # Lecture explicite des notes pour maj
+    full_notes = str(notes_raw)
+    if 'Mise à jour' in full_notes:
+        suffix = full_notes.split('Mise à jour', 1)[1]
+        for line in suffix.split('\n'):
+            line = line.strip(' :\t')
+            if line and not line.startswith('Mise'):
+                maj = line
+                break
+
+    return {
+        'titre': 'Ventes de livres numériques, données annuelles, Québec',
+        'source': 'Institut de la statistique du Québec (Observatoire de la culture et des communications du Québec)',
+        'lien_permanent': lien or 'statistique.quebec.ca/fr/produit/tableau/3408',
+        'mise_a_jour': maj,
+        'periode': f"{annees[0]}-{annees[-1]}" if annees else '',
+        'annees': annees,
+        'series': series,
+        'note_methodo': "Méthodologie : Optique culture no 41. Valeur au prix payé par le consommateur avant taxes. Inclut les ventes gratuites et les autoédités.",
+    }
+
+
 # ---------- Registry ----------
 
 EXTRACTORS = {
@@ -1322,4 +1405,5 @@ EXTRACTORS = {
     'extract_aei_canada': extract_aei_canada,
     'extract_job_vacancy_quebec': extract_job_vacancy_quebec,
     'extract_ai_exposure_culture': extract_ai_exposure_culture,
+    'extract_ventes_livres_numeriques': extract_ventes_livres_numeriques,
 }
