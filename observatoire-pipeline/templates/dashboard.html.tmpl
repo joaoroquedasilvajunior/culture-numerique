@@ -1495,6 +1495,56 @@ a{color:inherit;text-decoration:none}
         <div class="card-body"><div class="chart-wrap tall"><canvas id="chart_emplois"></canvas></div></div>
         <div class="card-foot">Trois sous-secteurs en perte sèche (5121 −11,6&nbsp;% · 5131 −9,7&nbsp;% · 7111 −13,6&nbsp;%). Un en croissance forte (5162 +30,6&nbsp;%).</div>
       </div>
+
+      <h3 style="margin:28px 0 16px;font-family:'Nunito',sans-serif;font-size:15px;color:var(--cb-300);font-weight:700">L'écosystème subventionné (CALQ) — <span style="font-weight:400;color:var(--cb-500)">complément non-marchand à l'EERH</span></h3>
+
+      <div class="card" id="card_r6_synthese">
+        <div class="card-head">
+          <div>
+            <div class="card-title">R6 <span style="color:var(--cb-500);font-weight:400">— Vitalité des arts vivants subventionnés</span></div>
+            <div class="card-sub" id="sub_r6">Repère auxiliaire · Sources : ISQ / CALQ (théâtre + cirque, diffuseurs pluridisciplinaires, arts visuels/numériques/cinéma)</div>
+          </div>
+          <div id="chip_r6" style="font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;padding:6px 12px;border-radius:6px;background:var(--cb-100);color:var(--cb-700);align-self:flex-start">Auxiliaire</div>
+        </div>
+        <div class="card-body">
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:16px;padding:12px 0">
+            <div class="kpi-mini"><div class="lbl">Organismes suivis</div><div class="val" id="kpi_r6_orgs">—</div></div>
+            <div class="kpi-mini"><div class="lbl">Représentations</div><div class="val" id="kpi_r6_repr">—</div></div>
+            <div class="kpi-mini"><div class="lbl">Spectateurs</div><div class="val" id="kpi_r6_spect">—</div></div>
+            <div class="kpi-mini"><div class="lbl">% aide publique</div><div class="val" id="kpi_r6_aide">—</div></div>
+            <div class="kpi-mini"><div class="lbl">% hors-QC (théâtre)</div><div class="val" id="kpi_r6_horsqc">—</div></div>
+          </div>
+        </div>
+        <div class="card-foot" id="foot_r6"></div>
+      </div>
+
+      <style>
+        .kpi-mini { padding: 10px 14px; background: rgba(38,70,83,0.04); border-radius: 8px; text-align: center; }
+        .kpi-mini .lbl { font-size: 11px; color: var(--cb-500); font-family: 'Nunito', sans-serif; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+        .kpi-mini .val { font-size: 22px; font-family: 'Nunito', sans-serif; font-weight: 800; color: var(--cb-700); }
+      </style>
+
+      <div class="card" style="margin-top:20px">
+        <div class="card-head">
+          <div>
+            <div class="card-title">Trajectoire des revenus totaux par pilier — 3 disciplines CALQ</div>
+            <div class="card-sub">$ nominaux · Aide publique, aide privée, revenus d'exploitation (empilés)</div>
+          </div>
+        </div>
+        <div class="card-body"><div class="chart-wrap"><canvas id="chart_calq_revenus"></canvas></div></div>
+        <div class="card-foot" id="foot_calq_revenus"></div>
+      </div>
+
+      <div class="card" style="margin-top:20px">
+        <div class="card-head">
+          <div>
+            <div class="card-title">Répartition de l'aide publique par palier de gouvernement — 2023-2024</div>
+            <div class="card-sub">Le municipal pèse davantage que le fédéral pour ce périmètre</div>
+          </div>
+        </div>
+        <div class="card-body"><div class="chart-wrap"><canvas id="chart_calq_paliers"></canvas></div></div>
+        <div class="card-foot" id="foot_calq_paliers"></div>
+      </div>
     </section>
 
     <!-- ANGLES MORTS -->
@@ -2511,6 +2561,103 @@ spark('spark4', [0, -2, -4, -7, -10, -11.6], C.bo);
       + '<strong>2014-2019</strong> : stagnation autour de 1 %, marché en lent recul. '
       + '<strong>2020</strong> : pic conjoncturel à 1,77 % (confinement, livres gratuits). '
       + '<strong>2021-2024</strong> : palier stable autour de 1,5 %, papier rebondit et entraîne le total.';
+  }
+})();
+
+// === R6 CALQ : KPI + trajectoire revenus + répartition aide publique ===
+(function(){
+  const R6 = D.reperes && D.reperes.r6_vitalite_arts_vivants_subventionnes;
+  if (!R6) return;
+  const fmt = (n, dec) => (n == null) ? '—' : Number(n).toLocaleString('fr-CA', {minimumFractionDigits: dec, maximumFractionDigits: dec});
+  const fmt_int = (n) => (n == null) ? '—' : Math.round(n).toLocaleString('fr-CA');
+  const setText = (id, txt) => { const el = document.getElementById(id); if (el) el.textContent = txt; };
+
+  // === Bandeau KPI ===
+  setText('kpi_r6_orgs',    fmt_int(R6.nb_organismes_agrege));
+  setText('kpi_r6_repr',    fmt_int(R6.nb_representations_agrege));
+  setText('kpi_r6_spect',   fmt_int(R6.spectateurs_agrege_theatre_diffuseurs));
+  setText('kpi_r6_aide',    R6.part_aide_publique_dans_revenus_pct != null ? fmt(R6.part_aide_publique_dans_revenus_pct, 1) + ' %' : '—');
+  setText('kpi_r6_horsqc',  R6.ratio_spectateurs_hors_qc_theatre_pct != null ? fmt(R6.ratio_spectateurs_hors_qc_theatre_pct, 1) + ' %' : '—');
+  setText('sub_r6', 'Année de référence : ' + (R6.annee_reference || '—') + ' · Sources CALQ (3 disciplines)');
+  // Foot synthèse
+  const foot = document.getElementById('foot_r6');
+  if (foot) {
+    foot.textContent = R6.lecture_synthetique || '';
+  }
+
+  // === Chart CALQ revenus par pilier — série temporelle empilée ===
+  // On agrège théâtre + diffuseurs + arts visuels par année sur la période
+  // commune la plus large (théâtre couvre 30 ans mais diffuseurs commence en 2016).
+  const th = D.calq_theatre_cirque, di = D.calq_diffuseurs_pluridiscip, av = D.calq_arts_visuels;
+  const elRev = document.getElementById('chart_calq_revenus');
+  if (elRev && th && di && av) {
+    // Périmètre commun = union des années de diffuseurs (plus court) — on prend
+    // les 8 dernières années (2016-17 → 2023-24) pour comparabilité.
+    const annees = di.annees;
+    function serie(source, libelle) {
+      const ind = source.indicateurs.find(i => i.libelle === libelle);
+      if (!ind) return annees.map(() => 0);
+      const map = {};
+      source.annees.forEach((a, i) => { map[a] = ind.valeurs[i]; });
+      return annees.map(a => map[a] || 0);
+    }
+    const _agrege = (a, b, c) => a.map((v, i) => (v || 0) + (b[i] || 0) + (c[i] || 0));
+    const aidePub  = _agrege(serie(th, 'Aide publique'),  serie(di, 'Aide publique'),  serie(av, 'Aide publique'));
+    const aidePri  = _agrege(serie(th, 'Aide privée'),    serie(di, 'Aide privée'),    serie(av, 'Aide privée'));
+    const exploit  = _agrege(serie(th, "Revenus d'exploitation"), serie(di, "Revenus d'exploitation"), serie(av, "Revenus d'exploitation"));
+    const toM = arr => arr.map(v => v / 1e6);
+    new Chart(elRev, {
+      type: 'bar',
+      data: { labels: annees, datasets: [
+        { label: "Revenus d'exploitation", data: toM(exploit), backgroundColor: C.cb700, borderRadius: 4, borderSkipped: false, stack: 's' },
+        { label: 'Aide privée',            data: toM(aidePri), backgroundColor: C.sr400 || '#e9a17c', borderRadius: 4, borderSkipped: false, stack: 's' },
+        { label: 'Aide publique',          data: toM(aidePub), backgroundColor: C.bo,    borderRadius: 4, borderSkipped: false, stack: 's' }
+      ]},
+      options: { responsive: true, maintainAspectRatio: false,
+        plugins: {
+          legend: { position: 'bottom', labels: { boxWidth: 12, padding: 12, font: { size: 11 }, usePointStyle: true }},
+          tooltip: { callbacks: { label: c => c.dataset.label + ' : ' + c.parsed.y.toLocaleString('fr-CA', {maximumFractionDigits: 1}) + ' M$' }}},
+        scales: {
+          x: { stacked: true, grid: { display: false }},
+          y: { stacked: true, grid: { color: '#f0f4f8' }, ticks: { callback: v => v + ' M$' }}
+        }
+      }
+    });
+    const footRev = document.getElementById('foot_calq_revenus');
+    if (footRev && R6.evolution_revenus_pct_nominal != null) {
+      footRev.innerHTML = 'Croissance nominale ' + R6.evolution_revenus_periode + ' : '
+        + '<strong>+' + R6.evolution_revenus_pct_nominal.toFixed(1) + ' %</strong> (dollars courants, non corrigés de l\'inflation). '
+        + 'L\'aide publique reste le pilier structurel : ' + R6.part_aide_publique_dans_revenus_pct + ' % du revenu total en ' + R6.annee_reference + '.';
+    }
+  }
+
+  // === Chart CALQ paliers — donut aide publique ===
+  const elPal = document.getElementById('chart_calq_paliers');
+  if (elPal && R6.repartition_aide_publique_pct) {
+    const rep = R6.repartition_aide_publique_pct;
+    new Chart(elPal, {
+      type: 'doughnut',
+      data: { labels: ['Gouvernement du Québec', 'Gouvernement du Canada', 'Administrations municipales'],
+        datasets: [{
+          data: [rep.quebec || 0, rep.canada || 0, rep.municipal || 0],
+          backgroundColor: [C.cb700, C.bo, C.bb],
+          borderColor: '#fff', borderWidth: 2
+        }]
+      },
+      options: { responsive: true, maintainAspectRatio: false,
+        plugins: {
+          legend: { position: 'right', labels: { boxWidth: 12, padding: 10, font: { size: 11 }, usePointStyle: true }},
+          tooltip: { callbacks: { label: c => c.label + ' : ' + c.parsed.toLocaleString('fr-CA', {maximumFractionDigits: 1}) + ' %' }}
+        }
+      }
+    });
+    const footPal = document.getElementById('foot_calq_paliers');
+    if (footPal) {
+      footPal.innerHTML = 'À signaler pour la Loi 109 et la directive fédérale 2026-06 : '
+        + 'sur ce périmètre, <strong>' + rep.quebec + ' %</strong> de l\'aide publique vient du gouvernement du Québec, '
+        + '<strong>' + rep.canada + ' %</strong> du gouvernement du Canada, et <strong>' + rep.municipal + ' %</strong> '
+        + 'des administrations municipales. Le municipal pèse davantage que le fédéral, contrairement à l\'intuition courante.';
+    }
   }
 })();
 

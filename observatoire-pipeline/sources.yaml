@@ -152,6 +152,35 @@ sources:
     axe_tdb: ["consommation", "ecosysteme"]
     notes: "Méthodologie Optique culture no 41. Trois métriques : nombre d'exemplaires, valeur des ventes en $, prix moyen en $. La série fait apparaître un pic massif en 2020 (894 531 exemplaires, prix moyen 11,74 $) qui combine effet confinement et forte part de gratuits — à interpréter avec prudence dans les comparaisons annuelles."
 
+  calq_theatre_cirque:
+    label: "Statistiques principales des organismes de production en théâtre et arts du cirque soutenus par le CALQ"
+    # Le fichier global (Québec.xlsx sans « selon ») ; les 6 ventilations par
+    # région / genre / taille sont volontairement exclues pour cette phase.
+    file_pattern: "Statistiques principales des organismes de production en théâtre et arts du cirque soutenus par le Conseil des arts et des lettres du Québec, Québec.xlsx"
+    isq_url: "https://statistique.quebec.ca/fr/produit/tableau/statistiques-principales-organismes-production-theatre-cirque-calq"
+    classification: "OCCQ — CALQ ; série annuelle fiscale 1994-1995 à 2023-2024 ; bloc Activités (productions, représentations, spectateurs QC/hors-QC)"
+    extractor: extract_calq_theatre_cirque
+    axe_tdb: ["ecosysteme", "presence"]
+    notes: "Série longue (30 ans) sur les organismes de production en théâtre et arts du cirque soutenus par le CALQ. Alimente le nouveau repère R6 « Vitalité des arts vivants subventionnés ». Structure : revenus (exploitation + aide privée + aide publique QC/CA/municipal), dépenses (production/administration/mise en marché), activités (productions et représentations n, spectateurs n avec ventilation QC vs hors-Québec). Modification d'univers en 2017-2018 (passage du programme de soutien au fonctionnement vers mission + programmation)."
+
+  calq_diffuseurs_pluridiscip:
+    label: "Statistiques principales des diffuseurs pluridisciplinaires soutenus par le CALQ"
+    file_pattern: "Statistiques principales des diffuseurs pluridisciplinaires soutenus par le Conseil des arts et des lettres du Québec, Québec.xlsx"
+    isq_url: "https://statistique.quebec.ca/fr/produit/tableau/statistiques-principales-diffuseurs-pluridisciplinaires-calq"
+    classification: "OCCQ — CALQ ; série annuelle fiscale 2016-2017 à 2023-2024 ; bloc Activités (représentations, spectateurs)"
+    extractor: extract_calq_diffuseurs_pluridiscip
+    axe_tdb: ["ecosysteme", "presence"]
+    notes: "Organismes qui diffusent (pas qui produisent) donc pas de série « Nombre de productions ». Bloc Activités limité à Représentations + Spectateurs (total, pas de ventilation QC/hors-QC)."
+
+  calq_arts_visuels:
+    label: "Statistiques principales des organismes de diffusion et de production en arts visuels, arts numériques, cinéma et vidéo soutenus à la mission par le CALQ"
+    file_pattern: "Statistiques principales des organismes de diffusion et de production en arts visuels, arts numériques, cinéma et vidéo soutenus à la mission par le Conseil des arts et des lettres du Québec, Québec.xlsx"
+    isq_url: "https://statistique.quebec.ca/fr/produit/tableau/statistiques-principales-organismes-arts-visuels-calq"
+    classification: "OCCQ — CALQ ; série annuelle fiscale 2017-2018 à 2023-2024 ; pas de bloc Activités chiffré en n"
+    extractor: extract_calq_arts_visuels
+    axe_tdb: ["ecosysteme"]
+    notes: "Ce tableau ISQ ne publie pas d'indicateurs d'activité chiffrés en n pour cette discipline (expositions, œuvres exposées, projections, etc. n'apparaissent pas dans le tableau global). Seul le nombre d'organismes joue ce rôle de proxy. Contribue au R6 en dimension écosystème financier."
+
   etablissements:
     label: "Nombre d'établissements culturels de certains types"
     isq_table_id: "929"

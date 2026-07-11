@@ -653,3 +653,104 @@ def test_livre_papier_vs_numerique_2025_papier_manquant(raw_dir):
     assert pt_2025['valeur_numerique'] is not None
     assert pt_2025['valeur_totale'] is None
     assert pt_2025['part_numerique_pct'] is None
+
+
+# === Extracteurs CALQ (écosystème subventionné) ===
+
+def test_calq_theatre_cirque_serie_longue(raw_dir):
+    """CALQ théâtre/cirque : série longue 1994-1995 à 2023-2024 (30 ans).
+    Le fichier global doit contenir le bloc Activités avec au minimum
+    Nombre de productions, Représentations, Spectateurs (total + QC + hors-QC).
+    """
+    from src import extract
+    f = find_source_file(
+        raw_dir,
+        "Statistiques principales des organismes de production en théâtre et arts du cirque soutenus par le Conseil des arts et des lettres du Québec, Québec.xlsx"
+    )
+    assert f is not None
+    d = extract.extract_calq_theatre_cirque(f)
+    # Période 30 ans
+    assert d['annees'][0] == '1994-1995'
+    assert d['annees'][-1] == '2023-2024'
+    assert len(d['annees']) == 30
+    # Discipline
+    assert d['discipline'] == 'theatre_cirque'
+    # Groupes présents : meta + revenus + depenses + activites
+    groupes = {ind['groupe'] for ind in d['indicateurs']}
+    assert {'meta', 'revenus', 'depenses', 'activites'}.issubset(groupes)
+    # Nb organismes 2023-2024 : ordre de grandeur (60-90 orgs typique)
+    nb_2324 = d['organismes_par_annee']['2023-2024']
+    assert 60 <= nb_2324 <= 90
+    # Activités attendues : au moins Représentations + Spectateurs
+    libelles_act = {ind['libelle'] for ind in d['indicateurs'] if ind['groupe'] == 'activites'}
+    assert 'Représentations' in libelles_act
+    assert 'Spectateurs' in libelles_act
+
+
+def test_calq_diffuseurs_pluridiscip_perimetre(raw_dir):
+    """CALQ diffuseurs pluridisciplinaires : série 2016-2017 à 2023-2024.
+    Ce sont des diffuseurs, donc pas de « Nombre de productions »,
+    seulement Représentations + Spectateurs.
+    """
+    from src import extract
+    f = find_source_file(
+        raw_dir,
+        "Statistiques principales des diffuseurs pluridisciplinaires soutenus par le Conseil des arts et des lettres du Québec, Québec.xlsx"
+    )
+    assert f is not None
+    d = extract.extract_calq_diffuseurs_pluridiscip(f)
+    assert d['annees'][0] == '2016-2017'
+    assert d['annees'][-1] == '2023-2024'
+    assert d['discipline'] == 'diffuseurs_pluridiscip'
+    # Activités : Représentations + Spectateurs, mais pas de « Nombre de productions »
+    libelles_act = {ind['libelle'] for ind in d['indicateurs'] if ind['groupe'] == 'activites'}
+    assert 'Représentations' in libelles_act
+    assert 'Spectateurs' in libelles_act
+    assert 'Nombre de productions' not in libelles_act
+
+
+def test_calq_arts_visuels_pas_dactivite_chiffree(raw_dir):
+    """CALQ arts visuels : série 2017-2018 à 2023-2024. Ce tableau ne
+    publie pas d'indicateurs d'activité en n dans le fichier global —
+    le nombre d'organismes joue seul le rôle de proxy volume.
+    Cette absence est structurelle et doit être respectée par
+    l'extracteur (pas d'invention de zéros).
+    """
+    from src import extract
+    f = find_source_file(
+        raw_dir,
+        "Statistiques principales des organismes de diffusion et de production en arts visuels, arts numériques, cinéma et vidéo soutenus à la mission par le Conseil des arts et des lettres du Québec, Québec.xlsx"
+    )
+    assert f is not None
+    d = extract.extract_calq_arts_visuels(f)
+    assert d['annees'][0] == '2017-2018'
+    assert d['annees'][-1] == '2023-2024'
+    assert d['discipline'] == 'arts_visuels_numeriques'
+    # Aucun indicateur d'activité chiffré n'est attendu
+    activites = [ind for ind in d['indicateurs'] if ind['groupe'] == 'activites']
+    assert activites == []
+    # Mais Nombre d'organismes doit être présent
+    assert d['organismes_par_annee']['2023-2024'] is not None
+
+
+def test_calq_theatre_cirque_croissance_30_ans(raw_dir):
+    """Test de bon sens sur la trajectoire longue : les revenus totaux du
+    secteur théâtre/cirque soutenu doivent avoir crû nominalement entre
+    1994-1995 et 2023-2024. Le test est délibérément lâche (juste > x2)
+    pour éviter d'échouer sur des révisions ISQ mineures.
+    """
+    from src import extract
+    f = find_source_file(
+        raw_dir,
+        "Statistiques principales des organismes de production en théâtre et arts du cirque soutenus par le Conseil des arts et des lettres du Québec, Québec.xlsx"
+    )
+    d = extract.extract_calq_theatre_cirque(f)
+    revenus_totaux = next(
+        ind for ind in d['indicateurs'] if ind['libelle'] == 'Revenus totaux'
+    )
+    v_debut = revenus_totaux['valeurs'][0]     # 1994-1995
+    v_fin = revenus_totaux['valeurs'][-1]      # 2023-2024
+    assert v_debut is not None and v_fin is not None
+    # Croissance nominale sur 30 ans : le secteur passe de ~35 M$ à ~120 M$
+    # (x3.4 avant inflation). Test lâche : au moins x2.
+    assert v_fin > 2 * v_debut

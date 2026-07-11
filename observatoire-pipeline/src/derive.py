@@ -531,6 +531,190 @@ def derive_livre_papier_vs_numerique(evolution_stats: dict,
     }
 
 
+def derive_r6_vitalite_arts_vivants(theatre: dict, diffuseurs: dict, arts_visuels: dict) -> dict:
+    """
+    Repère R6 (nouveau, hors protocole v1.1.0) — Vitalité des arts vivants
+    et arts visuels subventionnés par le CALQ.
+
+    Complète le triangle R5 (albums · films · livres, sources marchandes)
+    par une lecture non-marchande subventionnée (arts vivants + arts visuels).
+    Le CALQ soutient une part critique de la production culturelle qui ne
+    passe pas par la lecture EERH (industries marchandes) et que R5 ne
+    capte pas non plus.
+
+    Calcul sur la dernière année financière commune (2023-2024) :
+      - nb_organismes_agrege : somme des trois disciplines
+      - nb_productions_theatre_cirque
+      - nb_representations_agrege : somme théâtre + diffuseurs
+      - part_aide_publique_pct : agrégée sur les trois disciplines
+      - part_aide_qc_dans_aide_publique_pct : part du gouvernement du Québec
+        dans l'aide publique totale (pertinent pour la Loi 109 et la
+        directive fédérale 2026-06)
+      - ratio_spectateurs_hors_qc_theatre_pct : rayonnement hors-Québec
+      - evolution_revenus_pct : nominal, sur la période commune
+
+    Statut : auxiliaire_provisoire. Le protocole v1.1.0 n'a pas encore
+    officialisé R6 ; sa formule pourra évoluer.
+    """
+    def _get_serie(source, libelle):
+        for ind in source.get('indicateurs', []):
+            if ind['libelle'] == libelle:
+                return ind['valeurs']
+        return None
+
+    def _last(serie):
+        return serie[-1] if serie else None
+
+    def _agrege(*valeurs):
+        """Somme en tolérant None (ignoré) — retourne None si tout est None."""
+        vals = [v for v in valeurs if v is not None]
+        return sum(vals) if vals else None
+
+    def _pct(numerator, denominator):
+        if numerator is None or denominator is None or denominator == 0:
+            return None
+        return round(numerator / denominator * 100, 2)
+
+    # Année commune de référence : dernière année de chaque fichier
+    annees_theatre = theatre.get('annees', [])
+    annees_diffuseurs = diffuseurs.get('annees', [])
+    annees_arts_v = arts_visuels.get('annees', [])
+    annee_ref = None
+    if annees_theatre and annees_diffuseurs and annees_arts_v:
+        # Les 3 fichiers finissent en 2023-2024 en principe
+        if (annees_theatre[-1] == annees_diffuseurs[-1] == annees_arts_v[-1]):
+            annee_ref = annees_theatre[-1]
+
+    # Nombre d'organismes (agrégé)
+    nb_orgs_th = theatre.get('organismes_par_annee', {}).get(annee_ref) if annee_ref else None
+    nb_orgs_di = diffuseurs.get('organismes_par_annee', {}).get(annee_ref) if annee_ref else None
+    nb_orgs_av = arts_visuels.get('organismes_par_annee', {}).get(annee_ref) if annee_ref else None
+    nb_organismes_agrege = _agrege(nb_orgs_th, nb_orgs_di, nb_orgs_av)
+
+    # Nombre de productions (théâtre/cirque uniquement — diffuseurs n'en ont pas,
+    # arts visuels non chiffré en n)
+    nb_prod_th = _last(_get_serie(theatre, 'Nombre de productions'))
+
+    # Représentations (théâtre + diffuseurs)
+    nb_repr_th = _last(_get_serie(theatre, 'Représentations'))
+    nb_repr_di = _last(_get_serie(diffuseurs, 'Représentations'))
+    nb_repr_agrege = _agrege(nb_repr_th, nb_repr_di)
+
+    # Spectateurs (théâtre : ventilé QC/hors-QC)
+    spect_th_total = _last(_get_serie(theatre, 'Spectateurs'))
+    spect_th_qc = _last(_get_serie(theatre, 'Spectateurs au Québec'))
+    spect_th_hors_qc = _last(_get_serie(theatre, 'Spectateurs hors Québec'))
+    spect_di_total = _last(_get_serie(diffuseurs, 'Spectateurs'))
+    spect_agrege = _agrege(spect_th_total, spect_di_total)
+
+    # Aide publique / revenus totaux (agrégés sur les 3 sources)
+    def _sum_last(*sources_libelles):
+        vals = []
+        for src, lbl in sources_libelles:
+            serie = _get_serie(src, lbl)
+            v = _last(serie) if serie else None
+            if v is not None:
+                vals.append(v)
+        return sum(vals) if vals else None
+
+    revenus_totaux = _sum_last(
+        (theatre, 'Revenus totaux'),
+        (diffuseurs, 'Revenus totaux'),
+        (arts_visuels, 'Revenus totaux'),
+    )
+    aide_publique = _sum_last(
+        (theatre, 'Aide publique'),
+        (diffuseurs, 'Aide publique'),
+        (arts_visuels, 'Aide publique'),
+    )
+    aide_qc = _sum_last(
+        (theatre, 'Aide publique du gouvernement du Québec'),
+        (diffuseurs, 'Aide publique du gouvernement du Québec'),
+        (arts_visuels, 'Aide publique du gouvernement du Québec'),
+    )
+    aide_ca = _sum_last(
+        (theatre, 'Aide publique du gouvernement du Canada'),
+        (diffuseurs, 'Aide publique du gouvernement du Canada'),
+        (arts_visuels, 'Aide publique du gouvernement du Canada'),
+    )
+    aide_muni = _sum_last(
+        (theatre, 'Aide publique des administrations municipales'),
+        (diffuseurs, 'Aide publique des administrations municipales'),
+        (arts_visuels, 'Aide publique des administrations municipales'),
+    )
+
+    part_aide_pub = _pct(aide_publique, revenus_totaux)
+    part_aide_qc = _pct(aide_qc, aide_publique)
+    part_aide_ca = _pct(aide_ca, aide_publique)
+    part_aide_muni = _pct(aide_muni, aide_publique)
+    ratio_spect_hors = _pct(spect_th_hors_qc, spect_th_total)
+
+    # Évolution nominale des revenus totaux sur période commune
+    # (on utilise la période commune la plus courte : diffuseurs 2016-2024, arts_v 2017-2024)
+    evol_periode = None
+    evol_pct = None
+    if annees_diffuseurs and annees_arts_v:
+        annee_debut_commune = max(annees_diffuseurs[0], annees_arts_v[0])
+        if annee_debut_commune in annees_theatre:
+            idx_theatre = annees_theatre.index(annee_debut_commune)
+            revenus_debut = _sum_last() or 0  # on doit refaire manuel
+            def _val_a(src, lbl, annee):
+                serie_annees = src.get('annees', [])
+                serie = _get_serie(src, lbl)
+                if serie and annee in serie_annees:
+                    return serie[serie_annees.index(annee)]
+                return None
+            rev_debut = _agrege(
+                _val_a(theatre, 'Revenus totaux', annee_debut_commune),
+                _val_a(diffuseurs, 'Revenus totaux', annee_debut_commune),
+                _val_a(arts_visuels, 'Revenus totaux', annee_debut_commune),
+            )
+            if rev_debut and revenus_totaux and rev_debut > 0:
+                evol_pct = round((revenus_totaux - rev_debut) / rev_debut * 100, 2)
+                evol_periode = f"{annee_debut_commune} → {annee_ref}"
+
+    return {
+        'annee_reference': annee_ref,
+        'nb_organismes_agrege': nb_organismes_agrege,
+        'nb_organismes_par_discipline': {
+            'theatre_cirque': nb_orgs_th,
+            'diffuseurs_pluridiscip': nb_orgs_di,
+            'arts_visuels_numeriques': nb_orgs_av,
+        },
+        'nb_productions_theatre_cirque': nb_prod_th,
+        'nb_representations_agrege': nb_repr_agrege,
+        'spectateurs_agrege_theatre_diffuseurs': spect_agrege,
+        'ratio_spectateurs_hors_qc_theatre_pct': ratio_spect_hors,
+        'revenus_totaux_agreges': revenus_totaux,
+        'aide_publique_agregee': aide_publique,
+        'part_aide_publique_dans_revenus_pct': part_aide_pub,
+        'repartition_aide_publique_pct': {
+            'quebec': part_aide_qc,
+            'canada': part_aide_ca,
+            'municipal': part_aide_muni,
+        },
+        'evolution_revenus_periode': evol_periode,
+        'evolution_revenus_pct_nominal': evol_pct,
+        'lecture_synthetique': (
+            f"En {annee_ref}, {int(nb_organismes_agrege) if nb_organismes_agrege else '?'} organismes CALQ "
+            f"suivis dans ce périmètre ont généré {int(nb_repr_agrege) if nb_repr_agrege else '?'} représentations "
+            f"pour {int(spect_agrege) if spect_agrege else '?'} spectateurs, avec "
+            f"{part_aide_pub}% de leurs revenus provenant de l'aide publique "
+            f"(dont {part_aide_qc}% du Québec, {part_aide_ca}% du Canada, "
+            f"{part_aide_muni}% du municipal)."
+        ),
+        'note_limites': (
+            "Périmètre restreint à trois disciplines (théâtre/cirque, diffuseurs "
+            "pluridisciplinaires, arts visuels/numériques/cinéma soutenus à la "
+            "mission). Musique, danse et autres diffuseurs seront ajoutés dans une "
+            "phase ultérieure (fichiers CALQ par région/genre/taille). Les ratios "
+            "portent sur les organismes soutenus par le CALQ, pas sur l'ensemble "
+            "du secteur (biais de sélection assumé). Dollars nominaux non corrigés "
+            "de l'inflation."
+        ),
+    }
+
+
 def derive_all(combined: dict, annee: int = 2025) -> dict:
     """Calcule les cinq repères à partir du dict combiné produit par le pipeline.
 
@@ -608,6 +792,19 @@ def derive_all(combined: dict, annee: int = 2025) -> dict:
             combined['ventes_livres_numeriques']
         )
 
+    # Bloc auxiliaire — R6 vitalité des arts vivants subventionnés (hors protocole)
+    # Nouveau repère qui complète le triangle R5 (marchand) par une lecture
+    # non-marchande subventionnée basée sur les stats CALQ.
+    r6_vitalite = None
+    if ('calq_theatre_cirque' in combined
+            and 'calq_diffuseurs_pluridiscip' in combined
+            and 'calq_arts_visuels' in combined):
+        r6_vitalite = derive_r6_vitalite_arts_vivants(
+            combined['calq_theatre_cirque'],
+            combined['calq_diffuseurs_pluridiscip'],
+            combined['calq_arts_visuels']
+        )
+
     payload = {
         "annee": annee,
         "date_calcul": dt.datetime.now().isoformat(timespec='seconds'),
@@ -657,5 +854,17 @@ def derive_all(combined: dict, annee: int = 2025) -> dict:
                             'la question substitution vs addition sur la période '
                             '2014-2025.'),
             **livre_papier_vs_num,
+        }
+    if r6_vitalite is not None:
+        payload["r6_vitalite_arts_vivants_subventionnes"] = {
+            'statut': 'auxiliaire_provisoire',
+            'note_statut': ('Nouveau repère R6 (hors protocole v1.1.0). Complète '
+                            'le triangle R5 (albums, films, livres — sources '
+                            'marchandes ADISQ/SODEC/OCCQ) par une lecture non '
+                            'marchande subventionnée. Périmètre CALQ : théâtre '
+                            'et arts du cirque + diffuseurs pluridisciplinaires + '
+                            'arts visuels/numériques/cinéma soutenus à la mission. '
+                            'Sera formalisé dans la version v1.2.0 du protocole.'),
+            **r6_vitalite,
         }
     return payload

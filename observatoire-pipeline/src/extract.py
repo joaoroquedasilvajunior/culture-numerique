@@ -1384,6 +1384,176 @@ def extract_ventes_livres_numeriques(path: Path) -> dict:
     }
 
 
+def _extract_calq_serie(path: Path, discipline: str) -> dict:
+    """
+    Extracteur générique pour les tableaux ISQ « Statistiques principales des
+    organismes soutenus par le CALQ » en format série temporelle.
+
+    Layout commun :
+      L4 : Unité + années financières (format 'AAAA-AAAA')
+      L6-L7 : Nombre d'organismes (première ligne indicateur, unité 'n')
+      Bloc revenus : Revenus totaux → Autres partenaires gouvernementaux
+      Bloc dépenses : Dépenses totales → Autres dépenses
+      Bloc activités : après le titre 'Activités' → Représentations,
+                       Nombre de productions, Spectateurs (QC/hors-QC/total selon fichier)
+      Bas : légende marqueurs + Notes
+
+    Retourne :
+      {
+        discipline, source, periode, annees[],
+        indicateurs: [
+          {libelle, unite, groupe, valeurs[]}
+        ],
+        organismes_par_annee: {annee: n},  # accès rapide au nb d'organismes
+        note_methodo, mise_a_jour
+      }
+    """
+    wb = load_workbook(path, data_only=True)
+    ws = wb['Tableau']
+
+    # Détecter les colonnes d'années en L4
+    annees = []
+    cols_annees = []
+    for c in range(3, (ws.max_column or 3) + 1):
+        v = ws.cell(row=4, column=c).value
+        if v is None:
+            continue
+        s = str(v).strip()
+        # Format 'AAAA-AAAA' (année fiscale)
+        if len(s) >= 9 and s[:4].isdigit() and s[4] == '-' and s[5:9].isdigit():
+            annees.append(s)
+            cols_annees.append(c)
+
+    # Parcourir les lignes indicateurs. Machine à états simple pour classer
+    # en groupes : meta / revenus / depenses / activites.
+    # Note : la ligne « Nombre d'organismes » varie entre L5 (arts visuels),
+    # L6 (diffuseurs) et L7 (théâtre/cirque) selon les fichiers. On démarre
+    # donc au plus haut (L5) et on ignore les lignes vides.
+    indicateurs = []
+    groupe = 'meta'
+    for r in range(5, (ws.max_row or 5) + 1):
+        libelle = ws.cell(row=r, column=1).value
+        unite = ws.cell(row=r, column=2).value
+        if libelle is None:
+            continue
+        lib_s = str(libelle).strip().replace('\xa0', '')
+        if not lib_s:
+            continue
+        # Détection des blocs de notes/légende → arrêter le parcours
+        if lib_s.startswith(('..', '-', '...', ':')) and len(lib_s) < 6:
+            continue
+        low = lib_s.lower()
+        if low.startswith('note') or 'ayant pas lieu' in low or 'donnée non' in low:
+            break
+        # Titre de bloc "Activités" (sans unité chiffrée). Attention : la
+        # cellule unité peut être None ou chaîne vide selon le fichier.
+        unite_est_vide = (unite is None) or (str(unite).strip() == '')
+        if lib_s == 'Activités' and unite_est_vide:
+            groupe = 'activites'
+            continue
+        # Basculement vers dépenses
+        if lib_s.startswith('Dépenses totales'):
+            groupe = 'depenses'
+        # Premier revenu → on entre en groupe revenus (Nombre d'organismes reste meta)
+        if lib_s.startswith('Revenus totaux'):
+            groupe = 'revenus'
+        # Ne garder que les lignes avec unité définie (indicateurs chiffrés)
+        if unite is None or str(unite).strip() == '':
+            continue
+        unite_s = str(unite).strip()
+        # Nombre d'organismes → groupe meta explicite
+        if lib_s == "Nombre d'organismes":
+            groupe_lig = 'meta'
+        else:
+            groupe_lig = groupe
+        valeurs = [_to_num(ws.cell(row=r, column=c).value) for c in cols_annees]
+        indicateurs.append({
+            'libelle': lib_s,
+            'unite': unite_s,
+            'groupe': groupe_lig,
+            'valeurs': valeurs,
+        })
+
+    # Nb organismes par année (accès rapide)
+    organismes = {}
+    for ind in indicateurs:
+        if ind['libelle'] == "Nombre d'organismes":
+            for an, v in zip(annees, ind['valeurs']):
+                organismes[an] = v
+            break
+
+    # Métadonnées : notes / lien / maj (lignes hautes du bloc notes)
+    notes_txt = ''
+    lien = ''
+    maj = ''
+    for r in range((ws.max_row or 0) - 30, (ws.max_row or 0) + 1):
+        if r < 1:
+            continue
+        v = ws.cell(row=r, column=1).value
+        if v is None:
+            continue
+        s = str(v)
+        if 'statistique.quebec.ca' in s:
+            for ln in s.split('\n'):
+                if 'statistique.quebec.ca' in ln:
+                    lien = ln.strip()
+        if 'Mise à jour' in s:
+            suffix = s.split('Mise à jour', 1)[1]
+            for ln in suffix.split('\n'):
+                ln = ln.strip(' :\t')
+                if ln and not ln.startswith('Mise'):
+                    maj = ln
+                    break
+        if 'Notes' in s and not notes_txt:
+            notes_txt = s
+
+    return {
+        'discipline': discipline,
+        'source': 'ISQ (Observatoire de la culture et des communications du Québec) — Statistiques principales des organismes soutenus par le CALQ',
+        'periode': f"{annees[0]} à {annees[-1]}" if annees else '',
+        'annees': annees,
+        'indicateurs': indicateurs,
+        'organismes_par_annee': organismes,
+        'note_methodo': notes_txt[:600] if notes_txt else '',
+        'lien_permanent': lien,
+        'mise_a_jour': maj,
+    }
+
+
+def extract_calq_theatre_cirque(path: Path) -> dict:
+    """
+    Tableau ISQ « Statistiques principales des organismes de production en
+    théâtre et arts du cirque soutenus par le CALQ, Québec ».
+    Série longue 1994-1995 → 2023-2024 (30 ans).
+    Contient le bloc Activités : Nombre de productions, Représentations,
+    Spectateurs (Québec + hors-Québec).
+    """
+    return _extract_calq_serie(path, discipline='theatre_cirque')
+
+
+def extract_calq_diffuseurs_pluridiscip(path: Path) -> dict:
+    """
+    Tableau ISQ « Statistiques principales des diffuseurs pluridisciplinaires
+    soutenus par le CALQ, Québec ».
+    Série 2016-2017 → 2023-2024. Le bloc Activités contient seulement
+    Représentations + Spectateurs (pas de productions : ce sont des
+    diffuseurs, pas des producteurs).
+    """
+    return _extract_calq_serie(path, discipline='diffuseurs_pluridiscip')
+
+
+def extract_calq_arts_visuels(path: Path) -> dict:
+    """
+    Tableau ISQ « Statistiques principales des organismes de diffusion et de
+    production en arts visuels, arts numériques, cinéma et vidéo soutenus à
+    la mission par le CALQ, Québec ».
+    Série 2017-2018 → 2023-2024. Bloc Activités absent (les indicateurs
+    d'activité pour cette discipline ne sont pas chiffrés en 'n' dans ce
+    tableau).
+    """
+    return _extract_calq_serie(path, discipline='arts_visuels_numeriques')
+
+
 # ---------- Registry ----------
 
 EXTRACTORS = {
@@ -1406,4 +1576,7 @@ EXTRACTORS = {
     'extract_job_vacancy_quebec': extract_job_vacancy_quebec,
     'extract_ai_exposure_culture': extract_ai_exposure_culture,
     'extract_ventes_livres_numeriques': extract_ventes_livres_numeriques,
+    'extract_calq_theatre_cirque': extract_calq_theatre_cirque,
+    'extract_calq_diffuseurs_pluridiscip': extract_calq_diffuseurs_pluridiscip,
+    'extract_calq_arts_visuels': extract_calq_arts_visuels,
 }

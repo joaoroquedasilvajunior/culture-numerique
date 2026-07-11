@@ -1,6 +1,6 @@
 {
   "annee": 2025,
-  "date_calcul": "2026-06-29T11:24:03",
+  "date_calcul": "2026-07-11T06:50:55",
   "protocole_version": "1.1.0",
   "reperes": {
     "r1_ecart_decouvrabilite": {
@@ -2532,5 +2532,32 @@
       "lecture": "addition"
     },
     "limites": "Données 2025 papier non publiées au moment de l'extraction. Comparaison en dollars courants : la croissance nominale inclut l'effet inflation. Le marché du livre papier est ~60× plus gros en valeur que le numérique au Québec, ce qui rend la part numérique sensible aux fluctuations relatives."
+  },
+  "r6_vitalite_arts_vivants_subventionnes": {
+    "statut": "auxiliaire_provisoire",
+    "note_statut": "Nouveau repère R6 (hors protocole v1.1.0). Complète le triangle R5 (albums, films, livres — sources marchandes ADISQ/SODEC/OCCQ) par une lecture non marchande subventionnée. Périmètre CALQ : théâtre et arts du cirque + diffuseurs pluridisciplinaires + arts visuels/numériques/cinéma soutenus à la mission. Sera formalisé dans la version v1.2.0 du protocole.",
+    "annee_reference": "2023-2024",
+    "nb_organismes_agrege": 214.0,
+    "nb_organismes_par_discipline": {
+      "theatre_cirque": 73.0,
+      "diffuseurs_pluridiscip": 67.0,
+      "arts_visuels_numeriques": 74.0
+    },
+    "nb_productions_theatre_cirque": 293.0,
+    "nb_representations_agrege": 13379.0,
+    "spectateurs_agrege_theatre_diffuseurs": 4190494.0,
+    "ratio_spectateurs_hors_qc_theatre_pct": 16.97,
+    "revenus_totaux_agreges": 350110296.0,
+    "aide_publique_agregee": 139715749.0,
+    "part_aide_publique_dans_revenus_pct": 39.91,
+    "repartition_aide_publique_pct": {
+      "quebec": 58.08,
+      "canada": 17.4,
+      "municipal": 24.33
+    },
+    "evolution_revenus_periode": "2017-2018 → 2023-2024",
+    "evolution_revenus_pct_nominal": 27.71,
+    "lecture_synthetique": "En 2023-2024, 214 organismes CALQ suivis dans ce périmètre ont généré 13379 représentations pour 4190494 spectateurs, avec 39.91% de leurs revenus provenant de l'aide publique (dont 58.08% du Québec, 17.4% du Canada, 24.33% du municipal).",
+    "note_limites": "Périmètre restreint à trois disciplines (théâtre/cirque, diffuseurs pluridisciplinaires, arts visuels/numériques/cinéma soutenus à la mission). Musique, danse et autres diffuseurs seront ajoutés dans une phase ultérieure (fichiers CALQ par région/genre/taille). Les ratios portent sur les organismes soutenus par le CALQ, pas sur l'ensemble du secteur (biais de sélection assumé). Dollars nominaux non corrigés de l'inflation."
   }
 }

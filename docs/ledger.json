@@ -1,5 +1,5 @@
 {
-  "build_iso": "2026-06-29T15:24:03.532657+00:00",
+  "build_iso": "2026-07-11T10:50:55.362798+00:00",
   "pipeline_version": "1.0.0",
   "sources_used": [
     {
@@ -127,6 +127,33 @@
       "mtime_iso": "2026-06-29T14:40:14.672308+00:00",
       "source_key": "ventes_livres_numeriques",
       "label": "Ventes de livres numériques, données annuelles, Québec"
+    },
+    {
+      "path": "/Users/joaoroque/Documents/Claude/Projects/Culture Québec en donnée/Données Québec/Statistiques principales des organismes de production en théâtre et arts du cirque soutenus par le Conseil des arts et des lettres du Québec, Québec.xlsx",
+      "name": "Statistiques principales des organismes de production en théâtre et arts du cirque soutenus par le Conseil des arts et des lettres du Québec, Québec.xlsx",
+      "sha256": "7b87cb390def54486266d54a7b699901c685a774867c864aa9a922aa633761a9",
+      "size_bytes": 19187,
+      "mtime_iso": "2026-07-11T10:27:00.675090+00:00",
+      "source_key": "calq_theatre_cirque",
+      "label": "Statistiques principales des organismes de production en théâtre et arts du cirque soutenus par le CALQ"
+    },
+    {
+      "path": "/Users/joaoroque/Documents/Claude/Projects/Culture Québec en donnée/Données Québec/Statistiques principales des diffuseurs pluridisciplinaires soutenus par le Conseil des arts et des lettres du Québec, Québec.xlsx",
+      "name": "Statistiques principales des diffuseurs pluridisciplinaires soutenus par le Conseil des arts et des lettres du Québec, Québec.xlsx",
+      "sha256": "fb11fd9de36fcaaf8a9cad4b950b99996a7e9326ec1efa541e0d19f5620c0d04",
+      "size_bytes": 11970,
+      "mtime_iso": "2026-07-11T10:22:17.222921+00:00",
+      "source_key": "calq_diffuseurs_pluridiscip",
+      "label": "Statistiques principales des diffuseurs pluridisciplinaires soutenus par le CALQ"
+    },
+    {
+      "path": "/Users/joaoroque/Documents/Claude/Projects/Culture Québec en donnée/Données Québec/Statistiques principales des organismes de diffusion et de production en arts visuels, arts numériques, cinéma et vidéo soutenus à la mission par le Conseil des arts et des lettres du Québec, Québec.xlsx",
+      "name": "Statistiques principales des organismes de diffusion et de production en arts visuels, arts numériques, cinéma et vidéo soutenus à la mission par le Conseil des arts et des lettres du Québec, Québec.xlsx",
+      "sha256": "ef32cc14d187e32b3939d513acf620f39d2270a9a92886248b91f545e64ada27",
+      "size_bytes": 9727,
+      "mtime_iso": "2026-07-11T10:27:50.807793+00:00",
+      "source_key": "calq_arts_visuels",
+      "label": "Statistiques principales des organismes de diffusion et de production en arts visuels, arts numériques, cinéma et vidéo soutenus à la mission par le CALQ"
     },
     {
       "path": "/Users/joaoroque/Documents/Claude/Projects/Culture Québec en donnée/Données Québec/Nombre d’établissements culturels de certains types.xlsx",
