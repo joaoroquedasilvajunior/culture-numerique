@@ -1270,6 +1270,27 @@ a{color:inherit;text-decoration:none}
         </div>
       </div>
 
+      <div class="card" style="margin-bottom:20px">
+        <div class="card-head">
+          <div>
+            <div class="card-title">Présence catalogue — les artistes du Québec dans les métadonnées ouvertes</div>
+            <div class="card-sub" id="sub_mb">MusicBrainz (CC0) · 9 zones québécoises · première source non gouvernementale du pipeline</div>
+          </div>
+          <div style="font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;padding:6px 12px;border-radius:6px;background:var(--cb-100);color:var(--cb-700);align-self:flex-start">Iceberg</div>
+        </div>
+        <div class="card-body">
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:16px;padding:12px 0">
+            <div class="kpi-mini"><div class="lbl">Artistes au catalogue</div><div class="val" id="kpi_mb_total">—</div></div>
+            <div class="kpi-mini"><div class="lbl">Actifs</div><div class="val" id="kpi_mb_actifs">—</div></div>
+            <div class="kpi-mini"><div class="lbl">Lien streaming (plancher)</div><div class="val" id="kpi_mb_streaming">—</div></div>
+            <div class="kpi-mini"><div class="lbl">Lien Spotify (plancher)</div><div class="val" id="kpi_mb_spotify">—</div></div>
+            <div class="kpi-mini"><div class="lbl">Au top 20 ISQ (7 sem.)</div><div class="val" style="color:var(--bo-500, #d6603c)">1</div></div>
+          </div>
+          <div class="chart-wrap" style="margin-top:8px"><canvas id="chart_mb_genres"></canvas></div>
+        </div>
+        <div class="card-foot" id="foot_mb"></div>
+      </div>
+
       <div class="row row-2">
         <div class="card">
           <div class="card-head">
@@ -2658,6 +2679,46 @@ spark('spark4', [0, -2, -4, -7, -10, -11.6], C.bo);
         + '<strong>' + rep.canada + ' %</strong> du gouvernement du Canada, et <strong>' + rep.municipal + ' %</strong> '
         + 'des administrations municipales. Le municipal pèse davantage que le fédéral, contrairement à l\'intuition courante.';
     }
+  }
+})();
+
+// === PRÉSENCE CATALOGUE : MusicBrainz artistes QC ===
+(function(){
+  const MB = D.musicbrainz_artistes_qc;
+  if (!MB) return;
+  const fmt_int = n => (n == null) ? '—' : Math.round(n).toLocaleString('fr-CA');
+  const setText = (id, txt) => { const el = document.getElementById(id); if (el) el.textContent = txt; };
+
+  setText('kpi_mb_total', fmt_int(MB.nb_artistes));
+  setText('kpi_mb_actifs', MB.taux_actifs_pct != null ? MB.taux_actifs_pct.toLocaleString('fr-CA') + ' %' : '—');
+  setText('kpi_mb_streaming', MB.taux_streaming_pct != null ? MB.taux_streaming_pct.toLocaleString('fr-CA') + ' %' : '—');
+  setText('kpi_mb_spotify', MB.taux_spotify_pct != null ? MB.taux_spotify_pct.toLocaleString('fr-CA') + ' %' : '—');
+  setText('sub_mb', 'MusicBrainz (CC0) · récolte du ' + (MB.date_recolte || '—') + ' · 9 zones québécoises · première source non gouvernementale du pipeline');
+
+  // Top genres — barres horizontales
+  const el = document.getElementById('chart_mb_genres');
+  if (el && MB.top_genres) {
+    const top = MB.top_genres.slice(0, 12);
+    new Chart(el, {
+      type: 'bar',
+      data: { labels: top.map(g => g[0]),
+        datasets: [{ data: top.map(g => g[1]),
+          backgroundColor: top.map((g, i) => i === 0 ? C.bo : C.cb700),
+          borderRadius: 4, borderSkipped: false }]},
+      options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: false },
+          tooltip: { callbacks: { label: c => c.parsed.x.toLocaleString('fr-CA') + ' artistes' }}},
+        scales: { x: { grid: { color: '#f0f4f8' }},
+          y: { grid: { display: false }, ticks: { font: { size: 11 }}}}}
+    });
+  }
+
+  const foot = document.getElementById('foot_mb');
+  if (foot) {
+    foot.innerHTML = 'L\'iceberg de la découvrabilité : <strong>' + fmt_int(MB.nb_artistes) + ' artistes</strong> au catalogue des métadonnées ouvertes, '
+      + '<strong>' + fmt_int(MB.nb_avec_streaming) + '</strong> avec au moins un lien streaming documenté, '
+      + '<strong>' + fmt_int(MB.nb_avec_spotify) + '</strong> avec un lien Spotify, et <strong>1 seul</strong> dans le top 20 ISQ de consommation sur 7 semaines. '
+      + 'Les taux de liens sont des planchers de complétude des métadonnées — l\'enjeu du volet métadonnées de la Loi 109, pas un taux de présence réelle sur les plateformes.';
   }
 })();
 

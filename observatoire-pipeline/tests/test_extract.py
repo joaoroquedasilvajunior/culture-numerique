@@ -754,3 +754,57 @@ def test_calq_theatre_cirque_croissance_30_ans(raw_dir):
     # Croissance nominale sur 30 ans : le secteur passe de ~35 M$ à ~120 M$
     # (x3.4 avant inflation). Test lâche : au moins x2.
     assert v_fin > 2 * v_debut
+
+
+# === MusicBrainz — présence catalogue des artistes QC ===
+
+def test_musicbrainz_artistes_qc_perimetre(raw_dir):
+    """Récolte MusicBrainz du 2026-07-18 : 9 731 artistes uniques rattachés
+    aux 9 zones québécoises. Première source non gouvernementale du pipeline
+    (licence CC0).
+    """
+    from src import extract
+    f = find_source_file(raw_dir, "musicbrainz_artistes_qc_*.json")
+    assert f is not None, "Fichier musicbrainz_artistes_qc manquant"
+    d = extract.extract_musicbrainz_artistes_qc(f)
+    assert d['nb_artistes'] == 9731
+    assert d['date_recolte'] == '2026-07-18'
+    # 9 zones attendues
+    assert len(d['zones']) == 9
+    assert 'Montréal' in d['zones']
+    assert 'Québec (province)' in d['zones']
+    # Montréal est la zone la plus peuplée en libellé affiné
+    assert d['zones']['Montréal']['artistes'] > 4000
+
+
+def test_musicbrainz_artistes_qc_taux_plancher(raw_dir):
+    """Les taux de couverture streaming sont des planchers de complétude
+    des métadonnées ouvertes. Récolte 2026-07-18 : Spotify ~20 %,
+    streaming élargi ~40 %, actifs ~87 %.
+    """
+    from src import extract
+    f = find_source_file(raw_dir, "musicbrainz_artistes_qc_*.json")
+    d = extract.extract_musicbrainz_artistes_qc(f)
+    assert 15 <= d['taux_spotify_pct'] <= 30
+    assert 30 <= d['taux_streaming_pct'] <= 50
+    assert d['taux_actifs_pct'] > 80
+    # Cohérence interne
+    assert d['nb_avec_spotify'] <= d['nb_avec_streaming'] <= d['nb_artistes']
+
+
+def test_musicbrainz_artistes_qc_agregats(raw_dir):
+    """Agrégats calculés : types, top genres, échantillon documenté.
+    Le hip hop est le premier genre du catalogue QC (récolte 2026-07-18).
+    """
+    from src import extract
+    f = find_source_file(raw_dir, "musicbrainz_artistes_qc_*.json")
+    d = extract.extract_musicbrainz_artistes_qc(f)
+    # Types : Person + Group dominent
+    assert d['types'].get('Person', 0) > 5000
+    assert d['types'].get('Group', 0) > 3000
+    # Top genres : le premier est hip hop
+    assert d['top_genres'][0][0] == 'hip hop'
+    # Échantillon de 30 artistes documentés
+    assert len(d['echantillon_documentes']) == 30
+    # L'échantillon est trié par documentation décroissante
+    assert d['echantillon_documentes'][0]['nb_liens'] >= d['echantillon_documentes'][-1]['nb_liens']

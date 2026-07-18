@@ -19,6 +19,7 @@ ces marqueurs après en avoir extrait le niveau hiérarchique.
 from __future__ import annotations
 import csv
 import io
+import json
 import re
 import zipfile
 from collections import defaultdict
@@ -1554,6 +1555,77 @@ def extract_calq_arts_visuels(path: Path) -> dict:
     return _extract_calq_serie(path, discipline='arts_visuels_numeriques')
 
 
+def extract_musicbrainz_artistes_qc(path: Path) -> dict:
+    """
+    Récolte MusicBrainz des artistes rattachés aux zones québécoises
+    (fichier JSON produit par moissonneur_musicbrainz.py, licence CC0).
+
+    Le browse MusicBrainz de la zone province englobe les zones contenues :
+    la récolte dédoublonne par MBID et affine le libellé de zone. L'univers
+    est donc « artistes uniques rattachés au Québec ou à une ville du Québec ».
+
+    L'extracteur ne recharge pas la liste complète dans le payload dashboard
+    (9 700 artistes ≈ 3 Mo) : il calcule les agrégats et conserve un
+    échantillon des 30 artistes les plus documentés pour affichage.
+    """
+    import collections
+
+    data = json.loads(Path(path).read_text(encoding='utf-8'))
+    artistes = data.get('artistes', [])
+    n = len(artistes)
+
+    types = collections.Counter(a.get('type') or 'Inconnu' for a in artistes)
+    genres = collections.Counter(
+        g for a in artistes for g in a.get('genres', []))
+
+    # Couverture streaming par zone
+    zones_detail = {}
+    for a in artistes:
+        z = a.get('zone', '?')
+        d = zones_detail.setdefault(z, {'artistes': 0, 'spotify': 0, 'streaming': 0})
+        d['artistes'] += 1
+        if a.get('spotify_id'):
+            d['spotify'] += 1
+        if a.get('liens'):
+            d['streaming'] += 1
+    for d in zones_detail.values():
+        d['taux_spotify_pct'] = round(d['spotify'] / d['artistes'] * 100, 1) if d['artistes'] else None
+        d['taux_streaming_pct'] = round(d['streaming'] / d['artistes'] * 100, 1) if d['artistes'] else None
+
+    # Échantillon : artistes les mieux documentés (nb de liens + genres)
+    def score_doc(a):
+        return len(a.get('liens', {})) * 2 + len(a.get('genres', []))
+    echantillon = sorted(artistes, key=score_doc, reverse=True)[:30]
+    echantillon = [{
+        'nom': a['nom'], 'zone': a['zone'], 'type': a.get('type'),
+        'genres': a.get('genres', [])[:4],
+        'spotify': bool(a.get('spotify_id')),
+        'nb_liens': len(a.get('liens', {})),
+    } for a in echantillon]
+
+    return {
+        'source': data.get('source', 'MusicBrainz'),
+        'methode': data.get('methode', ''),
+        'date_recolte': data.get('date_recolte'),
+        'nb_artistes': n,
+        'nb_avec_spotify': data.get('nb_avec_spotify'),
+        'nb_avec_streaming': data.get('nb_avec_streaming'),
+        'nb_actifs': data.get('nb_actifs'),
+        'taux_spotify_pct': round(data.get('nb_avec_spotify', 0) / n * 100, 1) if n else None,
+        'taux_streaming_pct': round(data.get('nb_avec_streaming', 0) / n * 100, 1) if n else None,
+        'taux_actifs_pct': round(data.get('nb_actifs', 0) / n * 100, 1) if n else None,
+        'zones': zones_detail,
+        'types': dict(types),
+        'top_genres': genres.most_common(15),
+        'echantillon_documentes': echantillon,
+        'note_methodo': ("Un artiste MusicBrainz est rattaché à une seule zone. "
+                         "L'absence de lien Spotify dans MusicBrainz ne signifie pas "
+                         "absence de Spotify : le taux mesuré est un plancher qui "
+                         "reflète la complétude des métadonnées ouvertes — l'enjeu "
+                         "même du volet métadonnées de la Loi 109."),
+    }
+
+
 # ---------- Registry ----------
 
 EXTRACTORS = {
@@ -1579,4 +1651,5 @@ EXTRACTORS = {
     'extract_calq_theatre_cirque': extract_calq_theatre_cirque,
     'extract_calq_diffuseurs_pluridiscip': extract_calq_diffuseurs_pluridiscip,
     'extract_calq_arts_visuels': extract_calq_arts_visuels,
+    'extract_musicbrainz_artistes_qc': extract_musicbrainz_artistes_qc,
 }

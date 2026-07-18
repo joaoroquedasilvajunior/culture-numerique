@@ -1,5 +1,5 @@
 {
-  "build_iso": "2026-07-11T10:50:55.362798+00:00",
+  "build_iso": "2026-07-18T19:23:12.359206+00:00",
   "pipeline_version": "1.0.0",
   "sources_used": [
     {
@@ -154,6 +154,15 @@
       "mtime_iso": "2026-07-11T10:27:50.807793+00:00",
       "source_key": "calq_arts_visuels",
       "label": "Statistiques principales des organismes de diffusion et de production en arts visuels, arts numériques, cinéma et vidéo soutenus à la mission par le CALQ"
+    },
+    {
+      "path": "/Users/joaoroque/Documents/Claude/Projects/Culture Québec en donnée/Données Québec/musicbrainz_artistes_qc_2026-07-18.json",
+      "name": "musicbrainz_artistes_qc_2026-07-18.json",
+      "sha256": "bb3960e3f09988104fab6bfc1b5d6770ca94740287767aab3999d4b784bd9ee4",
+      "size_bytes": 3048329,
+      "mtime_iso": "2026-07-18T18:57:39.050613+00:00",
+      "source_key": "musicbrainz_artistes_qc",
+      "label": "Artistes du Québec dans MusicBrainz — présence catalogue et complétude des métadonnées ouvertes"
     },
     {
       "path": "/Users/joaoroque/Documents/Claude/Projects/Culture Québec en donnée/Données Québec/Nombre d’établissements culturels de certains types.xlsx",
