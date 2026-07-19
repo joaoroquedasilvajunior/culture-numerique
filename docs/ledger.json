@@ -1,5 +1,5 @@
 {
-  "build_iso": "2026-07-18T19:23:12.359206+00:00",
+  "build_iso": "2026-07-19T17:03:28.122752+00:00",
   "pipeline_version": "1.0.0",
   "sources_used": [
     {
@@ -163,6 +163,15 @@
       "mtime_iso": "2026-07-18T18:57:39.050613+00:00",
       "source_key": "musicbrainz_artistes_qc",
       "label": "Artistes du Québec dans MusicBrainz — présence catalogue et complétude des métadonnées ouvertes"
+    },
+    {
+      "path": "/Users/joaoroque/Documents/Claude/Projects/Culture Québec en donnée/Données Québec/deezer_artistes_qc_2026-07-19.json",
+      "name": "deezer_artistes_qc_2026-07-19.json",
+      "sha256": "522b6df8fecebf25190abced96375dcf1401d12f137ea48d0659738cf5c7e4e2",
+      "size_bytes": 316816,
+      "mtime_iso": "2026-07-19T16:59:07.961252+00:00",
+      "source_key": "deezer_artistes_qc",
+      "label": "Popularité Deezer des artistes du Québec — nb_fan et longue traîne"
     },
     {
       "path": "/Users/joaoroque/Documents/Claude/Projects/Culture Québec en donnée/Données Québec/Nombre d’établissements culturels de certains types.xlsx",

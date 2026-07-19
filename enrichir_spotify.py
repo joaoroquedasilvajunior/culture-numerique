@@ -51,8 +51,19 @@ def obtenir_token(client_id, client_secret):
         return json.load(resp)["access_token"]
 
 
+class PauseTropLongue(Exception):
+    """Retry-After démesuré : on sauvegarde et on sort proprement."""
+    def __init__(self, secondes):
+        self.secondes = secondes
+
+
 def get_json(url, token, retries=5):
-    """GET avec Bearer token. Retourne (donnees, None) ou (None, (code, corps))."""
+    """GET avec Bearer token. Retourne (donnees, None) ou (None, (code, corps)).
+
+    Le rate limit Spotify est une fenêtre glissante de 30 s. En cas de 429 :
+      - Retry-After raisonnable (< 5 min) : on attend et on réessaie ;
+      - Retry-After démesuré (pénalité) : PauseTropLongue → sauvegarde + sortie.
+    """
     for tentative in range(retries):
         r = urllib.request.Request(url, headers={"Authorization": f"Bearer {token}"})
         try:
@@ -64,11 +75,14 @@ def get_json(url, token, retries=5):
                 corps = e.read().decode("utf-8", errors="replace")[:300]
             except Exception:
                 pass
-            if e.code == 429 and tentative < retries - 1:
-                attente = int(e.headers.get("Retry-After", 5)) + 1
-                print(f"    (429 — pause {attente} s)")
-                time.sleep(attente)
-                continue
+            if e.code == 429:
+                attente = int(e.headers.get("Retry-After", 30)) + 1
+                if attente > 300:
+                    raise PauseTropLongue(attente)
+                if tentative < retries - 1:
+                    print(f"    (429 — pause {attente} s)")
+                    time.sleep(attente)
+                    continue
             return None, (e.code, corps)
     return None, (0, "épuisement des tentatives")
 
@@ -115,7 +129,12 @@ def main():
     # --- DIAGNOSTIC : unitaire puis batch ---
     test_id = cibles[0]["spotify_id"]
     print("\n--- Diagnostic des endpoints ---")
-    _, err_unit = get_json(f"https://api.spotify.com/v1/artists/{test_id}", token)
+    try:
+        _, err_unit = get_json(f"https://api.spotify.com/v1/artists/{test_id}", token)
+    except PauseTropLongue as p:
+        sys.exit(f"  Pénalité rate-limit encore active : réessayer dans "
+                 f"{p.secondes/3600:.1f} h ({p.secondes} s). Aucun appel ne "
+                 f"passera avant l'expiration — inutile de relancer avant.")
     print(f"  Unitaire /v1/artists/{{id}}       : {'OK' if err_unit is None else f'ERREUR {err_unit[0]} — {err_unit[1]}'}")
     ids2 = ",".join(c["spotify_id"] for c in cibles[:2])
     _, err_batch = get_json(f"https://api.spotify.com/v1/artists?ids={ids2}", token)
@@ -153,20 +172,33 @@ def main():
             print(f"  Lot {i}/{len(lots)} — {len(enrichis)} enrichis", end="\r")
             time.sleep(0.5)
     else:
-        for i, mb in enumerate(restants, 1):
-            data, err = get_json(f"https://api.spotify.com/v1/artists/{mb['spotify_id']}", token)
-            if err:
-                if err[0] in (400, 404):   # ID retiré / invalide : sauter
-                    continue
-                print(f"\n  Artiste {i} : erreur {err[0]} — {err[1]}")
-                break
-            enrichis[data["id"]] = normaliser(data, mb)
-            if i % 25 == 0:
-                FICHIER_ETAT.write_text(json.dumps(enrichis, ensure_ascii=False), encoding="utf-8")
-                ecoule = time.time() - debut
-                reste = ecoule / i * (len(restants) - i)
-                print(f"  {i}/{len(restants)} — ETA {reste/60:.0f} min", end="\r")
-            time.sleep(0.35)   # ~3 req/s, prudent
+        # Rythme prudent : ~15 appels par fenêtre de 30 s (mode développement).
+        # Ajustable via SPOTIFY_PAUSE (secondes entre appels, défaut 2.0).
+        pause = float(os.environ.get("SPOTIFY_PAUSE", "2.0"))
+        print(f"Rythme : 1 appel / {pause} s (~{30/pause:.0f} par fenêtre de 30 s) "
+              f"— ETA {len(restants)*pause/60:.0f} min")
+        try:
+            for i, mb in enumerate(restants, 1):
+                data, err = get_json(f"https://api.spotify.com/v1/artists/{mb['spotify_id']}", token)
+                if err:
+                    if err[0] in (400, 404):   # ID retiré / invalide : sauter
+                        continue
+                    print(f"\n  Artiste {i} : erreur {err[0]} — {err[1]}")
+                    break
+                enrichis[data["id"]] = normaliser(data, mb)
+                if i % 25 == 0:
+                    FICHIER_ETAT.write_text(json.dumps(enrichis, ensure_ascii=False), encoding="utf-8")
+                    ecoule = time.time() - debut
+                    reste = ecoule / i * (len(restants) - i)
+                    print(f"  {i}/{len(restants)} — ETA {reste/60:.0f} min", end="\r")
+                time.sleep(pause)
+        except PauseTropLongue as p:
+            FICHIER_ETAT.write_text(json.dumps(enrichis, ensure_ascii=False), encoding="utf-8")
+            print(f"\n  Spotify impose une pause de {p.secondes/3600:.1f} h (pénalité).")
+            print(f"  Progression sauvegardée ({len(enrichis)} artistes) — relancer plus tard,")
+            print(f"  le script reprendra où il en était. Conseil : réduire le rythme")
+            print(f"  (export SPOTIFY_PAUSE=3) ou demander l'extended quota mode.")
+            sys.exit(0)
 
     print()
     liste = sorted(enrichis.values(), key=lambda a: -(a["popularite"] or 0))

@@ -190,6 +190,15 @@ sources:
     axe_tdb: ["presence", "ecosysteme"]
     notes: "Première source non gouvernementale du pipeline. Univers : 9 731 artistes uniques rattachés au Québec (récolte 2026-07-18). Le taux de liens Spotify (~20 %) est un plancher de complétude des métadonnées ouvertes, pas un taux de présence réelle sur Spotify — nuance centrale pour la lecture Loi 109 (volet métadonnées). Enrichissement Spotify (popularité, followers) en attente : quota API journalier des apps en mode développement insuffisant (403 sur batch + 429 Retry-After 24 h, juillet 2026)."
 
+  deezer_artistes_qc:
+    label: "Popularité Deezer des artistes du Québec — nb_fan et longue traîne"
+    file_pattern: "deezer_artistes_qc_*.json"
+    isq_url: "https://api.deezer.com/"
+    classification: "API publique Deezer (sans authentification) ; périmètre = artistes MusicBrainz QC avec lien Deezer documenté ; refresh via enrichir_deezer.py"
+    extractor: extract_deezer_artistes_qc
+    axe_tdb: ["presence", "consommation"]
+    notes: "1 203 artistes enrichis (extraction 2026-07-19) sur les 9 731 du catalogue MusicBrainz. nb_fan = proxy de popularité ; Deezer est fort en francophonie, miroir pertinent pour le répertoire QC. Biais de périmètre : seuls les artistes dont la fiche MusicBrainz documente un lien Deezer sont couverts — la longue traîne réelle est encore plus longue. Attribution Deezer requise dans les visualisations."
+
   etablissements:
     label: "Nombre d'établissements culturels de certains types"
     isq_table_id: "929"

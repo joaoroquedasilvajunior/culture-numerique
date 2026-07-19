@@ -808,3 +808,37 @@ def test_musicbrainz_artistes_qc_agregats(raw_dir):
     assert len(d['echantillon_documentes']) == 30
     # L'échantillon est trié par documentation décroissante
     assert d['echantillon_documentes'][0]['nb_liens'] >= d['echantillon_documentes'][-1]['nb_liens']
+
+
+# === Deezer — popularité des artistes QC ===
+
+def test_deezer_artistes_qc_perimetre(raw_dir):
+    """Extraction Deezer 2026-07-19 : 1 203 artistes enrichis sur les
+    9 731 du catalogue MusicBrainz (périmètre = liens Deezer documentés).
+    """
+    from src import extract
+    f = find_source_file(raw_dir, "deezer_artistes_qc_*.json")
+    assert f is not None, "Fichier deezer_artistes_qc manquant"
+    d = extract.extract_deezer_artistes_qc(f)
+    assert d['nb_artistes'] == 1203
+    assert d['date_extraction'] == '2026-07-19'
+    # Distribution en 5 paliers dont les parts somment à ~100
+    assert len(d['distribution_longue_traine']) == 5
+    total_pct = sum(p['part_pct'] for p in d['distribution_longue_traine'])
+    assert 99.0 <= total_pct <= 101.0
+
+
+def test_deezer_artistes_qc_tete_et_traine(raw_dir):
+    """Céline Dion est en tête (~3,6 M fans) ; la distribution est une
+    longue traîne fortement concentrée (le top 1 % capte une part
+    majoritaire des fans).
+    """
+    from src import extract
+    f = find_source_file(raw_dir, "deezer_artistes_qc_*.json")
+    d = extract.extract_deezer_artistes_qc(f)
+    assert d['top_20'][0]['nom'] == 'Céline Dion'
+    assert d['top_20'][0]['nb_fan'] > 3_000_000
+    # Concentration : top 1 % > 40 % des fans
+    assert d['part_fans_top_1pct_pct'] > 40
+    # Médiane très basse (longue traîne)
+    assert d['mediane_fans'] < 1000

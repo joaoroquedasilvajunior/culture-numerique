@@ -1626,6 +1626,65 @@ def extract_musicbrainz_artistes_qc(path: Path) -> dict:
     }
 
 
+def extract_deezer_artistes_qc(path: Path) -> dict:
+    """
+    Enrichissement Deezer des artistes QC identifiés par MusicBrainz
+    (fichier JSON produit par enrichir_deezer.py, API publique Deezer).
+
+    nb_fan est le proxy de popularité. L'extracteur calcule la distribution
+    en longue traîne (paliers logarithmiques) et conserve le top 20 —
+    pas la liste complète (1 200 artistes) dans le payload dashboard.
+    """
+    data = json.loads(Path(path).read_text(encoding='utf-8'))
+    artistes = data.get('artistes', [])
+    n = len(artistes)
+    fans = sorted((a.get('nb_fan') or 0) for a in artistes)
+
+    # Paliers de longue traîne
+    paliers = [
+        ('moins de 100 fans', 0, 100),
+        ('100 à 999', 100, 1_000),
+        ('1 000 à 9 999', 1_000, 10_000),
+        ('10 000 à 99 999', 10_000, 100_000),
+        ('100 000 et plus', 100_000, float('inf')),
+    ]
+    distribution = []
+    for libelle, lo, hi in paliers:
+        cnt = sum(1 for f in fans if lo <= f < hi)
+        distribution.append({
+            'palier': libelle,
+            'artistes': cnt,
+            'part_pct': round(cnt / n * 100, 1) if n else None,
+        })
+
+    mediane = fans[n // 2] if n else None
+    total_fans = sum(fans)
+    # Concentration : part des fans captée par le top 1 % des artistes
+    top1pct_n = max(1, n // 100)
+    part_top1pct = (round(sum(fans[-top1pct_n:]) / total_fans * 100, 1)
+                    if total_fans else None)
+
+    top20 = [{
+        'nom': a.get('nom_deezer') or a.get('nom_mb'),
+        'zone': a.get('zone'),
+        'nb_fan': a.get('nb_fan'),
+        'nb_album': a.get('nb_album'),
+    } for a in artistes[:20]]
+
+    return {
+        'source': data.get('source', 'API publique Deezer'),
+        'source_identification': data.get('source_identification', ''),
+        'date_extraction': data.get('date_extraction'),
+        'nb_artistes': n,
+        'mediane_fans': mediane,
+        'total_fans': total_fans,
+        'part_fans_top_1pct_pct': part_top1pct,
+        'distribution_longue_traine': distribution,
+        'top_20': top20,
+        'note_methodo': data.get('note_methodo', ''),
+    }
+
+
 # ---------- Registry ----------
 
 EXTRACTORS = {
@@ -1652,4 +1711,5 @@ EXTRACTORS = {
     'extract_calq_diffuseurs_pluridiscip': extract_calq_diffuseurs_pluridiscip,
     'extract_calq_arts_visuels': extract_calq_arts_visuels,
     'extract_musicbrainz_artistes_qc': extract_musicbrainz_artistes_qc,
+    'extract_deezer_artistes_qc': extract_deezer_artistes_qc,
 }

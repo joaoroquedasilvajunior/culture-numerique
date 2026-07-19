@@ -1291,6 +1291,25 @@ a{color:inherit;text-decoration:none}
         <div class="card-foot" id="foot_mb"></div>
       </div>
 
+      <div class="card" style="margin-bottom:20px">
+        <div class="card-head">
+          <div>
+            <div class="card-title">La longue traîne de la popularité — artistes QC sur Deezer</div>
+            <div class="card-sub" id="sub_dz">API publique Deezer · périmètre : artistes MusicBrainz avec lien Deezer documenté</div>
+          </div>
+          <div id="chip_dz" style="font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;padding:6px 12px;border-radius:6px;background:var(--cb-100);color:var(--cb-700);align-self:flex-start">Longue traîne</div>
+        </div>
+        <div class="card-body">
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:16px;padding:12px 0">
+            <div class="kpi-mini"><div class="lbl">Artistes mesurés</div><div class="val" id="kpi_dz_n">—</div></div>
+            <div class="kpi-mini"><div class="lbl">Médiane de fans</div><div class="val" id="kpi_dz_med">—</div></div>
+            <div class="kpi-mini"><div class="lbl">Fans captés par le top 1 %</div><div class="val" id="kpi_dz_top1">—</div></div>
+          </div>
+          <div class="chart-wrap" style="margin-top:8px"><canvas id="chart_dz_traine"></canvas></div>
+        </div>
+        <div class="card-foot" id="foot_dz"></div>
+      </div>
+
       <div class="row row-2">
         <div class="card">
           <div class="card-head">
@@ -2719,6 +2738,47 @@ spark('spark4', [0, -2, -4, -7, -10, -11.6], C.bo);
       + '<strong>' + fmt_int(MB.nb_avec_streaming) + '</strong> avec au moins un lien streaming documenté, '
       + '<strong>' + fmt_int(MB.nb_avec_spotify) + '</strong> avec un lien Spotify, et <strong>1 seul</strong> dans le top 20 ISQ de consommation sur 7 semaines. '
       + 'Les taux de liens sont des planchers de complétude des métadonnées — l\'enjeu du volet métadonnées de la Loi 109, pas un taux de présence réelle sur les plateformes.';
+  }
+})();
+
+// === LONGUE TRAÎNE DEEZER : popularité des artistes QC ===
+(function(){
+  const DZ = D.deezer_artistes_qc;
+  if (!DZ) return;
+  const fmt_int = n => (n == null) ? '—' : Math.round(n).toLocaleString('fr-CA');
+  const setText = (id, txt) => { const el = document.getElementById(id); if (el) el.textContent = txt; };
+
+  setText('kpi_dz_n', fmt_int(DZ.nb_artistes));
+  setText('kpi_dz_med', fmt_int(DZ.mediane_fans));
+  setText('kpi_dz_top1', DZ.part_fans_top_1pct_pct != null ? DZ.part_fans_top_1pct_pct.toLocaleString('fr-CA') + ' %' : '—');
+  setText('sub_dz', 'API publique Deezer · extraction du ' + (DZ.date_extraction || '—') + ' · périmètre : artistes MusicBrainz avec lien Deezer documenté');
+
+  const el = document.getElementById('chart_dz_traine');
+  if (el && DZ.distribution_longue_traine) {
+    const dist = DZ.distribution_longue_traine;
+    new Chart(el, {
+      type: 'bar',
+      data: { labels: dist.map(p => p.palier),
+        datasets: [{ data: dist.map(p => p.artistes),
+          backgroundColor: dist.map((p, i) => i === dist.length - 1 ? C.bo : C.cb700),
+          borderRadius: 4, borderSkipped: false }]},
+      options: { responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: false },
+          tooltip: { callbacks: {
+            label: c => c.parsed.y.toLocaleString('fr-CA') + ' artistes (' + dist[c.dataIndex].part_pct.toLocaleString('fr-CA') + ' %)' }}},
+        scales: { x: { grid: { display: false }, ticks: { font: { size: 10 }}},
+          y: { grid: { color: '#f0f4f8' }}}}
+    });
+  }
+
+  const foot = document.getElementById('foot_dz');
+  if (foot && DZ.top_20 && DZ.top_20.length) {
+    const t3 = DZ.top_20.slice(0, 3).map(a => a.nom + ' (' + fmt_int(a.nb_fan) + ' fans)').join(' · ');
+    foot.innerHTML = 'Tête d\'affiche : ' + t3 + '. '
+      + 'La médiane à <strong>' + fmt_int(DZ.mediane_fans) + ' fans</strong> contre '
+      + '<strong>' + DZ.part_fans_top_1pct_pct.toLocaleString('fr-CA') + ' %</strong> des fans captés par le top 1 % : '
+      + 'la popularité du répertoire québécois est une longue traîne extrême. '
+      + 'La découvrabilité ne se joue pas pour la tête, déjà trouvée — elle se joue pour la traîne. Données Deezer.';
   }
 })();
 
