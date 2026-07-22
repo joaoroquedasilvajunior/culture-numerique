@@ -190,6 +190,15 @@ sources:
     axe_tdb: ["presence", "ecosysteme"]
     notes: "Première source non gouvernementale du pipeline. Univers : 9 731 artistes uniques rattachés au Québec (récolte 2026-07-18). Le taux de liens Spotify (~20 %) est un plancher de complétude des métadonnées ouvertes, pas un taux de présence réelle sur Spotify — nuance centrale pour la lecture Loi 109 (volet métadonnées). Enrichissement Spotify (popularité, followers) en attente : quota API journalier des apps en mode développement insuffisant (403 sur batch + 429 Retry-After 24 h, juillet 2026)."
 
+  palmares_films:
+    label: "Palmarès évolutif des films présentés en programme simple, ensemble du Québec"
+    file_pattern: "Palmarès évolutif des films*.xlsx"
+    isq_url: "https://statistique.quebec.ca/fr/produit/tableau/palmares-evolutif-films-programme-simple"
+    classification: "OCCQ — cumulatif de l'année en cours ; top 20 par assistance ; ensemble des films, ensemble du Québec"
+    extractor: extract_palmares_films
+    axe_tdb: ["consommation", "presence"]
+    notes: "Pendant cinéma du palmarès musical (R2). Top 20 des films par assistance cumulée depuis le début de l'année. Le fichier régional détaillé existe aussi sur le site ISQ mais seul le tableau global est intégré. Note ISQ : redécoupage Montérégie/Estrie au 2021-07-28 (décret 961-2021) pour les lectures régionales. Constat à l'intégration (juillet 2026) : aucun film québécois au top 20 (17 É-U, 2 G-B, 1 France)."
+
   deezer_artistes_qc:
     label: "Popularité Deezer des artistes du Québec — nb_fan et longue traîne"
     file_pattern: "deezer_artistes_qc_*.json"

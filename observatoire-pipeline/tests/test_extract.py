@@ -78,8 +78,11 @@ def test_cinema_quebec(raw_dir):
     assert f is not None, "Fichier cinéma pays d'origine (hebdomadaire) manquant"
     data = extract.extract_cinema_pays(f)
     qc = next(p for p in data['pays'] if p['pays'] == 'Québec')
-    assert qc['pct_cumul_ytd'] == 3.9
-    assert qc['var_cumul_an_prec_pct'] == -38.7
+    # Maj 22 juillet 2026 : pct 3,9 → 3,7 % ; var cumul -38,7 → -48,7 %.
+    # La part QC du box-office continue de glisser ; le recul sur un an
+    # se creuse. Signalé au chroniqueur (donnée d'actualité).
+    assert qc['pct_cumul_ytd'] == 3.7
+    assert qc['var_cumul_an_prec_pct'] == -48.7
 
 
 def test_palmares_quebec_count(raw_dir):
@@ -118,11 +121,12 @@ def test_emplois_eerh_mensuel_ytd_2026(raw_dir):
     data = extract.extract_emplois_eerh(f)
     rec = next(r for r in data if r['scian'] == '5121')
     assert rec['annee_reference'] == 2026
-    assert rec['mois_disponibles'] == 3
-    assert rec['mois_dernier'] == 'Mars'
-    # Variation Jan → Mars 2026 ≈ +1,7 % — légère reprise après la chute 2025
+    # Maj 22 juillet 2026 : avril ajouté (3 → 4 mois disponibles)
+    assert rec['mois_disponibles'] == 4
+    assert rec['mois_dernier'] == 'Avril'
+    # Variation Jan → Avril 2026 ≈ +4,0 % — la reprise 5121 se confirme
     assert rec['variation_pct'] is not None
-    assert 1.0 < rec['variation_pct'] < 3.0
+    assert 3.0 < rec['variation_pct'] < 5.0
 
 
 def test_emplois_eerh_annuel_5121_baseline_2025(raw_dir):
@@ -842,3 +846,40 @@ def test_deezer_artistes_qc_tete_et_traine(raw_dir):
     assert d['part_fans_top_1pct_pct'] > 40
     # Médiane très basse (longue traîne)
     assert d['mediane_fans'] < 1000
+
+
+# === Palmarès évolutif des films ===
+
+def test_palmares_films_perimetre(raw_dir):
+    """Top 20 cumulatif annuel des films par assistance, ensemble du Québec.
+    Structure : 20 entrées avec rang, titre, année, pays, assistance.
+    """
+    from src import extract
+    f = find_source_file(raw_dir, "Palmarès évolutif des films*.xlsx")
+    assert f is not None, "Fichier palmarès films manquant"
+    d = extract.extract_palmares_films(f)
+    assert len(d['entrees']) == 20
+    assert d['entrees'][0]['rang'] == 1
+    assert d['entrees'][-1]['rang'] == 20
+    # Le rang 1 a la plus forte assistance
+    assert d['entrees'][0]['assistance_cumul'] == max(
+        e['assistance_cumul'] for e in d['entrees'])
+    assert 'Cumulatif' in d['periode']
+
+
+def test_palmares_films_absence_quebec(raw_dir):
+    """Constat structurant à l'intégration (juillet 2026) : aucun film
+    québécois dans le top 20 d'assistance. Le pendant cinéma du R2
+    musical (1 seul interprète QC au top 20 musique).
+
+    Si ce test casse un jour parce qu'un film QC entre au top 20,
+    c'est une bonne nouvelle : mettre à jour le test ET le signaler
+    comme fait d'actualité au chroniqueur.
+    """
+    from src import extract
+    f = find_source_file(raw_dir, "Palmarès évolutif des films*.xlsx")
+    d = extract.extract_palmares_films(f)
+    assert d['n_quebec'] == 0
+    assert d['films_quebec'] == []
+    # Domination américaine
+    assert d['repartition_pays'].get('États-Unis', 0) >= 15

@@ -1685,6 +1685,59 @@ def extract_deezer_artistes_qc(path: Path) -> dict:
     }
 
 
+def extract_palmares_films(path: Path) -> dict:
+    """
+    Tableau ISQ « Palmarès évolutif des films présentés en programme simple,
+    par région administrative et pour l'ensemble du Québec ».
+    Fichier global : cumulatif de l'année en cours, ensemble des films,
+    ensemble du Québec, assistance.
+
+    Layout : L3-L6 = métadonnées de coupe (période, portée), L8 = en-têtes
+    (Rang, Titre, Année, Pays d'origine, Cumulatif), L10+ = 20 entrées.
+
+    Le pendant cinéma du palmarès musical : permet de compter les films
+    québécois dans le top 20 d'assistance.
+    """
+    wb = load_workbook(path, data_only=True)
+    ws = wb['Tableau']
+
+    periode = str(ws.cell(row=3, column=1).value or '').strip()
+    perimetre_films = str(ws.cell(row=4, column=1).value or '').strip()
+    portee_geo = str(ws.cell(row=5, column=1).value or '').strip()
+    mesure = str(ws.cell(row=6, column=1).value or '').strip()
+
+    entrees = []
+    for r in range(10, (ws.max_row or 10) + 1):
+        rang = _to_num(ws.cell(row=r, column=1).value)
+        titre = ws.cell(row=r, column=2).value
+        if rang is None or titre is None:
+            if entrees:
+                break
+            continue
+        entrees.append({
+            'rang': int(rang),
+            'titre': str(titre).strip(),
+            'annee_film': _to_num(ws.cell(row=r, column=3).value),
+            'pays_origine': str(ws.cell(row=r, column=4).value or '').strip(),
+            'assistance_cumul': _to_num(ws.cell(row=r, column=5).value),
+        })
+
+    films_quebec = [e for e in entrees if e['pays_origine'] == 'Québec']
+    return {
+        'periode': periode,
+        'perimetre_films': perimetre_films,
+        'portee_geo': portee_geo,
+        'mesure': mesure,
+        'entrees': entrees,
+        'n_quebec': len(films_quebec),
+        'films_quebec': films_quebec,
+        'repartition_pays': {
+            pays: sum(1 for e in entrees if e['pays_origine'] == pays)
+            for pays in sorted({e['pays_origine'] for e in entrees})
+        },
+    }
+
+
 # ---------- Registry ----------
 
 EXTRACTORS = {
@@ -1712,4 +1765,5 @@ EXTRACTORS = {
     'extract_calq_arts_visuels': extract_calq_arts_visuels,
     'extract_musicbrainz_artistes_qc': extract_musicbrainz_artistes_qc,
     'extract_deezer_artistes_qc': extract_deezer_artistes_qc,
+    'extract_palmares_films': extract_palmares_films,
 }

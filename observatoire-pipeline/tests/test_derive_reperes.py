@@ -110,9 +110,9 @@ def test_r3_cinema_metadata_seulement(combined):
         combined['volume_musique'], combined['part_qc'], combined['cinema_pays']
     )
     cinema = r3['canaux']['cinema']
-    # ISQ a révisé la part QC entre le 22 mai et le 9 juin : 4,7 → 3,9 %
-    # (même semaine de référence 24-30 avril 2026)
-    assert cinema['part_qc_box_office_pct'] == 3.9
+    # Historique des lectures : 4,7 (22 mai) → 3,9 (9 juin) → 3,7 (22 juillet).
+    # La part QC du box-office YTD s'érode de lecture en lecture.
+    assert cinema['part_qc_box_office_pct'] == 3.7
     assert cinema['status'] == 'donnees_annuelles_a_venir'
     assert cinema['consommation_absolue_recettes_qc'] is None
 
