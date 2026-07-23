@@ -883,3 +883,55 @@ def test_palmares_films_absence_quebec(raw_dir):
     assert d['films_quebec'] == []
     # Domination américaine
     assert d['repartition_pays'].get('États-Unis', 0) >= 15
+
+
+# === AEI Cadences (juin 2026) — lentille 2 au niveau Québec ===
+
+def test_aei_cadences_perimetre(raw_dir):
+    """Release Cadences : CA-QC + CAN, deux mois (avril-mai 2026),
+    Brésil exclu par décision éditoriale.
+    """
+    from src import extract
+    f = find_source_file(raw_dir, "aei_claude_ai_2026-*.csv")
+    assert f is not None, "Fichier AEI Cadences manquant"
+    d = extract.extract_aei_cadences(f)
+    assert d['geos'] == ['CA-QC', 'CAN']
+    assert d['periodes'] == ['2026-04-01', '2026-05-01']
+    assert d['periode_reference'] == '2026-05-01'
+    # Les deux géos ont des métriques overall pour le mois de référence
+    assert 'usage_pct' in d['overall']['CA-QC']['2026-05-01']
+    assert 'usage_pct' in d['overall']['CAN']['2026-05-01']
+
+
+def test_aei_cadences_quebec_mai_2026(raw_dir):
+    """Valeurs-clés CA-QC de mai 2026 : partage automation/augmentation
+    46,97/53,03 ; le Québec pèse 20,81 % de l'usage canadien de Claude.ai.
+    """
+    from src import extract
+    f = find_source_file(raw_dir, "aei_claude_ai_2026-*.csv")
+    d = extract.extract_aei_cadences(f)
+    qc_mai = d['overall']['CA-QC']['2026-05-01']
+    assert qc_mai['collaboration_bucket_automation_pct'] == 46.97
+    assert qc_mai['collaboration_bucket_augmentation_pct'] == 53.03
+    assert qc_mai['usage_pct'] == 20.81
+    # Somme automation + augmentation = 100
+    assert abs(qc_mai['collaboration_bucket_automation_pct']
+               + qc_mai['collaboration_bucket_augmentation_pct'] - 100) < 0.1
+
+
+def test_aei_cadences_soc_arts_2e_groupe(raw_dir):
+    """Constat d'intégration : les occupations Arts, Design, Entertainment,
+    Sports, and Media sont le 2e groupe SOC d'usage de Claude au Québec
+    (13,18 % en mai 2026), derrière Computer and Mathematical.
+    La lentille 2 devient directement culturelle.
+    """
+    from src import extract
+    f = find_source_file(raw_dir, "aei_claude_ai_2026-*.csv")
+    d = extract.extract_aei_cadences(f)
+    soc = d['soc_top_dernier_mois']
+    assert soc[0]['groupe'] == 'Computer and Mathematical'
+    assert soc[1]['groupe'] == 'Arts, Design, Entertainment, Sports, and Media'
+    assert soc[1]['creatif'] is True
+    assert soc[1]['pct_qc'] == 13.18
+    # Comparaison CAN disponible pour le groupe créatif
+    assert soc[1]['pct_can'] is not None

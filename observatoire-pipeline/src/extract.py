@@ -1738,6 +1738,95 @@ def extract_palmares_films(path: Path) -> dict:
     }
 
 
+def extract_aei_cadences(path: Path) -> dict:
+    """
+    Anthropic Economic Index — release « Cadences » (juin 2026), format long.
+    Ingest pinné sur release_2026_06_26 (le schéma change entre vintages :
+    codes pays 2 lettres → ISO-3, wide → long, comptes bruts retirés).
+
+    Périmètre : CA-QC (Québec, niveau subregion) + CAN (Canada, référence).
+    Le Brésil est volontairement exclu (décision éditoriale 2026-07-22).
+
+    Colonnes : date_start, date_end, geo_id, geo_level, category_name,
+    hierarchy_level, metric_id, value, node_name, node_external_id.
+
+    Piège de dénominateur documenté : usage_pct d'une subregion = part de la
+    subregion dans l'usage DU PAYS ; usage_pct d'un pays = part du pays dans
+    l'usage MONDIAL. Les deux ne se comparent pas entre eux.
+
+    Retourne pour chaque géo : les métriques overall des deux mois
+    disponibles, le top SOC niveau 1 (grands groupes) du dernier mois,
+    et pour CA-QC le top des tâches O*NET détaillées (hierarchy 1).
+    """
+    GEOS = {'CA-QC', 'CAN'}
+    overall = {g: {} for g in GEOS}          # geo -> periode -> {metric: value}
+    soc_h1 = {g: {} for g in GEOS}           # geo -> node_name -> pct (dernier mois)
+    onet_h1_caqc = []                        # (pct, node_name, node_external_id)
+    periodes = set()
+    derniere = None
+
+    with open(path, encoding='utf-8') as f:
+        reader = csv.reader(f)
+        header = next(reader)
+        idx = {c: i for i, c in enumerate(header)}
+        gi, ds = idx['geo_id'], idx['date_start']
+        cat, hl, mid, val = idx['category_name'], idx['hierarchy_level'], idx['metric_id'], idx['value']
+        nn, ne = idx['node_name'], idx['node_external_id']
+
+        rows = []
+        for row in reader:
+            g = row[gi]
+            if g not in GEOS:
+                continue
+            rows.append(row)
+            periodes.add(row[ds])
+        derniere = max(periodes) if periodes else None
+
+        for row in rows:
+            g, p = row[gi], row[ds]
+            c, h, m = row[cat], row[hl], row[mid]
+            try:
+                v = float(row[val])
+            except ValueError:
+                continue
+            if c == 'overall':
+                overall[g].setdefault(p, {})[m] = v
+            elif c == 'soc_occupation' and h == '1' and m == 'pct' and p == derniere:
+                soc_h1[g][row[nn]] = v
+            elif (g == 'CA-QC' and c == 'onet' and h == '1'
+                  and m == 'pct' and p == derniere):
+                onet_h1_caqc.append((v, row[nn], row[ne]))
+
+    # Comparaison SOC h1 : CA-QC vs CAN sur les groupes du top QC
+    soc_top = []
+    for nom, pct_qc in sorted(soc_h1['CA-QC'].items(), key=lambda kv: -kv[1])[:12]:
+        soc_top.append({
+            'groupe': nom,
+            'pct_qc': round(pct_qc, 2),
+            'pct_can': round(soc_h1['CAN'].get(nom), 2) if nom in soc_h1['CAN'] else None,
+            'creatif': nom == 'Arts, Design, Entertainment, Sports, and Media',
+        })
+
+    onet_top = [
+        {'pct': round(v, 3), 'tache': nom, 'onet_id': oid}
+        for v, nom, oid in sorted(onet_h1_caqc, reverse=True)[:15]
+    ]
+
+    return {
+        'source': 'Anthropic Economic Index — release Cadences (release_2026_06_26), Hugging Face',
+        'licence_note': 'Dataset public Anthropic ; attribution requise.',
+        'periodes': sorted(periodes),
+        'periode_reference': derniere,
+        'geos': sorted(GEOS),
+        'note_denominateurs': ("usage_pct subregion = part dans l'usage du pays ; "
+                               "usage_pct pays = part dans l'usage mondial. "
+                               "Ne pas comparer entre niveaux."),
+        'overall': overall,
+        'soc_top_dernier_mois': soc_top,
+        'onet_top_caqc_dernier_mois': onet_top,
+    }
+
+
 # ---------- Registry ----------
 
 EXTRACTORS = {
@@ -1766,4 +1855,5 @@ EXTRACTORS = {
     'extract_musicbrainz_artistes_qc': extract_musicbrainz_artistes_qc,
     'extract_deezer_artistes_qc': extract_deezer_artistes_qc,
     'extract_palmares_films': extract_palmares_films,
+    'extract_aei_cadences': extract_aei_cadences,
 }

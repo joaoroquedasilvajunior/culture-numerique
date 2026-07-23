@@ -1,5 +1,5 @@
 {
-  "build_iso": "2026-07-22T14:37:23.633237+00:00",
+  "build_iso": "2026-07-23T01:21:17.772143+00:00",
   "pipeline_version": "1.0.0",
   "sources_used": [
     {
@@ -163,6 +163,15 @@
       "mtime_iso": "2026-07-18T18:57:39.050613+00:00",
       "source_key": "musicbrainz_artistes_qc",
       "label": "Artistes du Québec dans MusicBrainz — présence catalogue et complétude des métadonnées ouvertes"
+    },
+    {
+      "path": "/Users/joaoroque/Documents/Claude/Projects/Culture Québec en donnée/Données Québec/aei_claude_ai_2026-06-26.csv",
+      "name": "aei_claude_ai_2026-06-26.csv",
+      "sha256": "f974b358bce0e5a8417510c61da4342234cd0de9d9d0b62acf4c6dbcf8ec7b68",
+      "size_bytes": 219174671,
+      "mtime_iso": "2026-07-23T01:14:19.269252+00:00",
+      "source_key": "aei_cadences",
+      "label": "Anthropic Economic Index — release Cadences (juin 2026), Québec et Canada"
     },
     {
       "path": "/Users/joaoroque/Documents/Claude/Projects/Culture Québec en donnée/Données Québec/Palmarès évolutif des films présentés en programme simple, par région administrative et pour l’ensemble du Québec .xlsx",

@@ -190,6 +190,15 @@ sources:
     axe_tdb: ["presence", "ecosysteme"]
     notes: "Première source non gouvernementale du pipeline. Univers : 9 731 artistes uniques rattachés au Québec (récolte 2026-07-18). Le taux de liens Spotify (~20 %) est un plancher de complétude des métadonnées ouvertes, pas un taux de présence réelle sur Spotify — nuance centrale pour la lecture Loi 109 (volet métadonnées). Enrichissement Spotify (popularité, followers) en attente : quota API journalier des apps en mode développement insuffisant (403 sur batch + 429 Retry-After 24 h, juillet 2026)."
 
+  aei_cadences:
+    label: "Anthropic Economic Index — release Cadences (juin 2026), Québec et Canada"
+    file_pattern: "aei_claude_ai_2026-*.csv"
+    isq_url: "https://huggingface.co/datasets/Anthropic/EconomicIndex"
+    classification: "Anthropic (Hugging Face, dataset public) ; release_2026_06_26 ; format long ; niveaux global/country/subregion ; mensuel avril-mai 2026"
+    extractor: extract_aei_cadences
+    axe_tdb: ["ecosysteme"]
+    notes: "Upgrade majeur de la lentille 2 « usage révélé » : première donnée AEI au niveau Québec (CA-QC), avec ventilation O*NET par tâche et SOC par occupation désormais disponibles en subregion (elles étaient réservées au niveau GLOBAL dans la release de février). Constat d'intégration : les occupations Arts/Design/Entertainment/Media sont le 2e groupe d'usage de Claude au Québec (13,2 %). Piège de dénominateur : usage_pct subregion = part dans le pays ; usage_pct pays = part dans le monde. Ingest pinné sur release_2026_06_26 (schéma variable entre vintages). L'ancienne source aei_canada (février 2026) est conservée pour traçabilité. Périmètre restreint à CA-QC + CAN (Brésil exclu, décision 2026-07-22)."
+
   palmares_films:
     label: "Palmarès évolutif des films présentés en programme simple, ensemble du Québec"
     file_pattern: "Palmarès évolutif des films*.xlsx"

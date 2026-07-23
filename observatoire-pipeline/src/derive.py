@@ -780,6 +780,12 @@ def derive_all(combined: dict, annee: int = 2025) -> dict:
     # culturelles canadiennes. Ferme la grille à trois lentilles AI-exposure.
     lentille_1a = combined.get('ai_exposure_culture')
 
+    # Bloc auxiliaire — lentille 2 au niveau Québec (release Cadences juin 2026).
+    # Remplace le caveat « Canada national » : CA-QC est désormais mesuré,
+    # avec ventilations O*NET et SOC. L'ancienne lecture aei_canada (février)
+    # reste exposée pour traçabilité.
+    lentille_2_qc = combined.get('aei_cadences')
+
     # Bloc auxiliaire — Livre papier vs numérique (hors protocole)
     # Croise la série ISQ « Ventes finales de livres neufs » (papier)
     # avec le tableau 3408 « Ventes de livres numériques » pour répondre
@@ -843,6 +849,17 @@ def derive_all(combined: dict, annee: int = 2025) -> dict:
                             '(Felten + Pizzinelli) appliqué aux industries '
                             'culturelles canadiennes par Statistique Canada.'),
             **lentille_1a,
+        }
+    if lentille_2_qc is not None:
+        payload["lentille_2_usage_revele_qc"] = {
+            'statut': 'auxiliaire_provisoire',
+            'note_statut': ('Dérivation analytique hors protocole v1.1.0. Lentille 2 '
+                            '« usage révélé » au niveau Québec (CA-QC), release '
+                            'Cadences de l\'AEI (juin 2026). Lève le caveat '
+                            '« Canada national » de la lecture de février : le '
+                            'Québec est mesuré directement, avec ventilation par '
+                            'tâche O*NET et par occupation SOC.'),
+            **lentille_2_qc,
         }
     if livre_papier_vs_num is not None:
         payload["livre_papier_vs_numerique"] = {

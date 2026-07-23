@@ -963,9 +963,29 @@ a{color:inherit;text-decoration:none}
     <section id="lentille2" class="section">
       <div class="section-header">
         <div>
-          <h2 class="section-title"><span class="star">⊙</span>Lentille 2 &mdash; usage révélé (Claude.ai Canada)</h2>
-          <p class="section-sub">Ce que les utilisateurs canadiens de Claude.ai font réellement avec l'IA, ventilé par mode de collaboration et par tâche O*NET. Source&nbsp;: Anthropic Economic Index, 5ᵉ édition (publiée le 24 mars 2026, données du 5 au 12 février 2026).</p>
+          <h2 class="section-title"><span class="star">⊙</span>Lentille 2 &mdash; usage révélé (Claude.ai Québec et Canada)</h2>
+          <p class="section-sub">Ce que les utilisateurs de Claude.ai font réellement avec l'IA. Depuis la release Cadences (juin 2026), le <strong>Québec est mesuré directement</strong> (niveau subregion CA-QC) avec ventilation par occupation SOC et par tâche O*NET : le caveat « Canada national » des lectures précédentes est levé. Source&nbsp;: Anthropic Economic Index (Hugging Face).</p>
         </div>
+      </div>
+
+      <div class="card" style="margin-bottom:20px">
+        <div class="card-head">
+          <div>
+            <div class="card-title">Le Québec mesuré — usage de Claude.ai par occupation</div>
+            <div class="card-sub" id="sub_l2qc">AEI release Cadences · niveau subregion CA-QC · comparaison Canada</div>
+          </div>
+          <div style="font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;padding:6px 12px;border-radius:6px;background:var(--cb-100);color:var(--cb-700);align-self:flex-start" id="chip_l2qc">CA-QC</div>
+        </div>
+        <div class="card-body">
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:16px;padding:12px 0">
+            <div class="kpi-mini"><div class="lbl">Part QC de l'usage canadien</div><div class="val" id="kpi_l2qc_part">—</div></div>
+            <div class="kpi-mini"><div class="lbl">Augmentation (QC)</div><div class="val" id="kpi_l2qc_aug">—</div></div>
+            <div class="kpi-mini"><div class="lbl">Automatisation (QC)</div><div class="val" id="kpi_l2qc_auto">—</div></div>
+            <div class="kpi-mini"><div class="lbl">Usage lié au travail (QC)</div><div class="val" id="kpi_l2qc_travail">—</div></div>
+          </div>
+          <div class="chart-wrap" style="margin-top:8px"><canvas id="chart_l2qc_soc"></canvas></div>
+        </div>
+        <div class="card-foot" id="foot_l2qc"></div>
       </div>
 
       <div class="l3-statut-banner">
@@ -2779,6 +2799,68 @@ spark('spark4', [0, -2, -4, -7, -10, -11.6], C.bo);
       + '<strong>' + DZ.part_fans_top_1pct_pct.toLocaleString('fr-CA') + ' %</strong> des fans captés par le top 1 % : '
       + 'la popularité du répertoire québécois est une longue traîne extrême. '
       + 'La découvrabilité ne se joue pas pour la tête, déjà trouvée — elle se joue pour la traîne. Données Deezer.';
+  }
+})();
+
+// === LENTILLE 2 QUÉBEC : AEI Cadences (CA-QC vs CAN) ===
+(function(){
+  const L2Q = D.reperes && D.reperes.lentille_2_usage_revele_qc;
+  if (!L2Q || !L2Q.overall) return;
+  const fmt1 = n => (n == null) ? '—' : Number(n).toLocaleString('fr-CA', {minimumFractionDigits: 1, maximumFractionDigits: 1});
+  const setText = (id, txt) => { const el = document.getElementById(id); if (el) el.textContent = txt; };
+
+  const ref = L2Q.periode_reference;
+  const qc = (L2Q.overall['CA-QC'] || {})[ref] || {};
+  setText('kpi_l2qc_part', qc.usage_pct != null ? fmt1(qc.usage_pct) + ' %' : '—');
+  setText('kpi_l2qc_aug', qc.collaboration_bucket_augmentation_pct != null ? fmt1(qc.collaboration_bucket_augmentation_pct) + ' %' : '—');
+  setText('kpi_l2qc_auto', qc.collaboration_bucket_automation_pct != null ? fmt1(qc.collaboration_bucket_automation_pct) + ' %' : '—');
+  setText('kpi_l2qc_travail', qc.use_case_work_pct != null ? fmt1(qc.use_case_work_pct) + ' %' : '—');
+  const moisRef = ref ? new Date(ref + 'T12:00:00').toLocaleDateString('fr-CA', {month: 'long', year: 'numeric'}) : '—';
+  setText('sub_l2qc', 'AEI release Cadences · mois de référence : ' + moisRef + ' · niveau subregion CA-QC · barres comparées au Canada');
+
+  // Barres groupées : top SOC h1, QC vs CAN, groupe créatif en orange
+  const el = document.getElementById('chart_l2qc_soc');
+  if (el && L2Q.soc_top_dernier_mois) {
+    const soc = L2Q.soc_top_dernier_mois.slice(0, 8);
+    const labelMap = {
+      'Computer and Mathematical': 'Informatique et mathématiques',
+      'Arts, Design, Entertainment, Sports, and Media': 'Arts, design, divertissement, médias',
+      'Educational Instruction and Library': 'Enseignement et bibliothèques',
+      'Sales and Related': 'Ventes',
+      'Office and Administrative Support': 'Soutien administratif',
+      'Business and Financial Operations': 'Affaires et finances',
+      'Management': 'Gestion',
+      'Healthcare Practitioners and Technical': 'Santé (praticiens)',
+    };
+    new Chart(el, {
+      type: 'bar',
+      data: { labels: soc.map(s => labelMap[s.groupe] || s.groupe),
+        datasets: [
+          { label: 'Québec (CA-QC)', data: soc.map(s => s.pct_qc),
+            backgroundColor: soc.map(s => s.creatif ? C.bo : C.cb700),
+            borderRadius: 4, borderSkipped: false },
+          { label: 'Canada (CAN)', data: soc.map(s => s.pct_can),
+            backgroundColor: soc.map(s => s.creatif ? 'rgba(214, 96, 60, 0.35)' : 'rgba(38, 70, 83, 0.3)'),
+            borderRadius: 4, borderSkipped: false }
+        ]},
+      options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+        plugins: {
+          legend: { position: 'bottom', labels: { boxWidth: 12, padding: 12, font: { size: 11 }, usePointStyle: true }},
+          tooltip: { callbacks: { label: c => c.dataset.label + ' : ' + c.parsed.x.toLocaleString('fr-CA', {maximumFractionDigits: 2}) + ' %' }}},
+        scales: { x: { grid: { color: '#f0f4f8' }, ticks: { callback: v => v + ' %' }},
+          y: { grid: { display: false }, ticks: { font: { size: 11 }}}}}
+    });
+  }
+
+  const foot = document.getElementById('foot_l2qc');
+  if (foot) {
+    const arts = (L2Q.soc_top_dernier_mois || []).find(s => s.creatif);
+    let txt = 'Première mesure directe du Québec dans l\'AEI. ';
+    if (arts) {
+      txt += 'Les occupations Arts, design, divertissement et médias (en orange) sont le <strong>2ᵉ groupe d\'usage de Claude au Québec (' + fmt1(arts.pct_qc) + ' %)</strong>, un cran au-dessus de l\'enseignement. La lentille 2 devient directement culturelle. ';
+    }
+    txt += 'Attention au dénominateur : la part QC (' + fmt1(qc.usage_pct) + ' %) se lit dans l\'usage canadien, pas mondial.';
+    foot.innerHTML = txt;
   }
 })();
 
