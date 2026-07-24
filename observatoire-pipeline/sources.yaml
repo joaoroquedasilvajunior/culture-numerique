@@ -190,6 +190,15 @@ sources:
     axe_tdb: ["presence", "ecosysteme"]
     notes: "Première source non gouvernementale du pipeline. Univers : 9 731 artistes uniques rattachés au Québec (récolte 2026-07-18). Le taux de liens Spotify (~20 %) est un plancher de complétude des métadonnées ouvertes, pas un taux de présence réelle sur Spotify — nuance centrale pour la lecture Loi 109 (volet métadonnées). Enrichissement Spotify (popularité, followers) en attente : quota API journalier des apps en mode développement insuffisant (403 sur batch + 429 Retry-After 24 h, juillet 2026)."
 
+  apple_top100_ca:
+    label: "Top 100 Apple Music Canada — chansons les plus écoutées, artistes QC marqués"
+    file_pattern: "apple_top100_ca_*.json"
+    isq_url: "https://rss.marketingtools.apple.com/api/v2/ca/music/most-played/100/songs.json"
+    classification: "Apple Music (flux marketing public, sans authentification) ; storefront Canada ; refresh via recolter_apple_top100.py"
+    extractor: extract_apple_top100
+    axe_tdb: ["decouvrabilite", "consommation"]
+    notes: "Pendant Apple du R2 : présence des artistes QC au sommet du palmarès d'une plateforme spécifique, en complément du palmarès ISQ (toutes plateformes) et du palmarès films. Identification QC par croisement de noms normalisés avec la récolte MusicBrainz (faux négatifs possibles, faux positifs improbables). Limite : palmarès par storefront pays (Canada), pas de coupe Québec. Apple n'expose aucune métrique de popularité par artiste dans ses API publiques ; ce flux de palmarès est la seule donnée ouverte disponible."
+
   aei_cadences:
     label: "Anthropic Economic Index — release Cadences (juin 2026), Québec et Canada"
     file_pattern: "aei_claude_ai_2026-*.csv"

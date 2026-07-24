@@ -989,7 +989,7 @@ a{color:inherit;text-decoration:none}
       </div>
 
       <div class="l3-statut-banner">
-        <strong>Dérivation auxiliaire &mdash; hors protocole.</strong> Cette section présente la lentille 2 «&nbsp;usage révélé&nbsp;» de la méthode AI-exposure. Elle n'est pas un repère gelé du Protocole v1.1.0. La granularité géographique est le Canada national (pas de coupe Québec dans la release Anthropic). Période d'observation&nbsp;: une seule semaine. Donnée auditable&nbsp;: clé <code>lentille_2_usage_revele</code> dans <a href="reperes_2025.json" target="_blank" rel="noopener">reperes_2025.json</a>.
+        <strong>Dérivation auxiliaire &mdash; hors protocole.</strong> Cette section présente la lentille 2 «&nbsp;usage révélé&nbsp;» de la méthode AI-exposure. Elle n'est pas un repère gelé du Protocole v1.1.0. Deux lectures coexistent&nbsp;: la carte «&nbsp;Le Québec mesuré&nbsp;» ci-dessus (release Cadences, juin 2026, niveau subregion CA-QC, deux mois d'observation) et les cartes ci-dessous conservées de la 5ᵉ édition (février 2026, Canada national, une semaine) pour traçabilité. Données auditables&nbsp;: clés <code>lentille_2_usage_revele_qc</code> et <code>lentille_2_usage_revele</code> dans <a href="reperes_2025.json" target="_blank" rel="noopener">reperes_2025.json</a>.
       </div>
 
       <div class="lentille2-grid">
@@ -1402,6 +1402,24 @@ a{color:inherit;text-decoration:none}
           <div class="top20" id="top20"></div>
         </div>
         <div class="card-foot">Un seul interprète québécois dans le top 20 (Les Cowboys Fringants, rang 15). Aucun interprète francophone hors Québec.</div>
+      </div>
+
+      <div class="card" style="margin-top:20px">
+        <div class="card-head">
+          <div>
+            <div class="card-title">Top 100 Apple Music Canada — présence québécoise</div>
+            <div class="card-sub" id="sub_apple">Flux marketing public Apple · chansons les plus écoutées, storefront Canada · identification QC par croisement MusicBrainz</div>
+          </div>
+          <div id="chip_apple" style="font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;padding:6px 12px;border-radius:6px;background:rgba(214, 96, 60, 0.12);color:#d6603c;align-self:flex-start">—</div>
+        </div>
+        <div class="card-body">
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:16px;padding:12px 0">
+            <div class="kpi-mini"><div class="lbl">Artistes QC au top 100</div><div class="val" id="kpi_apple_qc" style="color:#d6603c">—</div></div>
+            <div class="kpi-mini"><div class="lbl">Palmarès ISQ (top 20)</div><div class="val">1 / 20</div></div>
+            <div class="kpi-mini"><div class="lbl">Palmarès films (top 20)</div><div class="val">0 / 20</div></div>
+          </div>
+        </div>
+        <div class="card-foot" id="foot_apple"></div>
       </div>
 
       <div class="quote" style="margin-top:20px;border-left-color:var(--bo-500);background:linear-gradient(135deg,var(--bo-900) 0%,#fff 100%)">
@@ -2861,6 +2879,28 @@ spark('spark4', [0, -2, -4, -7, -10, -11.6], C.bo);
     }
     txt += 'Attention au dénominateur : la part QC (' + fmt1(qc.usage_pct) + ' %) se lit dans l\'usage canadien, pas mondial.';
     foot.innerHTML = txt;
+  }
+})();
+
+// === TOP 100 APPLE MUSIC CANADA : présence QC ===
+(function(){
+  const AP = D.apple_top100_ca;
+  if (!AP) return;
+  const setText = (id, txt) => { const el = document.getElementById(id); if (el) el.textContent = txt; };
+  setText('kpi_apple_qc', AP.n_quebec + ' / ' + AP.n_entrees);
+  setText('chip_apple', AP.n_quebec === 0 ? 'Zéro' : AP.n_quebec + ' QC');
+  setText('sub_apple', 'Flux marketing public Apple · extraction du ' + (AP.date_extraction || '—') + ' · storefront Canada · identification QC par croisement MusicBrainz');
+  const foot = document.getElementById('foot_apple');
+  if (foot) {
+    if (AP.n_quebec === 0) {
+      foot.innerHTML = 'Aucun artiste québécois dans les 100 chansons les plus écoutées sur Apple Music Canada '
+        + '(zéro vérifié : matcher validé sur noms connus + inspection des 48 artistes uniques du palmarès). '
+        + 'Le motif tient sur trois lectures indépendantes : 1/20 au palmarès musical ISQ, 0/20 au palmarès films, 0/100 sur Apple Music Canada. '
+        + '<em>Limite : palmarès par pays, pas de coupe Québec — la dilution dans le marché canadien anglophone explique une partie du zéro, mais le mesurer est précisément l\'intérêt.</em>';
+    } else {
+      const noms = (AP.entrees_quebec || []).map(e => e.artiste + ' (#' + e.rang + ')').join(' · ');
+      foot.innerHTML = 'Artistes québécois au top 100 : ' + noms + '.';
+    }
   }
 })();
 

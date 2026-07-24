@@ -1827,6 +1827,30 @@ def extract_aei_cadences(path: Path) -> dict:
     }
 
 
+def extract_apple_top100(path: Path) -> dict:
+    """
+    Top 100 Apple Music Canada (chansons les plus écoutées), flux marketing
+    public d'Apple, croisé avec la récolte MusicBrainz pour marquer les
+    artistes québécois (fichier produit par recolter_apple_top100.py).
+
+    Pendant Apple du R2 : présence QC au sommet du palmarès d'une
+    plateforme spécifique. Limite : storefront Canada, pas de coupe Québec.
+    """
+    data = json.loads(Path(path).read_text(encoding='utf-8'))
+    entrees = data.get('entrees', [])
+    qc = [e for e in entrees if e.get('quebec')]
+    return {
+        'source': data.get('source', ''),
+        'date_extraction': data.get('date_extraction'),
+        'date_flux': data.get('date_flux'),
+        'methode_identification': data.get('methode_identification', ''),
+        'n_entrees': len(entrees),
+        'n_quebec': len(qc),
+        'entrees_quebec': qc,
+        'top_10': entrees[:10],
+    }
+
+
 # ---------- Registry ----------
 
 EXTRACTORS = {
@@ -1856,4 +1880,5 @@ EXTRACTORS = {
     'extract_deezer_artistes_qc': extract_deezer_artistes_qc,
     'extract_palmares_films': extract_palmares_films,
     'extract_aei_cadences': extract_aei_cadences,
+    'extract_apple_top100': extract_apple_top100,
 }

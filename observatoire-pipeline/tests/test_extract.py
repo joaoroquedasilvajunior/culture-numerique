@@ -935,3 +935,37 @@ def test_aei_cadences_soc_arts_2e_groupe(raw_dir):
     assert soc[1]['pct_qc'] == 13.18
     # Comparaison CAN disponible pour le groupe créatif
     assert soc[1]['pct_can'] is not None
+
+
+# === Top 100 Apple Music Canada ===
+
+def test_apple_top100_perimetre(raw_dir):
+    """Flux marketing public Apple, storefront Canada, 100 entrées,
+    artistes QC marqués par croisement MusicBrainz.
+    """
+    from src import extract
+    f = find_source_file(raw_dir, "apple_top100_ca_*.json")
+    assert f is not None, "Fichier apple_top100_ca manquant"
+    d = extract.extract_apple_top100(f)
+    assert d['n_entrees'] == 100
+    assert len(d['top_10']) == 10
+    assert d['top_10'][0]['rang'] == 1
+
+
+def test_apple_top100_zero_quebec(raw_dir):
+    """Constat d'intégration (récolte 2026-07-23) : AUCUN artiste québécois
+    dans le top 100 des chansons les plus écoutées sur Apple Music Canada.
+    Zéro vérifié : matcher validé sur noms connus (Cowboys Fringants,
+    Céline Dion, Cœur de pirate) + inspection visuelle des 48 artistes
+    uniques du palmarès.
+
+    Le motif R2 tient maintenant sur trois lectures : 1/20 au palmarès
+    musical ISQ (toutes plateformes), 0/20 au palmarès films, 0/100 sur
+    Apple Music Canada. Si ce test casse parce qu'un artiste QC entre au
+    top 100 : bonne nouvelle, mettre à jour et signaler au chroniqueur.
+    """
+    from src import extract
+    f = find_source_file(raw_dir, "apple_top100_ca_*.json")
+    d = extract.extract_apple_top100(f)
+    assert d['n_quebec'] == 0
+    assert d['entrees_quebec'] == []

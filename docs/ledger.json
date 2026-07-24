@@ -1,5 +1,5 @@
 {
-  "build_iso": "2026-07-23T01:21:17.772143+00:00",
+  "build_iso": "2026-07-24T00:46:31.662386+00:00",
   "pipeline_version": "1.0.0",
   "sources_used": [
     {
@@ -163,6 +163,15 @@
       "mtime_iso": "2026-07-18T18:57:39.050613+00:00",
       "source_key": "musicbrainz_artistes_qc",
       "label": "Artistes du Québec dans MusicBrainz — présence catalogue et complétude des métadonnées ouvertes"
+    },
+    {
+      "path": "/Users/joaoroque/Documents/Claude/Projects/Culture Québec en donnée/Données Québec/apple_top100_ca_2026-07-23.json",
+      "name": "apple_top100_ca_2026-07-23.json",
+      "sha256": "1742b4e8373c191dd04922d50dc9d4df3fc7fbce4696f24f39734facc6e5a92b",
+      "size_bytes": 21478,
+      "mtime_iso": "2026-07-24T00:29:52.067508+00:00",
+      "source_key": "apple_top100_ca",
+      "label": "Top 100 Apple Music Canada — chansons les plus écoutées, artistes QC marqués"
     },
     {
       "path": "/Users/joaoroque/Documents/Claude/Projects/Culture Québec en donnée/Données Québec/aei_claude_ai_2026-06-26.csv",
