@@ -86,18 +86,18 @@ def test_cinema_quebec(raw_dir):
 
 
 def test_palmares_quebec_count(raw_dir):
-    """Un seul interprète québécois dans le top 20 — Les Cowboys Fringants au rang 17.
+    """Un seul interprète québécois dans le top 20 — Les Cowboys Fringants au rang 14.
 
-    Source : ISQ Palmarès cumulatif annuel, mise à jour 12 juin 2026.
-    L'unique entrée québécoise est descendue du rang 15 au rang 17 entre la
-    semaine du 24-30 avril et celle du 22-28 mai 2026. La diversité reste à 1.
+    Trajectoire du rang : 15 (avril) → 17 (mai) → 14 (maj du 23 juillet 2026).
+    La remontée peut refléter la saison estivale (festivals, Saint-Jean).
+    La diversité reste à 1 dans tous les cas.
     """
     f = find_source_file(raw_dir, 'Palmarès des enregistrements*.xlsx')
     data = extract.extract_palmares(f)
     qc = [t for t in data if t['provenance'] == 'Québec']
     assert len(qc) == 1
     assert qc[0]['interprete'] == 'Les Cowboys Fringants'
-    assert qc[0]['rang'] == 17
+    assert qc[0]['rang'] == 14
 
 
 def test_evolution_streaming_2024(raw_dir):
@@ -969,3 +969,37 @@ def test_apple_top100_zero_quebec(raw_dir):
     d = extract.extract_apple_top100(f)
     assert d['n_quebec'] == 0
     assert d['entrees_quebec'] == []
+
+
+# === Part QC top 200 ventes (série terminée 2021) ===
+
+def test_part_top200_ventes_perimetre(raw_dir):
+    """Tableau ISQ 2142 — série terminée (dernière maj 24 févr. 2022).
+    Capsule de l'ère des ventes : 4 dimensions définitionnelles,
+    dernière semaine du 24-30 décembre 2021.
+    """
+    from src import extract
+    f = find_source_file(raw_dir, "Part des enregistrements audio québécois*.xlsx")
+    assert f is not None, "Fichier part top 200 ventes manquant"
+    d = extract.extract_part_top200_ventes(f)
+    assert d['statut_serie'] == 'terminee'
+    assert d['annee'] == '2021'
+    assert '24 au 30 décembre 2021' in d['derniere_semaine']
+    assert len(d['dimensions']) == 4
+    assert 'Dimension artistique' in d['dimensions']
+
+
+def test_part_top200_ventes_bascule_ere(raw_dir):
+    """Le contraste central : en cumulatif 2021, 58,9 % des ventes du
+    top 200 étaient québécoises (dimension artistique, ensemble albums) ;
+    en 2026, la part QC du streaming est de 6,9 % (tableau 4153).
+    Métriques non comparables terme à terme (ventes vs flux, top 200 vs
+    total) mais l'ordre de grandeur de la bascule d'ère est le constat.
+    """
+    from src import extract
+    f = find_source_file(raw_dir, "Part des enregistrements audio québécois*.xlsx")
+    d = extract.extract_part_top200_ventes(f)
+    s = d['synthese_2021']
+    assert s['part_qc_albums_dimension_artistique_pct'] == 58.9
+    assert s['part_qc_albums_numeriques_dimension_artistique_pct'] == 55.4
+    assert s['part_qc_pistes_dimension_artistique_pct'] == 18.4

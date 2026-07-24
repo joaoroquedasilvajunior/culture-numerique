@@ -1851,6 +1851,85 @@ def extract_apple_top100(path: Path) -> dict:
     }
 
 
+def extract_part_top200_ventes(path: Path) -> dict:
+    """
+    Tableau ISQ 2142 (SÉRIE TERMINÉE) — « Part des enregistrements audio
+    québécois parmi les 200 enregistrements audio les plus vendus selon le
+    type d'enregistrement, données hebdomadaires, Québec ».
+
+    Dernière mise à jour : 24 février 2022 (semaine du 24-30 décembre 2021).
+    Données Nielsen Music / MRC Data, compilation ADISQ + OCCQ.
+    Capsule historique de l'ère des VENTES, avant la bascule vers la mesure
+    de consommation en continu (tableau 4153).
+
+    Quatre définitions du « produit québécois » (cadre définitionnel qui
+    préfigure les débats Loi 109) :
+      - dimension artistique (l'interprète/répertoire mis de l'avant)
+      - dimension industrielle (la maison de disques)
+      - les deux à la fois / l'une ou l'autre
+
+    Layout : L3 année, L4 semaine, L6-L7 en-têtes (Cette semaine % /
+    Cumulatif %), blocs par dimension (L8, L13, L18, L23), lignes
+    indicateurs indentées par points.
+    """
+    wb = load_workbook(path, data_only=True)
+    ws = wb['Tableau']
+    annee = str(ws.cell(row=3, column=1).value or '').strip()
+    semaine = str(ws.cell(row=4, column=1).value or '').strip()
+
+    dimensions = {}
+    dim_courante = None
+    for r in range(8, (ws.max_row or 8) + 1):
+        lib = ws.cell(row=r, column=1).value
+        if lib is None:
+            continue
+        lib_s = str(lib).strip()
+        if not lib_s or lib_s.startswith(('..', '...')) and len(lib_s) < 4:
+            continue
+        if lib_s.lower().startswith('note') or 'donnée non disponible' in lib_s.lower():
+            break
+        if lib_s.startswith('Dimension'):
+            dim_courante = lib_s
+            dimensions[dim_courante] = []
+            continue
+        if dim_courante is None:
+            continue
+        semaine_pct = _to_num(ws.cell(row=r, column=2).value)
+        cumul_pct = _to_num(ws.cell(row=r, column=4).value)
+        indicateur = lib_s.lstrip('.')
+        dimensions[dim_courante].append({
+            'indicateur': indicateur,
+            'semaine_pct': semaine_pct,
+            'cumul_annuel_pct': cumul_pct,
+        })
+
+    def _cumul(dim, indicateur_prefix):
+        for ligne in dimensions.get(dim, []):
+            if ligne['indicateur'].startswith(indicateur_prefix):
+                return ligne['cumul_annuel_pct']
+        return None
+
+    return {
+        'statut_serie': 'terminee',
+        'tableau_isq': '2142',
+        'source_donnees': 'Nielsen Music / MRC Data ; compilation ADISQ + ISQ/OCCQ',
+        'annee': annee,
+        'derniere_semaine': semaine,
+        'mise_a_jour_finale': '24 février 2022',
+        'dimensions': dimensions,
+        'synthese_2021': {
+            'part_qc_albums_dimension_artistique_pct': _cumul('Dimension artistique', 'Ensemble des albums'),
+            'part_qc_albums_numeriques_dimension_artistique_pct': _cumul('Dimension artistique', 'Albums numériques'),
+            'part_qc_pistes_dimension_artistique_pct': _cumul('Dimension artistique', 'Pistes numériques'),
+        },
+        'note_methodo': ("Part estimée sur les 200 titres les plus VENDUS par support "
+                         "(unités), pas sur la consommation totale ni le streaming. "
+                         "13 pistes numériques = 1 album. Le cadre à quatre dimensions "
+                         "(artistique/industrielle) opérationnalise dès 2021 la question "
+                         "définitionnelle du « contenu québécois » au cœur de la Loi 109."),
+    }
+
+
 # ---------- Registry ----------
 
 EXTRACTORS = {
@@ -1881,4 +1960,5 @@ EXTRACTORS = {
     'extract_palmares_films': extract_palmares_films,
     'extract_aei_cadences': extract_aei_cadences,
     'extract_apple_top100': extract_apple_top100,
+    'extract_part_top200_ventes': extract_part_top200_ventes,
 }

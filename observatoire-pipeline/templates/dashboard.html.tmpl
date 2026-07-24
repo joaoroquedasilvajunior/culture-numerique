@@ -1422,6 +1422,24 @@ a{color:inherit;text-decoration:none}
         <div class="card-foot" id="foot_apple"></div>
       </div>
 
+      <div class="card" style="margin-top:20px">
+        <div class="card-head">
+          <div>
+            <div class="card-title">La bascule d'ère — quand le Québec achetait, il achetait québécois</div>
+            <div class="card-sub" id="sub_bascule">ISQ tableau 2142 (série terminée, Nielsen/ADISQ) vs tableau 4153 (Luminate) · métriques non comparables terme à terme, ordres de grandeur éloquents</div>
+          </div>
+          <div style="font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;padding:6px 12px;border-radius:6px;background:var(--cb-100);color:var(--cb-700);align-self:flex-start">Série terminée</div>
+        </div>
+        <div class="card-body">
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;padding:12px 0">
+            <div class="kpi-mini"><div class="lbl">Ventes top 200 — albums, 2021</div><div class="val" id="kpi_bascule_2021">—</div></div>
+            <div class="kpi-mini"><div class="lbl">Ventes top 200 — pistes, 2021</div><div class="val" id="kpi_bascule_pistes">—</div></div>
+            <div class="kpi-mini"><div class="lbl">Streaming — 2026 (YTD)</div><div class="val" style="color:#d6603c">6,9 %</div></div>
+          </div>
+        </div>
+        <div class="card-foot" id="foot_bascule"></div>
+      </div>
+
       <div class="quote" style="margin-top:20px;border-left-color:var(--bo-500);background:linear-gradient(135deg,var(--bo-900) 0%,#fff 100%)">
         <strong>Recommandation 25 du Comité-conseil (2024)</strong> : « Analyser la faisabilité de réglementer le partage des données d'usage par les plateformes. »<br>
         <strong>Recommandation 26</strong> : « Mettre à la disposition de l'OCCQ les ressources humaines, technologiques et financières nécessaires à l'analyse des données d'usage. »
@@ -2901,6 +2919,26 @@ spark('spark4', [0, -2, -4, -7, -10, -11.6], C.bo);
       const noms = (AP.entrees_quebec || []).map(e => e.artiste + ' (#' + e.rang + ')').join(' · ');
       foot.innerHTML = 'Artistes québécois au top 100 : ' + noms + '.';
     }
+  }
+})();
+
+// === BASCULE D'ÈRE : part QC top 200 ventes 2021 vs streaming 2026 ===
+(function(){
+  const B = D.part_top200_ventes_2021;
+  if (!B || !B.synthese_2021) return;
+  const s = B.synthese_2021;
+  const fmt1 = n => (n == null) ? '—' : n.toLocaleString('fr-CA', {minimumFractionDigits: 1, maximumFractionDigits: 1}) + ' %';
+  const setText = (id, txt) => { const el = document.getElementById(id); if (el) el.textContent = txt; };
+  setText('kpi_bascule_2021', fmt1(s.part_qc_albums_dimension_artistique_pct));
+  setText('kpi_bascule_pistes', fmt1(s.part_qc_pistes_dimension_artistique_pct));
+  const foot = document.getElementById('foot_bascule');
+  if (foot) {
+    foot.innerHTML = 'En cumulatif 2021, <strong>' + fmt1(s.part_qc_albums_dimension_artistique_pct)
+      + '</strong> des ventes d\'albums du top 200 étaient québécoises (dimension artistique, données Nielsen/ADISQ, série close en février 2022). '
+      + 'La part du streaming en 2026 est de <strong>6,9 %</strong> (tableau 4153). '
+      + 'Caveats : ventes d\'unités vs flux d\'écoutes, top 200 vs consommation totale, compilateurs différents. '
+      + 'Mais déjà en 2021, les pistes téléchargées à l\'unité (' + fmt1(s.part_qc_pistes_dimension_artistique_pct)
+      + ') annonçaient la logique du flux. Le cadre ISQ à quatre dimensions (artistique/industrielle) posait dès 2021 la question définitionnelle du « contenu québécois » au cœur de la Loi 109.';
   }
 })();
 

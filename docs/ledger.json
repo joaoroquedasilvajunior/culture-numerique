@@ -1,5 +1,5 @@
 {
-  "build_iso": "2026-07-24T00:46:31.662386+00:00",
+  "build_iso": "2026-07-24T01:12:15.814571+00:00",
   "pipeline_version": "1.0.0",
   "sources_used": [
     {
@@ -30,11 +30,11 @@
       "label": "Résultats d'exploitation des établissements cinématographiques selon le pays d'origine des films (hebdomadaire)"
     },
     {
-      "path": "/Users/joaoroque/Documents/Claude/Projects/Culture Québec en donnée/Données Québec/Palmarès des enregistrements musicaux, Québec_2.xlsx",
-      "name": "Palmarès des enregistrements musicaux, Québec_2.xlsx",
-      "sha256": "f3a94788e6c0a91547867b87738e9a8776d1e6bc9fecb8f0d3902451482a9a18",
-      "size_bytes": 7052,
-      "mtime_iso": "2026-06-12T13:05:44.046450+00:00",
+      "path": "/Users/joaoroque/Documents/Claude/Projects/Culture Québec en donnée/Données Québec/Palmarès des enregistrements musicaux, Québec_3.xlsx",
+      "name": "Palmarès des enregistrements musicaux, Québec_3.xlsx",
+      "sha256": "5a497f2f415bfa18d1e4394d4cce260005a334152330d8bb754ba7dc431bb4a6",
+      "size_bytes": 7055,
+      "mtime_iso": "2026-07-24T00:54:26.300491+00:00",
       "source_key": "palmares_top20",
       "label": "Palmarès des enregistrements musicaux"
     },
@@ -163,6 +163,15 @@
       "mtime_iso": "2026-07-18T18:57:39.050613+00:00",
       "source_key": "musicbrainz_artistes_qc",
       "label": "Artistes du Québec dans MusicBrainz — présence catalogue et complétude des métadonnées ouvertes"
+    },
+    {
+      "path": "/Users/joaoroque/Documents/Claude/Projects/Culture Québec en donnée/Données Québec/Part des enregistrements audio québécois parmi les 200 enregistrements audio les plus vendus selon le type d’enregistrement audio, données hebdomadaires, Québec.xlsx",
+      "name": "Part des enregistrements audio québécois parmi les 200 enregistrements audio les plus vendus selon le type d’enregistrement audio, données hebdomadaires, Québec.xlsx",
+      "sha256": "80d63f030d173a44b7a163e23c1c6e5c92433c4dda6a1266ca7a77b6e869aea6",
+      "size_bytes": 7644,
+      "mtime_iso": "2026-07-24T01:02:14.789305+00:00",
+      "source_key": "part_top200_ventes_2021",
+      "label": "Part des enregistrements audio québécois parmi les 200 plus vendus (SÉRIE TERMINÉE, 2021)"
     },
     {
       "path": "/Users/joaoroque/Documents/Claude/Projects/Culture Québec en donnée/Données Québec/apple_top100_ca_2026-07-23.json",

@@ -190,6 +190,16 @@ sources:
     axe_tdb: ["presence", "ecosysteme"]
     notes: "Première source non gouvernementale du pipeline. Univers : 9 731 artistes uniques rattachés au Québec (récolte 2026-07-18). Le taux de liens Spotify (~20 %) est un plancher de complétude des métadonnées ouvertes, pas un taux de présence réelle sur Spotify — nuance centrale pour la lecture Loi 109 (volet métadonnées). Enrichissement Spotify (popularité, followers) en attente : quota API journalier des apps en mode développement insuffisant (403 sur batch + 429 Retry-After 24 h, juillet 2026)."
 
+  part_top200_ventes_2021:
+    label: "Part des enregistrements audio québécois parmi les 200 plus vendus (SÉRIE TERMINÉE, 2021)"
+    isq_table_id: "2142"
+    file_pattern: "Part des enregistrements audio québécois*.xlsx"
+    isq_url: "https://statistique.quebec.ca/fr/produit/tableau/2142"
+    classification: "OCCQ — série hebdomadaire TERMINÉE (dernière maj 24 févr. 2022) ; Nielsen Music/MRC Data, compilation ADISQ ; 4 dimensions (artistique/industrielle) × 3 types"
+    extractor: extract_part_top200_ventes
+    axe_tdb: ["decouvrabilite", "consommation"]
+    notes: "Capsule historique de l'ère des VENTES : en cumulatif 2021, 58,9 % des ventes du top 200 étaient québécoises (dimension artistique, ensemble des albums), contre 6,9 % du streaming en 2026 (tableau 4153). La bascule d'ère la plus dramatique du Carnet, à manier avec ses caveats : ventes d'unités vs flux d'écoutes, top 200 vs consommation totale, Nielsen vs Luminate. Le cadre à quatre dimensions (artistique/industrielle) opérationnalise dès 2021 la question définitionnelle du « contenu québécois » que la Loi 109 et la DIMA se disputent aujourd'hui."
+
   apple_top100_ca:
     label: "Top 100 Apple Music Canada — chansons les plus écoutées, artistes QC marqués"
     file_pattern: "apple_top100_ca_*.json"

@@ -72,14 +72,14 @@ def test_r1_ratio_et_ecart(combined):
 # === R2 — Profondeur du catalogue (N₂₀) ======================================
 
 def test_r2_n20_cowboys_fringants(combined):
-    """R2 — Un seul interprète québécois distinct dans le top 20 (rang 17 au 22-28 mai 2026).
+    """R2 — Un seul interprète québécois distinct dans le top 20 (rang 14 à la maj du 23 juillet 2026).
 
-    Source : ISQ Palmarès, mise à jour 12 juin 2026.
+    Trajectoire : 15 (avril) → 17 (mai) → 14 (juillet). N₂₀ reste à 1.
     """
     r2 = derive.derive_r2(combined['palmares_top20'])
     assert r2['n20'] == 1
     assert r2['interpretes'] == ['Les Cowboys Fringants']
-    assert r2['rangs_quebecois'] == [17]
+    assert r2['rangs_quebecois'] == [14]
     assert r2['provisional'] is True
 
 
