@@ -1,5 +1,5 @@
 {
-  "build_iso": "2026-07-24T01:12:15.814571+00:00",
+  "build_iso": "2026-08-17T11:13:47.822706+00:00",
   "pipeline_version": "1.0.0",
   "sources_used": [
     {
@@ -111,11 +111,11 @@
       "label": "Variations mensuelles et annuelles des ventes de livres neufs"
     },
     {
-      "path": "/Users/joaoroque/Documents/Claude/Projects/Culture Québec en donnée/Données Québec/Ventes de livres neufs selon la catégorie de points de vente, données mensuelles, Québec .xlsx",
-      "name": "Ventes de livres neufs selon la catégorie de points de vente, données mensuelles, Québec .xlsx",
-      "sha256": "30e500decbb7156f87e84d0cbc180d4fc4798f78a1576fe99fa8381fc79d5df7",
-      "size_bytes": 11186,
-      "mtime_iso": "2026-05-25T20:03:47.293458+00:00",
+      "path": "/Users/joaoroque/Documents/Claude/Projects/Culture Québec en donnée/Données Québec/Ventes de livres neufs selon la catégorie de points de vente, données mensuelles, Québec_3.xlsx",
+      "name": "Ventes de livres neufs selon la catégorie de points de vente, données mensuelles, Québec_3.xlsx",
+      "sha256": "63bd658a32391a867eb304c38731d1067f38c0deebaff67e09dc02e9cc07b70a",
+      "size_bytes": 12059,
+      "mtime_iso": "2026-08-17T10:48:17.725683+00:00",
       "source_key": "ventes_categorie",
       "label": "Ventes de livres neufs selon la catégorie de points de vente, données mensuelles"
     },
@@ -163,6 +163,15 @@
       "mtime_iso": "2026-07-18T18:57:39.050613+00:00",
       "source_key": "musicbrainz_artistes_qc",
       "label": "Artistes du Québec dans MusicBrainz — présence catalogue et complétude des métadonnées ouvertes"
+    },
+    {
+      "path": "/Users/joaoroque/Documents/Claude/Projects/Culture Québec en donnée/Données Québec/isq_musique_bilan_2025.json",
+      "name": "isq_musique_bilan_2025.json",
+      "sha256": "53ebb6b8c1d55771ef1f2b529d5d9855bab2d202cea134c99cde14fecdca25e4",
+      "size_bytes": 2756,
+      "mtime_iso": "2026-08-17T11:06:30.094865+00:00",
+      "source_key": "isq_musique_bilan_2025",
+      "label": "Bilan annuel ISQ de la consommation musicale 2025 — profondeur du palmarès artistes"
     },
     {
       "path": "/Users/joaoroque/Documents/Claude/Projects/Culture Québec en donnée/Données Québec/Part des enregistrements audio québécois parmi les 200 enregistrements audio les plus vendus selon le type d’enregistrement audio, données hebdomadaires, Québec.xlsx",

@@ -1930,6 +1930,41 @@ def extract_part_top200_ventes(path: Path) -> dict:
     }
 
 
+def extract_isq_musique_bilan(path: Path) -> dict:
+    """
+    Bilan annuel ISQ de la consommation musicale (compilé du communiqué de
+    presse du 11 août 2026, données Luminate/ADISQ/OCCQ, année 2025).
+
+    Apporte la donnée de profondeur attendue : les rangs généraux des 10
+    premiers interprètes QC dans le palmarès des artistes. L'extracteur
+    calcule la courbe de profondeur (nb de QC dans le top 20/50/100/200).
+    """
+    data = json.loads(Path(path).read_text(encoding='utf-8'))
+    artistes = data.get('palmares_artistes_2025', {}).get('artistes_qc_top200', [])
+    rangs = [a['rang_general'] for a in artistes]
+
+    courbe = []
+    for seuil in (20, 50, 100, 200):
+        courbe.append({
+            'top': seuil,
+            'n_qc': sum(1 for r in rangs if r <= seuil),
+            'part_pct': round(sum(1 for r in rangs if r <= seuil) / seuil * 100, 1),
+        })
+
+    return {
+        'source': data.get('source', ''),
+        'source_donnees': data.get('source_donnees', ''),
+        'date_compilation': data.get('date_compilation'),
+        'annee_reference': data.get('annee_reference'),
+        'streaming': data.get('streaming', {}),
+        'anciennete_ecoutes': data.get('anciennete_ecoutes', {}),
+        'artistes_qc_top200': artistes,
+        'courbe_profondeur': courbe,
+        'ventes_supports': data.get('ventes_supports', {}),
+        'note_methodo': data.get('methode_compilation', ''),
+    }
+
+
 # ---------- Registry ----------
 
 EXTRACTORS = {
@@ -1961,4 +1996,5 @@ EXTRACTORS = {
     'extract_aei_cadences': extract_aei_cadences,
     'extract_apple_top100': extract_apple_top100,
     'extract_part_top200_ventes': extract_part_top200_ventes,
+    'extract_isq_musique_bilan': extract_isq_musique_bilan,
 }

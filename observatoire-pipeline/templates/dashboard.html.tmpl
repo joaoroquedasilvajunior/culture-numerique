@@ -1425,6 +1425,21 @@ a{color:inherit;text-decoration:none}
       <div class="card" style="margin-top:20px">
         <div class="card-head">
           <div>
+            <div class="card-title">La courbe de profondeur — où le répertoire québécois apparaît dans le palmarès</div>
+            <div class="card-sub" id="sub_profondeur">Bilan annuel ISQ 2025 (communiqué du 11 août 2026, Luminate/ADISQ) · rangs généraux des 10 premiers artistes QC</div>
+          </div>
+          <div style="font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;padding:6px 12px;border-radius:6px;background:var(--cb-100);color:var(--cb-700);align-self:flex-start">Annuel 2025</div>
+        </div>
+        <div class="card-body">
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:16px;padding:12px 0" id="kpis_profondeur"></div>
+          <div class="chart-wrap" style="margin-top:8px"><canvas id="chart_profondeur"></canvas></div>
+        </div>
+        <div class="card-foot" id="foot_profondeur"></div>
+      </div>
+
+      <div class="card" style="margin-top:20px">
+        <div class="card-head">
+          <div>
             <div class="card-title">La bascule d'ère — quand le Québec achetait, il achetait québécois</div>
             <div class="card-sub" id="sub_bascule">ISQ tableau 2142 (série terminée, Nielsen/ADISQ) vs tableau 4153 (Luminate) · métriques non comparables terme à terme, ordres de grandeur éloquents</div>
           </div>
@@ -2939,6 +2954,52 @@ spark('spark4', [0, -2, -4, -7, -10, -11.6], C.bo);
       + 'Caveats : ventes d\'unités vs flux d\'écoutes, top 200 vs consommation totale, compilateurs différents. '
       + 'Mais déjà en 2021, les pistes téléchargées à l\'unité (' + fmt1(s.part_qc_pistes_dimension_artistique_pct)
       + ') annonçaient la logique du flux. Le cadre ISQ à quatre dimensions (artistique/industrielle) posait dès 2021 la question définitionnelle du « contenu québécois » au cœur de la Loi 109.';
+  }
+})();
+
+// === COURBE DE PROFONDEUR : artistes QC au palmarès annuel 2025 ===
+(function(){
+  const M = D.isq_musique_bilan_2025;
+  if (!M || !M.courbe_profondeur) return;
+
+  // Bandeau KPI dynamique
+  const kpis = document.getElementById('kpis_profondeur');
+  if (kpis) {
+    M.courbe_profondeur.forEach(c => {
+      const div = document.createElement('div');
+      div.className = 'kpi-mini';
+      div.innerHTML = '<div class="lbl">Top ' + c.top + '</div>'
+        + '<div class="val">' + c.n_qc + '<span style="font-size:13px;color:var(--cb-500)"> / ' + c.top + '</span></div>';
+      kpis.appendChild(div);
+    });
+  }
+
+  // Barres : rang général de chaque artiste QC (horizontal, ordre croissant)
+  const el = document.getElementById('chart_profondeur');
+  if (el && M.artistes_qc_top200) {
+    const arts = M.artistes_qc_top200;
+    new Chart(el, {
+      type: 'bar',
+      data: { labels: arts.map(a => a.interprete),
+        datasets: [{ data: arts.map(a => a.rang_general),
+          backgroundColor: arts.map(a => a.rang_general <= 20 ? C.bo : C.cb700),
+          borderRadius: 4, borderSkipped: false }]},
+      options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: false },
+          tooltip: { callbacks: { label: c => 'Rang général : ' + c.parsed.x }}},
+        scales: { x: { grid: { color: '#f0f4f8' }, title: { display: true, text: 'Rang général au palmarès des artistes (2025)', font: { size: 11 }}},
+          y: { grid: { display: false }, ticks: { font: { size: 11 }}}}}
+    });
+  }
+
+  const foot = document.getElementById('foot_profondeur');
+  if (foot) {
+    const s = M.streaming || {};
+    foot.innerHTML = 'La densité québécoise reste autour de <strong>5 %</strong> à toutes les profondeurs du palmarès '
+      + '(1/20, 3/50, 6/100, 10/200), sous la part d\'écoutes de <strong>' + (s.part_interpretes_qc_pct || '—') + ' %</strong> : '
+      + 'le répertoire QC est consommé un peu partout dans la longue traîne, mais sous-représenté aux sommets. '
+      + 'Autre signal du bilan 2025 : la croissance du streaming ralentit nettement (+3 % vs +12 % en 2024) et '
+      + '<strong>50 %</strong> des écoutes vont à des pistes de plus de 5 ans (nouveautés : 28 %). Le flux favorise le déjà-établi.';
   }
 })();
 

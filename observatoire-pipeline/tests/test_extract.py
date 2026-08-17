@@ -382,18 +382,25 @@ def test_ventes_livres_total(raw_dir):
 
 
 def test_ventes_categorie(raw_dir):
-    """Ventes de livres par catégorie de points de vente — cumul 2025 = 542 612 980 $.
-    Source : ISQ, tableau 2341, mise à jour 25 mai 2026."""
+    """Ventes de livres par catégorie de points de vente — année 2025 COMPLÈTE :
+    cumul = 727 696 881 $ sur 12 mois.
+
+    Maj du 17 août 2026 (fichier _3) : l'année 2025 est désormais close
+    (le fichier précédent s'arrêtait à septembre, cumul 542,6 M$).
+    Le marché du livre neuf au Québec dépasse donc 727 M$ en 2025.
+    """
     f = find_source_file(raw_dir, 'Ventes de livres neufs*points de vente*.xlsx')
     assert f is not None, "Fichier ventes par catégorie de points de vente manquant"
     data = extract.extract_ventes_categorie(f)
     total = next(L for L in data['lignes'] if L['libelle'] == 'Ventes totales')
-    assert total['cumul'] == 542612980.0
+    assert total['cumul'] == 727696881.0
     assert total['valeurs'][7] == 112351737.0  # Août — pic de la rentrée scolaire
-    assert len(data['mois']) == 9
-    assert data['mois'][0] == 'Janvier' and data['mois'][-1] == 'Septembre'
+    assert len(data['mois']) == 12
+    assert data['mois'][0] == 'Janvier' and data['mois'][-1] == 'Décembre'
     agreees = next(L for L in data['lignes'] if L['libelle'] == 'Librairies agréées (A)')
-    assert agreees['cumul'] == 258349841.0
+    # Année complète 2025 : 353,0 M$ pour les librairies agréées MCC,
+    # soit 48,5 % du marché total (727,7 M$)
+    assert agreees['cumul'] == 353006071.0
 
 
 def test_etablissements_count(raw_dir):
@@ -1003,3 +1010,54 @@ def test_part_top200_ventes_bascule_ere(raw_dir):
     assert s['part_qc_albums_dimension_artistique_pct'] == 58.9
     assert s['part_qc_albums_numeriques_dimension_artistique_pct'] == 55.4
     assert s['part_qc_pistes_dimension_artistique_pct'] == 18.4
+
+
+# === Bilan annuel ISQ musique 2025 (communiqué 11 août 2026) ===
+
+def test_isq_musique_bilan_perimetre(raw_dir):
+    """Compilation du communiqué ISQ du 11 août 2026 (Luminate/ADISQ,
+    année 2025) : streaming, ancienneté des écoutes, palmarès artistes,
+    ventes par support.
+    """
+    from src import extract
+    f = find_source_file(raw_dir, "isq_musique_bilan_*.json")
+    assert f is not None, "Fichier bilan musique 2025 manquant"
+    d = extract.extract_isq_musique_bilan(f)
+    assert d['annee_reference'] == 2025
+    assert d['streaming']['ecoutes_totales_milliards'] == 31.9
+    assert d['streaming']['part_interpretes_qc_pct'] == 7.1
+    assert d['streaming']['croissance_pct']['2025'] == 3
+    assert len(d['artistes_qc_top200']) == 10
+
+
+def test_isq_musique_bilan_courbe_profondeur(raw_dir):
+    """La courbe de profondeur dérivée des rangs généraux des artistes QC :
+    1 au top 20 (Cowboys Fringants, 12e), 3 au top 50, 6 au top 100,
+    10 au top 200. La densité QC est ~5 % à chaque profondeur, bien
+    en dessous de la part d'écoutes (7,1 %).
+    """
+    from src import extract
+    f = find_source_file(raw_dir, "isq_musique_bilan_*.json")
+    d = extract.extract_isq_musique_bilan(f)
+    courbe = {c['top']: c['n_qc'] for c in d['courbe_profondeur']}
+    assert courbe[20] == 1
+    assert courbe[50] == 3
+    assert courbe[100] == 6
+    assert courbe[200] == 10
+    # Premier artiste QC : Cowboys Fringants au rang général 12
+    assert d['artistes_qc_top200'][0]['interprete'] == 'Les Cowboys Fringants'
+    assert d['artistes_qc_top200'][0]['rang_general'] == 12
+
+
+def test_isq_musique_bilan_ventes_2025(raw_dir):
+    """Ventes 2025 : part QC des albums en chute 24 → 18 % (4e baisse),
+    vinyle défavorable au QC (8 %), français sur supports physiques
+    39 → 11 % depuis 2018.
+    """
+    from src import extract
+    f = find_source_file(raw_dir, "isq_musique_bilan_*.json")
+    d = extract.extract_isq_musique_bilan(f)
+    v = d['ventes_supports']
+    assert v['part_qc_ventes_albums_pct']['2025'] == 18
+    assert v['part_qc_vinyle_pct'] == 8
+    assert v['part_francais_supports_physiques_pct']['2025'] == 11

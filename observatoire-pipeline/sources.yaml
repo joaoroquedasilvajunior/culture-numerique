@@ -190,6 +190,15 @@ sources:
     axe_tdb: ["presence", "ecosysteme"]
     notes: "Première source non gouvernementale du pipeline. Univers : 9 731 artistes uniques rattachés au Québec (récolte 2026-07-18). Le taux de liens Spotify (~20 %) est un plancher de complétude des métadonnées ouvertes, pas un taux de présence réelle sur Spotify — nuance centrale pour la lecture Loi 109 (volet métadonnées). Enrichissement Spotify (popularité, followers) en attente : quota API journalier des apps en mode développement insuffisant (403 sur batch + 429 Retry-After 24 h, juillet 2026)."
 
+  isq_musique_bilan_2025:
+    label: "Bilan annuel ISQ de la consommation musicale 2025 — profondeur du palmarès artistes"
+    file_pattern: "isq_musique_bilan_*.json"
+    isq_url: "https://statistique.quebec.ca/fr/produit/tableau/palmares-enregistrements-musicaux-quebec"
+    classification: "ISQ/OCCQ, communiqué du 11 août 2026 (Luminate + ADISQ) ; année de référence 2025 ; compilé manuellement par le Carnet"
+    extractor: extract_isq_musique_bilan
+    axe_tdb: ["decouvrabilite", "consommation"]
+    notes: "Chiffres annuels 2025 relevés du communiqué : 31,9 G écoutes (+3 %, ralentissement net vs +12 % en 2024), part interprètes QC 7,1 % (stable 7-8 % depuis 2022), catalogue > 5 ans = 50 % des écoutes vs nouveautés 28 %, part QC des ventes d'albums 24 → 18 % (4e baisse annuelle), vinyle défavorable au QC (8 %), français sur supports physiques 39 → 11 % depuis 2018. Donnée de profondeur clé : rangs généraux des 10 premiers artistes QC au palmarès (courbe : 1 au top 20, 3 au top 50, 6 au top 100, 10 au top 200). À recouper avec les deux analyses détaillées ISQ lors de leur parution en tableau."
+
   part_top200_ventes_2021:
     label: "Part des enregistrements audio québécois parmi les 200 plus vendus (SÉRIE TERMINÉE, 2021)"
     isq_table_id: "2142"
