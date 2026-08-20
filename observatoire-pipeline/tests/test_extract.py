@@ -123,11 +123,12 @@ def test_emplois_eerh_mensuel_ytd_2026(raw_dir):
     # Maj 20 août 2026 : mai ajouté (4 → 5 mois disponibles)
     assert rec['mois_disponibles'] == 5
     assert rec['mois_dernier'] == 'Mai'
-    # Variation Jan → Mai 2026. Fourchette provisoirement élargie
-    # (valeur exacte à épingler à la prochaine session avec exécution
-    # locale ; trajectoire de reprise : +1,7 % à mars, +4,0 % à avril).
+    # Variation Jan → Mai 2026 = +8,39 % (n=14 820 en mai). La reprise 5121
+    # s'accélère : +1,7 % (mars) → +4,0 % (avril) → +8,4 % (mai). À lire en
+    # contraste avec la part QC du box-office (3,7 % YTD, cumul -48,7 %) :
+    # le paradoxe cinéma se creuse par les deux bouts.
     assert rec['variation_pct'] is not None
-    assert -5.0 < rec['variation_pct'] < 12.0
+    assert 8.0 < rec['variation_pct'] < 8.8
 
 
 def test_emplois_eerh_annuel_5121_baseline_2025(raw_dir):

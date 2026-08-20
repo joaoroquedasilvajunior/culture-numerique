@@ -50,6 +50,35 @@ def find_source_file(raw_dir: Path, pattern: str) -> Path | None:
     return candidates[0] if candidates else None
 
 
+def _signaler_orphelins(raw_dir: Path, config: dict, verbose: bool) -> list[str]:
+    """Signale les fichiers de données du dossier brut qui ne matchent AUCUN
+    motif de sources.yaml.
+
+    Motivation (2026-08-20) : un fichier EERH au nom tronqué par le
+    navigateur (« ...selon l'Enquête sur l'emploi.xlsx ») a séjourné dans le
+    dossier de mai à août sans jamais alimenter le pipeline, chaque nouveau
+    téléchargement écrasant silencieusement le précédent. Un orphelin n'est
+    pas une erreur (le build continue), mais il doit être visible.
+    """
+    extensions = {'.xlsx', '.csv', '.json', '.zip'}
+    patterns_nfc = [_nfc(meta['file_pattern']) for meta in config['sources'].values()]
+    orphelins = []
+    for p in sorted(raw_dir.iterdir()):
+        if not p.is_file() or p.suffix.lower() not in extensions:
+            continue
+        nom_nfc = _nfc(p.name)
+        if not any(fnmatch.fnmatchcase(nom_nfc, pat) for pat in patterns_nfc):
+            orphelins.append(p.name)
+    if orphelins and verbose:
+        print(f"\n  [⚠] {len(orphelins)} fichier(s) orphelin(s) — aucun motif de "
+              f"sources.yaml ne les capte :")
+        for nom in orphelins:
+            print(f"      · {nom[:90]}")
+        print("      (nom tronqué au téléchargement ? nouvelle source à déclarer ? "
+              "fichier à renommer ou à retirer)")
+    return orphelins
+
+
 def _resolve_raw_dir(repo_root: Path, config: dict) -> Path:
     """Résout le dossier des données brutes selon la config.
     - Si `raw_data_dir` est défini dans sources.yaml et est un chemin absolu, on le prend tel quel.
@@ -131,6 +160,9 @@ def run(repo_root: Path | str = '.', verbose: bool = True) -> dict:
         sources_used.append({**file_fingerprint(src_file),
                              'source_key': source_key,
                              'label': meta['label']})
+
+    # Garde anti-orphelins : fichiers de données non captés par les motifs
+    orphelins = _signaler_orphelins(raw_dir, config, verbose)
 
     # Write combined dashboard data
     combined_path = processed_dir / 'dashboard_data.json'
