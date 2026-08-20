@@ -1063,3 +1063,87 @@ def test_isq_musique_bilan_ventes_2025(raw_dir):
     assert v['part_qc_ventes_albums_pct']['2025'] == 18
     assert v['part_qc_vinyle_pct'] == 8
     assert v['part_francais_supports_physiques_pct']['2025'] == 11
+
+
+# === Dépenses des ménages pour la culture et les médias ===
+
+def test_depenses_menages_perimetre(raw_dir):
+    """EDM série 2010-2021 (biennale après 2017). Dépense culture-médias
+    par ménage : 2 709 $ (2010) → 4 004 $ (2021), part du budget 5,7 → 6,9 %.
+    """
+    from src import extract
+    f = find_source_file(raw_dir, "Dépenses moyennes des ménages*courants, Québec.xlsx")
+    assert f is not None, "Fichier dépenses ménages (série) manquant"
+    d = extract.extract_depenses_menages(f)
+    assert d['annees'] == [2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2019, 2021]
+    s = d['series_cles']
+    assert s['depenses_culture_medias'][0] == 2709.0
+    assert s['depenses_culture_medias'][-1] == 4004.0
+    assert s['part_culture_medias_pct'][-1] == 6.9
+
+
+def test_depenses_menages_streaming_x11(raw_dir):
+    """« Téléchargements et services en ligne » : F (peu fiable) en 2010-2011,
+    puis 15 $ (2012) → 166 $ (2021). La dépense d'abonnements en ligne a été
+    multipliée par 11 en neuf ans — la bascule d'ère vue du portefeuille des
+    ménages. La télédistribution, elle, plafonne (~550 $) puis s'érode.
+    """
+    from src import extract
+    f = find_source_file(raw_dir, "Dépenses moyennes des ménages*courants, Québec.xlsx")
+    d = extract.extract_depenses_menages(f)
+    tele = d['series_cles']['telechargements_services_en_ligne']
+    assert tele[0] == 'F' and tele[1] == 'F'   # marqueurs préservés
+    assert tele[2] == 15.0
+    assert tele[-1] == 166.0
+    cable = d['series_cles']['teledistribution']
+    assert cable[-1] == 520.0
+
+
+def test_depenses_menages_quartiles_gradient(raw_dir):
+    """Coupe 2021 par quartile : la part du budget consacrée à la culture
+    et aux médias DÉCROÎT avec le revenu (7,7 / 7,4 / 7,3 / 6,0 %).
+    La culture-médias pèse relativement plus lourd dans les budgets modestes.
+    """
+    from src import extract
+    f = find_source_file(raw_dir, "Dépenses moyennes des ménages*quartile*.xlsx")
+    assert f is not None, "Fichier dépenses ménages (quartiles) manquant"
+    d = extract.extract_depenses_menages_quartiles(f)
+    assert d['annee'] == '2021'
+    part = d['part_culture_par_quartile_pct']
+    assert part[:4] == [7.7, 7.4, 7.3, 6.0]
+    # Gradient strictement décroissant du Q1 au Q4
+    assert part[0] > part[1] > part[2] > part[3]
+
+
+# === Principaux indicateurs culture — Ensemble du Québec ===
+
+def test_indicateurs_culture_ensemble_perimetre(raw_dir):
+    """Coupe Ensemble du Québec, séries 2001-2024, 8 indicateurs extraits."""
+    from src import extract
+    f = find_source_file(raw_dir, "Principaux indicateurs en culture*.xlsx")
+    assert f is not None, "Fichier principaux indicateurs manquant"
+    d = extract.extract_indicateurs_culture_ensemble(f)
+    assert d['portee'] == 'Ensemble du Québec'
+    assert d['annees'][0] == 2001
+    assert d['annees'][-1] == 2024
+    assert 'part_films_qc_assistance_pct' in d['indicateurs']
+    assert 'professions_culturelles_effectif' in d['indicateurs']
+
+
+def test_indicateurs_part_films_qc_serie_longue(raw_dir):
+    """La série longue de la part des films QC dans l'assistance :
+    6,1 % (2001), sommet 19,1 % (2005), 14,9 % (2024, provisoire).
+    Contexte historique de l'effondrement 2026 (3,7 % YTD au 22 juillet) :
+    la part 2026 courante est SOUS le plancher de 2001.
+    """
+    from src import extract
+    f = find_source_file(raw_dir, "Principaux indicateurs en culture*.xlsx")
+    d = extract.extract_indicateurs_culture_ensemble(f)
+    serie = {pt['annee']: pt['valeur']
+             for pt in d['indicateurs']['part_films_qc_assistance_pct']['serie']}
+    assert serie[2001] == 6.1
+    assert serie[2005] == 19.1
+    assert serie[2024] == 14.9
+    # Le sommet historique est bien 2005
+    vals = {a: v for a, v in serie.items() if v is not None}
+    assert max(vals, key=vals.get) == 2005

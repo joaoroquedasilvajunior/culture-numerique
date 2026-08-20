@@ -1,5 +1,5 @@
 {
-  "build_iso": "2026-08-20T15:50:11.933100+00:00",
+  "build_iso": "2026-08-20T16:00:38.151655+00:00",
   "pipeline_version": "1.0.0",
   "sources_used": [
     {
@@ -217,6 +217,33 @@
       "mtime_iso": "2026-07-19T16:59:07.961252+00:00",
       "source_key": "deezer_artistes_qc",
       "label": "Popularité Deezer des artistes du Québec — nb_fan et longue traîne"
+    },
+    {
+      "path": "/Users/joaoroque/Documents/Claude/Projects/Culture Québec en donnée/Données Québec/Dépenses moyennes des ménages pour la culture et les médias, en dollars courants, Québec.xlsx",
+      "name": "Dépenses moyennes des ménages pour la culture et les médias, en dollars courants, Québec.xlsx",
+      "sha256": "1281fc826986a504f261d1d8fe8b177773a5fd84d8c9a6193377adfca632e7ad",
+      "size_bytes": 13425,
+      "mtime_iso": "2026-04-22T00:55:51.683093+00:00",
+      "source_key": "depenses_menages",
+      "label": "Dépenses moyennes des ménages pour la culture et les médias, Québec (série 2010-2021)"
+    },
+    {
+      "path": "/Users/joaoroque/Documents/Claude/Projects/Culture Québec en donnée/Données Québec/Dépenses moyennes des ménages pour la culture et les médias, en dollars courants, selon le quartile de revenu du ménage.xlsx",
+      "name": "Dépenses moyennes des ménages pour la culture et les médias, en dollars courants, selon le quartile de revenu du ménage.xlsx",
+      "sha256": "cb89c27259852fba100edc640e52357a8f816082674382d12c480764f01f1240",
+      "size_bytes": 9718,
+      "mtime_iso": "2026-04-22T00:56:22.022082+00:00",
+      "source_key": "depenses_menages_quartiles",
+      "label": "Dépenses moyennes des ménages culture et médias selon le quartile de revenu (2021)"
+    },
+    {
+      "path": "/Users/joaoroque/Documents/Claude/Projects/Culture Québec en donnée/Données Québec/Principaux indicateurs en culture, par région administrative et pour l’ensemble du Québec.xlsx",
+      "name": "Principaux indicateurs en culture, par région administrative et pour l’ensemble du Québec.xlsx",
+      "sha256": "4ec202b91ae3cb2121eaf4278f3b7018f8e4e3b2be43705cd96e640d147eb4c3",
+      "size_bytes": 16805,
+      "mtime_iso": "2026-04-22T00:50:47.490490+00:00",
+      "source_key": "indicateurs_culture_ensemble",
+      "label": "Principaux indicateurs en culture — coupe Ensemble du Québec (séries 2001-2024)"
     },
     {
       "path": "/Users/joaoroque/Documents/Claude/Projects/Culture Québec en donnée/Données Québec/Nombre d’établissements culturels de certains types.xlsx",

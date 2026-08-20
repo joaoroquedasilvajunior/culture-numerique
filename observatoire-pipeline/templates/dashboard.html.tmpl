@@ -1524,6 +1524,17 @@ a{color:inherit;text-decoration:none}
         <div style="overflow-x:auto"><table class="tbl"><thead><tr><th></th><th>Pays d'origine</th><th class="num">Assistance YTD</th><th class="pct">Part %</th><th class="pct">Var. vs 2025</th></tr></thead><tbody id="tbl_cine"></tbody></table></div>
       </div>
 
+      <div class="card" style="margin-top:20px">
+        <div class="card-head">
+          <div>
+            <div class="card-title">Part des films québécois dans l'assistance — série longue 2001-2024</div>
+            <div class="card-sub">ISQ · Principaux indicateurs en culture (Ensemble du Québec) · années 2022-2024 provisoires</div>
+          </div>
+        </div>
+        <div class="card-body"><div class="chart-wrap"><canvas id="chart_films_qc_longue"></canvas></div></div>
+        <div class="card-foot" id="foot_films_qc_longue"></div>
+      </div>
+
       <h3 style="margin:28px 0 16px;font-family:'Nunito',sans-serif;font-size:15px;color:var(--cb-300);font-weight:700">Livres : ventes par catégorie de points de vente</h3>
 
       <div class="card">
@@ -1584,6 +1595,26 @@ a{color:inherit;text-decoration:none}
         </div>
         <div class="card-body"><div class="chart-wrap"><canvas id="chart_part_num"></canvas></div></div>
         <div class="card-foot" id="foot_part_num"></div>
+      </div>
+
+      <h3 style="margin:28px 0 16px;font-family:'Nunito',sans-serif;font-size:15px;color:var(--cb-300);font-weight:700">Ce que les ménages dépensent pour la culture et les médias</h3>
+
+      <div class="card">
+        <div class="card-head">
+          <div>
+            <div class="card-title">Dépenses moyennes des ménages — culture et médias, Québec 2010-2021</div>
+            <div class="card-sub">ISQ · Enquête sur les dépenses des ménages · $ courants · biennale après 2017</div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:16px;padding:12px 0">
+            <div class="kpi-mini"><div class="lbl">Dépense culture-médias 2021</div><div class="val" id="kpi_dm_total">—</div></div>
+            <div class="kpi-mini"><div class="lbl">Part du budget 2021</div><div class="val" id="kpi_dm_part">—</div></div>
+            <div class="kpi-mini"><div class="lbl">Abonnements en ligne 2012 → 2021</div><div class="val" id="kpi_dm_streaming" style="color:#d6603c">—</div></div>
+          </div>
+          <div class="chart-wrap" style="margin-top:8px"><canvas id="chart_dm_series"></canvas></div>
+        </div>
+        <div class="card-foot" id="foot_dm"></div>
       </div>
     </section>
 
@@ -3024,6 +3055,94 @@ spark('spark4', [0, -2, -4, -7, -10, -11.6], C.bo);
       + 'le répertoire QC est consommé un peu partout dans la longue traîne, mais sous-représenté aux sommets. '
       + 'Autre signal du bilan 2025 : la croissance du streaming ralentit nettement (+3 % vs +12 % en 2024) et '
       + '<strong>50 %</strong> des écoutes vont à des pistes de plus de 5 ans (nouveautés : 28 %). Le flux favorise le déjà-établi.';
+  }
+})();
+
+// === SÉRIE LONGUE : part des films QC dans l'assistance 2001-2024 ===
+(function(){
+  const IC = D.indicateurs_culture_ensemble;
+  if (!IC || !IC.indicateurs || !IC.indicateurs.part_films_qc_assistance_pct) return;
+  const el = document.getElementById('chart_films_qc_longue');
+  if (!el) return;
+  const serie = IC.indicateurs.part_films_qc_assistance_pct.serie;
+  const annees = serie.map(p => p.annee);
+  const vals = serie.map(p => p.valeur);
+  // Sommet 2005 en orange
+  const maxVal = Math.max(...vals.filter(v => v != null));
+  const pointColors = vals.map(v => v === maxVal ? C.bo : C.cb700);
+  const pointRadii = vals.map(v => v === maxVal ? 7 : 3);
+  new Chart(el, {
+    type: 'line',
+    data: { labels: annees, datasets: [{
+      label: 'Part films QC (%)', data: vals,
+      borderColor: C.cb700, backgroundColor: 'rgba(38, 70, 83, 0.07)',
+      borderWidth: 2.5, pointBackgroundColor: pointColors, pointBorderColor: pointColors,
+      pointRadius: pointRadii, pointHoverRadius: 7, tension: 0.25, fill: true, spanGaps: true }]},
+    options: { responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false },
+        tooltip: { callbacks: { label: c => c.parsed.y == null ? 'n.d.' : c.parsed.y.toLocaleString('fr-CA', {maximumFractionDigits: 1}) + ' %' }}},
+      scales: { x: { grid: { display: false }, ticks: { maxTicksLimit: 12 }},
+        y: { grid: { color: '#f0f4f8' }, ticks: { callback: v => v + ' %' }, beginAtZero: true }}}
+  });
+  const foot = document.getElementById('foot_films_qc_longue');
+  if (foot) {
+    const byYear = {}; serie.forEach(p => { byYear[p.annee] = p.valeur; });
+    foot.innerHTML = 'De <strong>' + (byYear[2001] || '—') + ' %</strong> en 2001 au sommet de <strong>'
+      + maxVal + ' %</strong> en 2005, puis des oscillations entre 5 et 15 %. '
+      + '2024 (provisoire) : <strong>' + (byYear[2024] || '—') + ' %</strong>. '
+      + 'La lecture courante 2026 (3,7 % YTD, carte cinéma ci-dessus) est SOUS le plancher de 2001 : '
+      + 'jamais en un quart de siècle la part québécoise du box-office n\'a été aussi basse.';
+  }
+})();
+
+// === DÉPENSES DES MÉNAGES : culture-médias + abonnements en ligne ===
+(function(){
+  const DM = D.depenses_menages;
+  if (!DM || !DM.series_cles) return;
+  const fmt$ = n => (n == null || typeof n === 'string') ? '—' : Math.round(n).toLocaleString('fr-CA') + ' $';
+  const setText = (id, txt) => { const el = document.getElementById(id); if (el) el.textContent = txt; };
+  const s = DM.series_cles;
+  const n = DM.annees.length;
+  setText('kpi_dm_total', fmt$(s.depenses_culture_medias[n-1]));
+  setText('kpi_dm_part', s.part_culture_medias_pct[n-1] != null ? s.part_culture_medias_pct[n-1].toLocaleString('fr-CA', {minimumFractionDigits: 1}) + ' %' : '—');
+  const t0 = s.telechargements_services_en_ligne.find(v => typeof v === 'number');
+  const t1 = s.telechargements_services_en_ligne[n-1];
+  setText('kpi_dm_streaming', (typeof t0 === 'number' && typeof t1 === 'number') ? fmt$(t0) + ' → ' + fmt$(t1) : '—');
+
+  const el = document.getElementById('chart_dm_series');
+  if (el) {
+    const num = arr => arr.map(v => typeof v === 'number' ? v : null);
+    new Chart(el, {
+      type: 'line',
+      data: { labels: DM.annees, datasets: [
+        { label: 'Abonnements et services en ligne', data: num(s.telechargements_services_en_ligne),
+          borderColor: C.bo, backgroundColor: C.bo, borderWidth: 2.5, pointRadius: 4, tension: 0.25, spanGaps: false },
+        { label: 'Télédistribution (câble, satellite)', data: num(s.teledistribution),
+          borderColor: C.cb700, backgroundColor: C.cb700, borderWidth: 2.5, pointRadius: 4, tension: 0.25 },
+        { label: 'Livres (papier et numériques)', data: num(s.livres),
+          borderColor: C.bb, backgroundColor: C.bb, borderWidth: 2, pointRadius: 3, tension: 0.25 }
+      ]},
+      options: { responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { position: 'bottom', labels: { boxWidth: 12, padding: 12, font: { size: 11 }, usePointStyle: true }},
+          tooltip: { callbacks: { label: c => c.dataset.label + ' : ' + (c.parsed.y == null ? 'n.d.' : c.parsed.y.toLocaleString('fr-CA') + ' $') }}},
+        scales: { x: { grid: { display: false }},
+          y: { grid: { color: '#f0f4f8' }, ticks: { callback: v => v + ' $' }, beginAtZero: true }}}
+    });
+  }
+
+  const foot = document.getElementById('foot_dm');
+  if (foot) {
+    let txt = 'La dépense d\'abonnements et services en ligne a été multipliée par 11 entre 2012 (15 $) et 2021 (166 $), '
+      + 'pendant que la télédistribution plafonne puis s\'érode (520 $ en 2021) et que le poste livres stagne (~100 $). '
+      + 'La bascule d\'ère, vue du portefeuille des ménages.';
+    const DQ = D.depenses_menages_quartiles;
+    if (DQ && DQ.part_culture_par_quartile_pct) {
+      const p = DQ.part_culture_par_quartile_pct;
+      txt += ' <em>Gradient d\'équité (coupe ' + DQ.annee + ') : la part du budget consacrée à la culture et aux médias décroît avec le revenu ('
+        + p.slice(0, 4).map(v => v.toLocaleString('fr-CA', {minimumFractionDigits: 1}) + ' %').join(' / ')
+        + ' du 1ᵉʳ au 4ᵉ quartile) — elle pèse relativement plus lourd dans les budgets modestes.</em>';
+    }
+    foot.innerHTML = txt;
   }
 })();
 

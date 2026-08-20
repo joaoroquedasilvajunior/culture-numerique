@@ -245,6 +245,33 @@ sources:
     axe_tdb: ["presence", "consommation"]
     notes: "1 203 artistes enrichis (extraction 2026-07-19) sur les 9 731 du catalogue MusicBrainz. nb_fan = proxy de popularité ; Deezer est fort en francophonie, miroir pertinent pour le répertoire QC. Biais de périmètre : seuls les artistes dont la fiche MusicBrainz documente un lien Deezer sont couverts — la longue traîne réelle est encore plus longue. Attribution Deezer requise dans les visualisations."
 
+  depenses_menages:
+    label: "Dépenses moyennes des ménages pour la culture et les médias, Québec (série 2010-2021)"
+    file_pattern: "Dépenses moyennes des ménages*courants, Québec.xlsx"
+    isq_url: "https://statistique.quebec.ca/fr/produit/tableau/depenses-moyennes-menages-culture-medias"
+    classification: "ISQ — Enquête sur les dépenses des ménages (EDM) ; dollars courants ; biennale après 2017 (2017, 2019, 2021)"
+    extractor: extract_depenses_menages
+    axe_tdb: ["consommation"]
+    notes: "Le versant demande des ménages qui manquait au Carnet. Séries clés : dépenses culture et médias (2 709 $ en 2010), part du budget (~5-6 %), et surtout « Téléchargements et services en ligne » (la dépense d'abonnements streaming dans le temps : F en 2010-2011, 15 $ en 2012...). Marqueurs EDM : F peu fiable, x confidentiel, * / ** coefficients de variation (non conservés)."
+
+  depenses_menages_quartiles:
+    label: "Dépenses moyennes des ménages culture et médias selon le quartile de revenu (2021)"
+    file_pattern: "Dépenses moyennes des ménages*quartile*.xlsx"
+    isq_url: "https://statistique.quebec.ca/fr/produit/tableau/depenses-moyennes-menages-culture-medias-quartile"
+    classification: "ISQ — EDM, coupe 2021 par quartile de revenu"
+    extractor: extract_depenses_menages_quartiles
+    axe_tdb: ["consommation"]
+    notes: "Gradient de la part budgétaire : les ménages du 1er quartile consacrent une part PLUS élevée de leur budget à la culture et aux médias (7,7 %) que ceux du 3e (7,3 %). La culture-médias pèse relativement plus lourd dans les budgets modestes — dimension d'équité à articuler avec les débats sur l'accessibilité (prix des abonnements, du livre numérique)."
+
+  indicateurs_culture_ensemble:
+    label: "Principaux indicateurs en culture — coupe Ensemble du Québec (séries 2001-2024)"
+    file_pattern: "Principaux indicateurs en culture*.xlsx"
+    isq_url: "https://statistique.quebec.ca/fr/produit/tableau/principaux-indicateurs-culture-region-administrative"
+    classification: "ISQ — tableau régionalisable, coupe Ensemble du Québec ; séries annuelles 2001-2024 (2022-2024 provisoires)"
+    extractor: extract_indicateurs_culture_ensemble
+    axe_tdb: ["consommation", "ecosysteme"]
+    notes: "Série phare : « Part des films québécois dans l'assistance » 2001-2024 — l'historique long du cinéma QC (6,1 % en 2001, sommets ~13-15 %, 14,9 % en 2024) qui contextualise l'effondrement 2026 (3,7 % YTD). Aussi : dépenses publiques directes en culture, effectif des professions culturelles, fréquentation des musées. Porte d'entrée vers la dimension territoriale : les coupes par région administrative du même tableau sont téléchargeables séparément (phase ultérieure)."
+
   etablissements:
     label: "Nombre d'établissements culturels de certains types"
     isq_table_id: "929"

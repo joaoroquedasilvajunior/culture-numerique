@@ -1965,6 +1965,204 @@ def extract_isq_musique_bilan(path: Path) -> dict:
     }
 
 
+def _lire_serie_menage(ws, row, cols_annees):
+    """Lit une ligne de dépenses ménages : valeurs numériques ou marqueurs
+    ISQ (F peu fiable, x confidentiel, .. non disponible, - néant)."""
+    valeurs = []
+    for c in cols_annees:
+        v = ws.cell(row=row, column=c).value
+        num = _to_num(v)
+        if num is not None:
+            valeurs.append(num)
+        else:
+            s = str(v).strip() if v is not None else ''
+            valeurs.append(s if s in ('F', 'x', '..', '-', '...') else None)
+    return valeurs
+
+
+def extract_depenses_menages(path: Path) -> dict:
+    """
+    Tableau ISQ « Dépenses moyennes des ménages pour la culture et les
+    médias, en dollars courants, Québec » — série 2010-2021 (Enquête sur
+    les dépenses des ménages, biennale après 2017 : 2017, 2019, 2021).
+
+    Hiérarchie par indentation \\xa0 : Produits culturels (télédistribution,
+    téléchargements et services en ligne, matériel préenregistré, sorties,
+    lecture) / Produits d'accès (équipements, services Internet, cellulaire) /
+    Produits destinés à la création artistique.
+
+    Marqueurs préservés tels quels : F (peu fiable), x (confidentiel),
+    .. (non disponible). Les astérisques de CV (colonnes paires) ne sont
+    pas conservés — granularité suffisante pour l'usage dashboard.
+    """
+    wb = load_workbook(path, data_only=True)
+    ws = wb['Tableau']
+
+    annees, cols = [], []
+    for c in range(3, (ws.max_column or 3) + 1):
+        v = ws.cell(row=5, column=c).value
+        if v is None:
+            continue
+        s = str(v).strip()
+        if s.isdigit():
+            annees.append(int(s))
+            cols.append(c)
+
+    lignes = []
+    for r in range(7, (ws.max_row or 7) + 1):
+        lib = ws.cell(row=r, column=1).value
+        if lib is None or not str(lib).strip():
+            continue
+        lib_s = str(lib)
+        low = lib_s.strip().lower()
+        if low.startswith(('f :', '- :', '... :', 'x :', 'r :', '.. :')) or low.startswith('note'):
+            break
+        niveau = (len(lib_s) - len(lib_s.lstrip('\xa0'))) // 2
+        unite = str(ws.cell(row=r, column=2).value or '').strip()
+        if not unite:
+            continue
+        lignes.append({
+            'libelle': lib_s.replace('\xa0', '').strip(),
+            'niveau': niveau,
+            'unite': unite,
+            'valeurs': _lire_serie_menage(ws, r, cols),
+        })
+
+    def _serie(libelle_prefix):
+        for L in lignes:
+            if L['libelle'].startswith(libelle_prefix):
+                return L['valeurs']
+        return None
+
+    return {
+        'source': 'ISQ — Enquête sur les dépenses des ménages (EDM), dollars courants',
+        'annees': annees,
+        'lignes': lignes,
+        'series_cles': {
+            'depenses_culture_medias': _serie('Dépenses pour la culture et les médias'),
+            'part_culture_medias_pct': _serie('Part des dépenses pour la culture'),
+            'telechargements_services_en_ligne': _serie('Téléchargements et services en ligne'),
+            'teledistribution': _serie('Frais de télédistribution'),
+            'livres': _serie('Livres et livres numériques'),
+        },
+        'note_methodo': ("Dépenses moyennes par ménage, dollars courants (non "
+                         "corrigés de l'inflation). Enquête biennale après 2017 "
+                         "(2017, 2019, 2021). Marqueurs : F peu fiable, "
+                         "x confidentiel, .. non disponible."),
+    }
+
+
+def extract_depenses_menages_quartiles(path: Path) -> dict:
+    """
+    Tableau ISQ « Dépenses moyennes des ménages pour la culture et les
+    médias selon le quartile de revenu du ménage » — coupe 2021.
+
+    Lecture-clé : le gradient de la part du budget consacrée à la culture
+    et aux médias selon le revenu (les ménages modestes y consacrent une
+    part PLUS élevée : Q1 7,7 % vs Q3 7,3 % en 2021).
+    """
+    wb = load_workbook(path, data_only=True)
+    ws = wb['Tableau']
+    annee = str(ws.cell(row=3, column=1).value or '').strip()
+
+    quartiles, cols = [], []
+    for c in range(3, (ws.max_column or 3) + 1):
+        v = ws.cell(row=7, column=c).value
+        if v and str(v).strip():
+            quartiles.append(str(v).strip())
+            cols.append(c)
+
+    lignes = []
+    for r in range(9, (ws.max_row or 9) + 1):
+        lib = ws.cell(row=r, column=1).value
+        if lib is None or not str(lib).strip():
+            continue
+        low = str(lib).strip().lower()
+        if low.startswith(('f :', 'note', '- :', 'x :')):
+            break
+        unite = str(ws.cell(row=r, column=2).value or '').strip()
+        if not unite:
+            continue
+        lignes.append({
+            'libelle': str(lib).replace('\xa0', '').strip(),
+            'unite': unite,
+            'valeurs': _lire_serie_menage(ws, r, cols),
+        })
+
+    part = next((L['valeurs'] for L in lignes
+                 if L['libelle'].startswith('Part des dépenses')), None)
+    return {
+        'source': 'ISQ — EDM, coupe par quartile de revenu du ménage',
+        'annee': annee,
+        'quartiles': quartiles,
+        'lignes': lignes,
+        'part_culture_par_quartile_pct': part,
+    }
+
+
+def extract_indicateurs_culture_ensemble(path: Path) -> dict:
+    """
+    Tableau ISQ « Principaux indicateurs en culture, par région
+    administrative et pour l'ensemble du Québec » — coupe « Ensemble du
+    Québec », séries longues 2001-2024.
+
+    Série phare pour le Carnet : « Part des films québécois dans
+    l'assistance » (2001-2024) — l'historique long qui manquait pour
+    contextualiser l'effondrement 2026. Aussi : recettes de billetterie,
+    dépenses publiques en culture, effectif des professions culturelles.
+    """
+    wb = load_workbook(path, data_only=True)
+    ws = wb['Tableau']
+    portee = str(ws.cell(row=3, column=1).value or '').strip()
+
+    annees, cols = [], []
+    for c in range(4, (ws.max_column or 4) + 1):
+        v = ws.cell(row=5, column=c).value
+        if v is None:
+            continue
+        s = str(v).split('¹')[0].split('²')[0].split('(')[0].strip()
+        if s.isdigit():
+            annees.append(int(s))
+            cols.append(c)
+
+    cibles = {
+        'part_films_qc_assistance_pct': 'Part des films québécois',
+        'recettes_cinema': 'Recettes de billetterie dans les ciném',
+        'assistance_cinema': 'Assistance dans les cinémas',
+        'depenses_publiques_culture_k': "Dépenses directes de l'administration",
+        'professions_culturelles_effectif': 'Effectif',
+        'population': 'Population',
+        'ventes_livres_neufs': 'Ventes finales de livres neufs',
+        'frequentation_musees': 'Fréquentation intra-muros',
+    }
+    indicateurs = {}
+    for r in range(7, (ws.max_row or 7) + 1):
+        lib = ws.cell(row=r, column=2).value
+        if lib is None:
+            continue
+        lib_s = str(lib).replace('\xa0', '').strip()
+        for cle, prefix in cibles.items():
+            if cle not in indicateurs and lib_s.startswith(prefix):
+                indicateurs[cle] = {
+                    'libelle': lib_s,
+                    'serie': [
+                        {'annee': a, 'valeur': _to_num(ws.cell(row=r, column=c).value)}
+                        for a, c in zip(annees, cols)
+                    ],
+                }
+
+    return {
+        'source': 'ISQ — Principaux indicateurs en culture, coupe Ensemble du Québec',
+        'portee': portee,
+        'annees': annees,
+        'indicateurs': indicateurs,
+        'note_methodo': ("Coupe « Ensemble du Québec » du tableau régionalisable "
+                         "(les coupes par région administrative sont téléchargeables "
+                         "séparément sur le site ISQ). Années 2022-2024 marquées "
+                         "provisoires (²) par l'ISQ."),
+    }
+
+
 # ---------- Registry ----------
 
 EXTRACTORS = {
@@ -1997,4 +2195,7 @@ EXTRACTORS = {
     'extract_apple_top100': extract_apple_top100,
     'extract_part_top200_ventes': extract_part_top200_ventes,
     'extract_isq_musique_bilan': extract_isq_musique_bilan,
+    'extract_depenses_menages': extract_depenses_menages,
+    'extract_depenses_menages_quartiles': extract_depenses_menages_quartiles,
+    'extract_indicateurs_culture_ensemble': extract_indicateurs_culture_ensemble,
 }
