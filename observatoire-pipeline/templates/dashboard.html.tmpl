@@ -781,7 +781,7 @@ a{color:inherit;text-decoration:none}
       <h1 class="page-title">Carnet de données — souveraineté culturelle numérique</h1>
     </div>
     <div class="topbar-right">
-      <div class="badge-period">Données ISQ · Extraction 25 mai 2026</div>
+      <div class="badge-period" id="badge-extraction">Données ISQ</div>
     </div>
   </header>
 
@@ -791,20 +791,20 @@ a{color:inherit;text-decoration:none}
       <strong>Démarche indépendante.</strong> Le Carnet de données — souveraineté culturelle numérique est une initiative de recherche et d'analyse citoyenne. Il n'est ni affilié, ni mandaté, ni endossé par l'Institut de la statistique du Québec, le ministère de la Culture et des Communications ou le gouvernement du Québec. Il réutilise des données publiques de l'ISQ&nbsp;; les analyses et interprétations n'engagent que leurs auteurs.
     </div>
 
-    <!-- REPÈRES SUIVIS — Cinq repères ancrés du Protocole du Carnet de données -->
+    <!-- REPÈRES SUIVIS — Six repères ancrés du Protocole du Carnet de données -->
     <section id="reperes" class="section">
       <div class="section-header">
         <div>
           <h2 class="section-title"><span class="star">★</span>Repères suivis</h2>
-          <p class="section-sub">Cinq repères ancrés du <em>Protocole du Carnet de données</em>&nbsp;: définition figée, re-mesurés à l'identique année après année. Quatre sont mesurables aujourd'hui, un est en chantier — parce que la statistique publique québécoise ne le mesure pas encore.</p>
+          <p class="section-sub">Six repères ancrés du <em>Protocole du Carnet de données</em>&nbsp;: définition figée, re-mesurés à l'identique année après année. Cinq sont mesurables aujourd'hui, un est en chantier — parce que la statistique publique québécoise ne le mesure pas encore. La <strong>baseline annuelle 2025 est figée</strong> depuis la v1.2.0&nbsp;; les lectures hebdomadaires en cours restent affichées en second.</p>
         </div>
-        <div class="protocole-badge" id="protocole-badge">Protocole v1.1.0 · Gel 2026-05-25</div>
+        <div class="protocole-badge" id="protocole-badge">Protocole v1.2.0</div>
       </div>
 
       <div class="reperes-grid">
 
         <!-- R1 — Écart de découvrabilité -->
-        <div class="repere repere-provisional">
+        <div class="repere repere-provisional" id="repere-r1">
           <div class="repere-head">
             <span class="repere-tag">R1</span>
             <span class="repere-status status-provisional">Lecture YTD</span>
@@ -814,12 +814,12 @@ a{color:inherit;text-decoration:none}
             <div class="repere-value-main">R = <span id="r1-ratio">—</span></div>
             <div class="repere-value-sub">E = <span id="r1-ecart">—</span>&nbsp;pts</div>
           </div>
-          <div class="repere-context">Albums num. <span id="r1-alb">—</span> · Streaming <span id="r1-str">—</span></div>
+          <div class="repere-context"><span id="r1-alb-label">Albums num.</span> <span id="r1-alb">—</span> · Streaming <span id="r1-str">—</span></div>
           <div class="repere-source">ISQ 4153 · <span id="r1-periode">YTD courant</span></div>
         </div>
 
         <!-- R2 — Profondeur du catalogue -->
-        <div class="repere repere-provisional">
+        <div class="repere repere-provisional" id="repere-r2">
           <div class="repere-head">
             <span class="repere-tag">R2</span>
             <span class="repere-status status-provisional">Lecture YTD</span>
@@ -834,7 +834,7 @@ a{color:inherit;text-decoration:none}
         </div>
 
         <!-- R3 — Consommation absolue -->
-        <div class="repere repere-provisional">
+        <div class="repere repere-provisional" id="repere-r3">
           <div class="repere-head">
             <span class="repere-tag">R3</span>
             <span class="repere-status status-provisional">Lecture YTD</span>
@@ -852,7 +852,7 @@ a{color:inherit;text-decoration:none}
         <div class="repere repere-frozen">
           <div class="repere-head">
             <span class="repere-tag">R4</span>
-            <span class="repere-status status-frozen">Gelé · v1.1.0</span>
+            <span class="repere-status status-frozen">Gelé · v1.2.0</span>
           </div>
           <h3 class="repere-name">Indice d'angle mort</h3>
           <div class="repere-values">
@@ -860,7 +860,7 @@ a{color:inherit;text-decoration:none}
             <div class="repere-value-sub"><span id="r4-a">A&nbsp;=&nbsp;—</span></div>
           </div>
           <div class="repere-context">Matrice UNESCO 2025 · 4 capitaux × 3 étapes</div>
-          <div class="repere-source">Gel 2026-05-25 · annexe protocole</div>
+          <div class="repere-source" id="r4-gel">Recompté v1.2.0 · annexe protocole</div>
         </div>
 
         <!-- R5 — Volume d'œuvres -->
@@ -875,13 +875,28 @@ a{color:inherit;text-decoration:none}
             <div class="repere-value-sub">albums · films · livres</div>
           </div>
           <div class="repere-context">Sources à identifier (ADISQ, SODEC, OCCQ/BAnQ)</div>
-          <div class="repere-source">Placeholder · protocole §5</div>
+          <div class="repere-source" id="r5-couverture">Chantier ouvert · protocole §5</div>
+        </div>
+
+        <!-- R6 — Vitalité des arts vivants subventionnés (promu en v1.2.0) -->
+        <div class="repere">
+          <div class="repere-head">
+            <span class="repere-tag">R6</span>
+            <span class="repere-status status-frozen">Officialisé · v1.2.0</span>
+          </div>
+          <h3 class="repere-name">Vitalité des arts vivants subventionnés</h3>
+          <div class="repere-values">
+            <div class="repere-value-main"><span id="r6-repr">—</span></div>
+            <div class="repere-value-sub">représentations · <span id="r6-orgs">—</span> organismes</div>
+          </div>
+          <div class="repere-context"><span id="r6-aide">—</span> d'aide publique · <span id="r6-hors">—</span> hors Québec</div>
+          <div class="repere-source">CALQ 2023-2024 · protocole §6</div>
         </div>
 
       </div>
 
       <div class="reperes-note">
-        <strong>Provisional vs gelé.</strong> R1, R2 et R3 portent la mention <em>Lecture YTD</em> tant que la baseline annuelle 2025 n'a pas été figée par recoupement avec l'archive ISQ (au 1ᵉʳ mars de l'année suivante). R4 est gelé par le protocole et ne bougera qu'avec un bump de version. R5 attend l'identification de ses sources. Méthodologie complète&nbsp;: <a href="https://github.com/joaoroquedasilvajunior/culture-numerique/blob/main/Protocole_reperes_observatoire.md" target="_blank" rel="noopener">Protocole v1.1.0</a>&nbsp;; donnée auditable&nbsp;: <a href="reperes_2025.json" target="_blank" rel="noopener">reperes_2025.json</a>.
+        <strong>Baseline figée (v1.2.0, 21 août 2026).</strong> R1, R2 et R3 affichent désormais la <em>baseline annuelle 2025</em>, figée sur les sources annuelles (bilan ISQ/OCCQ du 11 août 2026, données Luminate&nbsp;; séries annuelles cinéma). Les lectures hebdomadaires en cours d'année restent calculées et exposées sous la clé <code>lecture_courante</code>. Deux précisions de lecture&nbsp;: R1 compare, en annuel, le streaming à l'<em>ensemble des albums</em> (seule ventilation d'achat publiée dans la source annuelle), alors que la lecture hebdomadaire compare aux <em>albums numériques</em> — les dénominateurs diffèrent&nbsp;; R3 mesure désormais l'assistance québécoise au cinéma directement, sans l'estimer par pondération. R4 a été recompté (8/12 → 9/12) et R6 promu repère officiel. R5 demeure en chantier&nbsp;: aucune des trois familles visées n'est mesurée par la statistique publique. Méthodologie complète&nbsp;: <a href="https://github.com/joaoroquedasilvajunior/culture-numerique/blob/main/Protocole_reperes_observatoire.md" target="_blank" rel="noopener">Protocole v1.2.0</a>&nbsp;; donnée auditable&nbsp;: <a href="reperes_2025.json" target="_blank" rel="noopener">reperes_2025.json</a>.
       </div>
     </section>
 
@@ -1820,7 +1835,7 @@ const C = {
   if (D.reperes.protocole_version && R.r4_angle_mort) {
     setText('protocole-badge',
             'Protocole v' + D.reperes.protocole_version +
-            ' · Gel ' + (R.r4_angle_mort.date_gel || '2026-05-25'));
+            ' · baseline 2025 figée');
   }
 
   // R1 — Écart de découvrabilité
@@ -1828,9 +1843,15 @@ const C = {
     const r1 = R.r1_ecart_decouvrabilite;
     setText('r1-ratio', fmt(r1.ratio, 2));
     setText('r1-ecart', fmt(r1.ecart_pts, 1));
-    setText('r1-alb', fmt(r1.part_albums_numeriques_pct, 1) + ' %');
+    const b1 = r1.baseline_2025;
+    setText('r1-alb', fmt(b1 ? b1.part_achat_pct : r1.part_albums_numeriques_pct, 1) + ' %');
     setText('r1-str', fmt(r1.part_streaming_pct, 1) + ' %');
     if (r1.periode) setText('r1-periode', r1.periode);
+    // Étiquette du canal d'achat + statut de lecture
+    const elAlbLbl = document.getElementById('r1-alb-label');
+    if (elAlbLbl && b1) elAlbLbl.textContent = 'Albums (tous supports)';
+    const elStatut = document.querySelector('#repere-r1 .repere-status');
+    if (elStatut && b1) { elStatut.textContent = 'Baseline 2025'; }
   }
 
   // R2 — Profondeur du catalogue (N₂₀)
@@ -1849,9 +1870,17 @@ const C = {
 
   // R3 — Consommation absolue (streaming musical en mise en avant)
   if (R.r3_consommation_absolue && R.r3_consommation_absolue.canaux) {
-    const s = R.r3_consommation_absolue.canaux.streaming_musique;
+    const r3 = R.r3_consommation_absolue;
+    const base3 = r3.baseline_2025 && r3.baseline_2025.canaux;
+    const s = (base3 && base3.streaming_musique) || r3.canaux.streaming_musique;
     if (s && s.consommation_qc_k_ecoutes != null) {
       setText('r3-streaming', fmtInt(s.consommation_qc_k_ecoutes));
+    }
+    // v1.2.0 — la branche cinéma est désormais mesurée
+    if (base3 && base3.cinema) {
+      const ctx3 = document.querySelector('#repere-r3 .repere-context');
+      if (ctx3) ctx3.textContent = 'Cinéma : ' + fmtInt(base3.cinema.consommation_qc_assistance)
+                                 + ' spectateurs (' + fmt(base3.cinema.part_qc_assistance_pct, 1) + ' %)';
     }
   }
 
@@ -1861,6 +1890,33 @@ const C = {
     setText('r4-couvertes', r4.cellules_couvertes);
     setText('r4-total', r4.total);
     setText('r4-a', 'A = ' + fmt(r4.a, 3));
+    if (r4.date_gel) setText('r4-gel', 'Recompté le ' + r4.date_gel + ' · annexe protocole');
+  }
+
+  // R5 — chantier ouvert, couvertures partielles documentées (v1.2.0)
+  if (R.r5_volume_oeuvres && R.r5_volume_oeuvres.couvertures_partielles) {
+    const cp = R.r5_volume_oeuvres.couvertures_partielles;
+    const av = cp.arts_vivants_subventionnes;
+    if (av) {
+      setText('r5-couverture', 'Couverture partielle : ' + fmtInt(av.productions)
+              + ' productions CALQ · protocole §5');
+    }
+  }
+
+  // R6 — Vitalité des arts vivants subventionnés (promu en v1.2.0)
+  if (R.r6_vitalite_arts_vivants && !R.r6_vitalite_arts_vivants.status) {
+    const r6 = R.r6_vitalite_arts_vivants;
+    setText('r6-repr', fmtInt(r6.nb_representations_agrege));
+    setText('r6-orgs', fmtInt(r6.nb_organismes_agrege));
+    setText('r6-aide', fmt(r6.part_aide_publique_dans_revenus_pct, 1) + ' %');
+    setText('r6-hors', fmt(r6.ratio_spectateurs_hors_qc_theatre_pct, 1) + ' %');
+  }
+
+  // Badge d'extraction — date réelle du build
+  if (D.reperes.date_calcul) {
+    const d = new Date(D.reperes.date_calcul);
+    setText('badge-extraction', 'Données ISQ · Extraction ' +
+            d.toLocaleDateString('fr-CA', {day: 'numeric', month: 'long', year: 'numeric'}));
   }
 
   // R5 — placeholder rendu statiquement, rien à peupler ici

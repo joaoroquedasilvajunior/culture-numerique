@@ -1,6 +1,6 @@
 # Protocole des repères suivis — Carnet de données — souveraineté culturelle numérique
 
-**Version 1.1.0** — révisée le 2026-05-26 (gel initial : 2026-05-25)
+**Version 1.2.0** — révisée le 2026-08-21 (gel initial : 2026-05-25)
 **Cadre :** pluralisme méthodologique + Cadre UNESCO 2025 pour les statistiques culturelles
 **Posture éditoriale :** voir *Manifeste du Carnet de données — souveraineté culturelle numérique*
 
@@ -16,15 +16,16 @@
 
 ## Principe directeur
 
-Cinq repères ancrés, à définition figée, re-mesurés à l'identique année après année.
+Six repères ancrés, à définition figée, re-mesurés à l'identique année après année.
 Ce n'est *pas* un indice composite. Ces repères sont l'objet stable *à propos duquel*
 les grilles de lecture (UNESCO 2025, Loi 109, autres) peuvent se prononcer — y compris
 divergemment. C'est cette divergence entre grilles que le pluralisme méthodologique
 traite comme résultat.
 
-Quatre repères sont mesurables aujourd'hui. Un cinquième (5b, en annexe) est annoncé
-publiquement comme *en chantier de recherche*, parce que la statistique publique
-québécoise ne le mesure pas encore — ce qui est en soi un résultat.
+Cinq repères sont mesurables aujourd'hui (R1, R2, R3, R4, R6). Un sixième (R5,
+volume d'œuvres) est annoncé publiquement comme *en chantier de recherche*, parce que
+la statistique publique québécoise ne le mesure pas encore — ce qui est en soi un
+résultat. R6 a été promu du statut auxiliaire au statut de repère officiel en v1.2.0.
 
 ## Cadence
 
@@ -200,12 +201,21 @@ par le Carnet de données au 1ᵉʳ mars.
 
 **Période.** Annuelle.
 
-**Baseline 2025.** Matrice initiale figée le 2026-05-25, détail en **Annexe R4**
-(*infra*). Compte : **8 cellules couvertes sur 12** (*A* = 0,667), dont une seule
-pleinement couverte (Économique × Diffusion-Consommation, instrumentée par la
-triade de l'article 33 de la Loi 109) et sept couvertes partiellement. Quatre
-cellules ✗ non couvertes : la colonne *Naturel* en création-production et
-diffusion-consommation, *Social × Création-Production*, *Social × Préservation-Transmission*.
+**Baseline 2025 (recomptée en v1.2.0).** Matrice figée le 2026-05-25, recomptée
+le 2026-08-21, détail en **Annexe R4** (*infra*). Compte : **9 cellules couvertes
+sur 12** (*A* = 0,750), dont une seule pleinement couverte (Économique ×
+Diffusion-Consommation, instrumentée par la triade de l'article 33 de la Loi 109)
+et huit couvertes partiellement. Trois cellules ✗ non couvertes : la colonne
+*Naturel* en création-production et diffusion-consommation, et
+*Social × Préservation-Transmission*.
+
+*Historique du compte* : 8/12 (*A* = 0,667) au gel initial du 2026-05-25 →
+**9/12** (*A* = 0,750) au recomptage du 2026-08-21. La cellule reclassée est
+*Social × Création-Production* (✗ → ⚠), couverte par les statistiques des
+organismes soutenus par le CALQ, intégrées au pipeline le 2026-07-11. Cette
+hausse mesure une amélioration de l'instrumentation du Carnet, pas de la
+statistique publique elle-même : les sources CALQ existaient déjà, elles
+n'étaient pas mobilisées.
 
 **Direction « sovereignty gain ».** *A* augmente.
 
@@ -262,6 +272,63 @@ mise en service du repère).
 
 ---
 
+## Repère 6 — Vitalité des arts vivants et arts visuels subventionnés
+
+> **Promu repère officiel en v1.2.0 (2026-08-21).** Calculé depuis le
+> 2026-07-11 avec le statut de dérivation auxiliaire, ce repère entre au
+> protocole parce qu'il couvre un versant que R1-R3 (marché) et R5 (volume
+> d'œuvres) laissent entièrement hors champ : l'écosystème culturel
+> **non marchand**, dont l'existence ne dépend pas des plateformes.
+
+**Concept.** Vitalité de la production et de la diffusion culturelles
+subventionnées au Québec, mesurée par l'activité et la structure de
+financement des organismes soutenus par le Conseil des arts et des lettres
+du Québec (CALQ).
+
+**Définition opérationnelle.** Cinq mesures, sur le périmètre agrégé des trois
+disciplines suivies :
+- *N_org* = nombre d'organismes soutenus.
+- *N_prod* = nombre de productions (théâtre et arts du cirque).
+- *N_repr* = nombre de représentations.
+- *P_pub* = part de l'aide publique dans les revenus totaux (%), avec sa
+  ventilation par palier (Québec / Canada / municipal).
+- *R_hors* = part des spectateurs hors Québec au théâtre et cirque (%), proxy
+  de rayonnement extérieur.
+
+**Périmètre.** Trois disciplines : organismes de production en théâtre et arts
+du cirque ; diffuseurs pluridisciplinaires ; organismes de diffusion et de
+production en arts visuels, arts numériques, cinéma et vidéo soutenus à la
+mission. Les autres coupes CALQ (musique, danse, diffuseurs spécialisés,
+ventilations régionales) existent et pourront élargir le périmètre par une
+révision ultérieure.
+
+**Sources.** ISQ / OCCQ — Statistiques principales des organismes soutenus par
+le CALQ, séries annuelles fiscales (théâtre et cirque : 1994-1995 à 2023-2024).
+
+**Période.** Annuelle, sur l'année financière (avril → mars), décalée d'un an
+par rapport aux repères en année civile. Ce décalage est assumé et signalé.
+
+**Baseline 2023-2024.** 214 organismes ; 293 productions ; 13 379
+représentations ; 4 190 494 spectateurs ; *P_pub* = 39,91 % (dont 58,1 %
+Québec, 17,4 % Canada, 24,3 % municipal) ; *R_hors* = 16,97 %.
+
+**Direction « sovereignty gain ».** Lecture non univoque, et c'est délibéré.
+Une hausse de *N_prod* et *N_repr* indique une vitalité accrue. Une hausse de
+*P_pub* peut se lire comme un soutien public renforcé **ou** comme une
+fragilisation des revenus autonomes — le repère ne tranche pas, il expose.
+
+**Limites.**
+- Périmètre restreint aux organismes **soutenus par le CALQ** : biais de
+  sélection assumé, ne mesure pas l'ensemble du secteur.
+- Ruptures de série : le CALQ a remplacé son programme de soutien au
+  fonctionnement par des programmes de soutien à la mission et à la
+  programmation à partir de 2017-2018 ; les comparaisons antérieures à cette
+  date portent sur un univers différent.
+- Les arts visuels ne publient pas d'indicateur d'activité chiffré dans le
+  tableau global : le nombre d'organismes y sert seul de proxy de volume.
+
+---
+
 ## Annexe 5b — Chantier de recherche : indicateur dual EERH ↔ noyau créatif
 
 **Statut.** En chantier de recherche. Pas encore opérationnel.
@@ -306,15 +373,21 @@ MCC / CRTC). Règle de comptage : ✓ et ⚠ comptent (binaire) ; ✗ ne compte 
 | Humain × Création-Production | ⚠ | Emplois salariés EERH (ISQ **2576**) — salariés seulement, autonomes invisibles à la statistique |
 | Humain × Diffusion-Consommation | ⚠ | Emplois salariés EERH (ISQ **2576**) — même limite |
 | Humain × Préservation-Transmission | ⚠ | Statistiques des bibliothèques publiques du Québec (MCC / BAnQ) — proxy de transmission culturelle |
-| Social × Création-Production | ✗ | — |
-| Social × Diffusion-Consommation | ⚠ | Principaux indicateurs en culture par région (ISQ **4850**) — proxy faible, ne couvre pas le capital social au sens strict |
+| Social × Création-Production | ⚠ | Statistiques des organismes soutenus par le CALQ (ISQ/OCCQ) — densité institutionnelle de la création subventionnée ; **reclassée ✗ → ⚠ en v1.2.0 (2026-08-21)** |
+| Social × Diffusion-Consommation | ⚠ | Principaux indicateurs en culture par région (ISQ **4850**) — proxy faible ; renforcé en v1.2.0 par les dépenses des ménages par quartile de revenu (ISQ EDM), qui documentent le gradient d'accès économique |
 | Social × Préservation-Transmission | ✗ | — |
 
-**Compte.** 1 ✓ plein + 7 ⚠ partiels = **8 cellules couvertes / 12** ; *A* = 0,667.
-Cellules ✗ (4) : la colonne *Naturel* en création-production et diffusion-consommation
+**Compte (v1.2.0, 2026-08-21).** 1 ✓ plein + 8 ⚠ partiels = **9 cellules
+couvertes / 12** ; *A* = 0,750.
+Cellules ✗ (3) : la colonne *Naturel* en création-production et diffusion-consommation
 (absence d'instrumentation statistique du capital patrimonial-naturel dans les
-deux premières étapes), *Social × Création-Production* et *Social × Préservation-Transmission*
-(absence d'instrumentation du capital social hors de l'angle régional).
+deux premières étapes) et *Social × Préservation-Transmission* (absence
+d'instrumentation de la transmission du capital social).
+
+*Titre de l'annexe conservé* (« Matrice initiale ») pour la stabilité des liens ;
+l'état courant est celui du recomptage du 2026-08-21. L'état au gel initial
+(8/12, avec *Social × Création-Production* en ✗) demeure consultable dans
+l'historique git du présent document.
 
 **Toute modification ultérieure de cette annexe** — reclassement d'une cellule,
 ajout ou retrait d'une source, changement d'état d'un proxy — **exige un bump de
@@ -333,6 +406,8 @@ la matrice doit s'accompagner d'une mise à jour synchrone du dériveur et de
 | 1.0     | 2026-05-25 | Création initiale, 5 repères + 5b. |
 | 1.0.1   | 2026-05-25 | Correction factuelle. Vérification croisée des numéros de tableau ISQ par lecture systématique des fichiers .xlsx sources (R1 = 4153 confirmé ; R2 = 2620 ; R3 sources = 3171, 2140, 2736, 3059). Champ `isq_table_id` ajouté à `sources.yaml`. Faux positif détecté pour `evolution_stats` (« 051 » provenait d'une référence interne à *Statistique Canada CANSIM Tableau 051-0001*, pas de la fiche permanente ISQ qui est 3171). |
 | 1.1.0   | 2026-05-26 | Révision mineure. R4 : règle de comptage binaire explicitée (✓ et ⚠ couvrent, ✗ ne couvre pas) ; matrice initiale figée en *Annexe R4* (8/12, dont 1 ✓ et 7 ⚠) ; intégration des sources MCC (Registre du patrimoine culturel) et MCC/BAnQ (bibliothèques publiques) au périmètre du recensement, ce qui reclasse Naturel × Préservation-Transmission et Humain × Préservation-Transmission en ⚠. R5 : alignement explicite des définitions « œuvre québécoise » sur les conventions institutionnelles externes (ADISQ, SODEC, OCCQ/BAnQ) plutôt que définition maison. Dériveur des repères implémenté (`src/derive.py`, `tests/test_derive_reperes.py`). |
+
+| 1.2.0   | 2026-08-21 | Révision mineure. **Baseline annuelle 2025 figée** pour R1, R2 et R3 sur les sources annuelles (bilan ISQ/OCCQ du 11 août 2026, données Luminate ; séries annuelles cinéma) ; les lectures hebdomadaires YTD sont conservées en parallèle sous la clé `lecture_courante`. **R1** : la baseline annuelle compare le streaming (7,1 %) à l'*ensemble des albums* (18 %), seule ventilation d'achat publiée dans la source annuelle — R = 2,54 ; E = 10,9 pts — alors que la lecture YTD compare au sous-ensemble *albums numériques* ; les deux dénominateurs sont explicités et ne se substituent pas. **R2** : définition étendue à la *courbe de profondeur* (N₂₀ / N₅₀ / N₁₀₀ / N₂₀₀ = 1 / 3 / 6 / 10 en 2025, densité moyenne 5,5 %), N₂₀ demeurant le repère principal. **R3** : branche cinéma complétée — l'assistance québécoise 2025 (1 036 590 spectateurs, 9,04 % du total) est désormais *mesurée* par la série annuelle par pays d'origine et non plus estimée par pondération ; les recettes québécoises restent non dérivables (la ventilation par pays porte sur l'assistance). **R4** : recomptage — *Social × Création-Production* reclassée ✗ → ⚠ (statistiques CALQ des organismes soutenus) ; compte porté de 8/12 à **9/12** (*A* = 0,750). **R5** : demeure *en chantier* (aucune des trois familles visées n'est mesurée) mais les couvertures partielles sont désormais documentées pour borner le chantier (productions théâtre/cirque CALQ ; catalogue d'artistes MusicBrainz), avec leurs limites explicites. **R6** (vitalité des arts vivants et arts visuels subventionnés, CALQ) : **promu du statut auxiliaire au statut de repère officiel**, portant le protocole de cinq à six repères. |
 
 ---
 

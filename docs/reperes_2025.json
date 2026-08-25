@@ -1,28 +1,95 @@
 {
   "annee": 2025,
-  "date_calcul": "2026-08-20T12:00:38",
-  "protocole_version": "1.1.0",
+  "date_calcul": "2026-08-25T11:35:17",
+  "protocole_version": "1.2.0",
   "reperes": {
     "r1_ecart_decouvrabilite": {
-      "ratio": 3.49,
-      "ecart_pts": 17.2,
+      "lecture_courante": {
+        "ratio": 3.49,
+        "ecart_pts": 17.2,
+        "part_achat_pct": 24.1,
+        "canal_achat": "albums numériques",
+        "part_streaming_pct": 6.9,
+        "source": "ISQ tableau 4153 (hebdomadaire, cumul YTD)",
+        "periode": "22 au 28 mai 2026",
+        "provisional": true
+      },
+      "baseline_2025": {
+        "ratio": 2.54,
+        "ecart_pts": 10.9,
+        "part_achat_pct": 18,
+        "canal_achat": "ensemble des albums (tous supports)",
+        "part_streaming_pct": 7.1,
+        "source": "ISQ/OCCQ — bilan annuel 2025 (communiqué du 11 août 2026 ; données Luminate, compilation ADISQ)",
+        "periode": "année civile 2025",
+        "provisional": false
+      },
+      "ratio": 2.54,
+      "ecart_pts": 10.9,
       "part_albums_numeriques_pct": 24.1,
-      "part_streaming_pct": 6.9,
-      "source": "ISQ tableau 4153",
-      "periode": "22 au 28 mai 2026",
-      "provisional": true,
-      "note": "Lecture YTD courante. Valeur 2025 à figer au 1ᵉʳ mars sur l'archive ISQ annuelle (tâche #26)."
+      "part_streaming_pct": 7.1,
+      "source": "ISQ/OCCQ — bilan annuel 2025 (communiqué du 11 août 2026 ; données Luminate, compilation ADISQ)",
+      "periode": "année civile 2025",
+      "provisional": false,
+      "note": "v1.2.0 : baseline annuelle 2025 figée sur la source annuelle ISQ/OCCQ. La lecture hebdomadaire YTD est conservée en parallèle (canal d'achat différent : albums numériques)."
     },
     "r2_profondeur_catalogue": {
+      "lecture_courante": {
+        "n20": 1,
+        "interpretes": [
+          "Les Cowboys Fringants"
+        ],
+        "rangs_quebecois": [
+          14
+        ],
+        "source": "ISQ — Palmarès des enregistrements musicaux (cumul YTD)",
+        "provisional": true
+      },
+      "baseline_2025": {
+        "n20": 1,
+        "interpretes": [
+          "Les Cowboys Fringants"
+        ],
+        "rangs_quebecois": [
+          12
+        ],
+        "courbe_profondeur": [
+          {
+            "top": 20,
+            "n_qc": 1,
+            "part_pct": 5.0
+          },
+          {
+            "top": 50,
+            "n_qc": 3,
+            "part_pct": 6.0
+          },
+          {
+            "top": 100,
+            "n_qc": 6,
+            "part_pct": 6.0
+          },
+          {
+            "top": 200,
+            "n_qc": 10,
+            "part_pct": 5.0
+          }
+        ],
+        "densite_moyenne_pct": 5.5,
+        "source": "ISQ/OCCQ — palmarès annuel des artistes les plus écoutés 2025 (communiqué du 11 août 2026)",
+        "periode": "année civile 2025",
+        "provisional": false
+      },
       "n20": 1,
       "interpretes": [
         "Les Cowboys Fringants"
       ],
       "rangs_quebecois": [
-        14
+        12
       ],
-      "source": "ISQ — Palmarès des enregistrements musicaux (cumulatif annuel)",
-      "provisional": true
+      "source": "ISQ/OCCQ — palmarès annuel des artistes les plus écoutés 2025 (communiqué du 11 août 2026)",
+      "provisional": false,
+      "note": "v1.2.0 : baseline 2025 figée ; définition étendue à la courbe de profondeur (N₂₀/N₅₀/N₁₀₀/N₂₀₀)."
     },
     "r3_consommation_absolue": {
       "canaux": {
@@ -40,16 +107,34 @@
         },
         "cinema": {
           "part_qc_box_office_pct": 3.7,
-          "consommation_absolue_recettes_qc": null,
-          "status": "donnees_annuelles_a_venir",
-          "note": "Recettes totales annuelles requises pour C_film ; indicateurs_cinema est annuel mais cinema_pays est YTD — consolidation au 1ᵉʳ mars année+1."
+          "provisional": true,
+          "note": "Lecture hebdomadaire YTD ; baseline annuelle ci-dessous."
         }
       },
-      "definition_operationnelle": "C_c = volume_total × part_QC (par canal)"
+      "definition_operationnelle": "C_c = volume_total × part_QC (par canal)",
+      "baseline_2025": {
+        "canaux": {
+          "streaming_musique": {
+            "volume_total_k_ecoutes": 31900000.0,
+            "part_qc_pct": 7.1,
+            "consommation_qc_k_ecoutes": 2264900.0,
+            "source": "ISQ/OCCQ — bilan annuel 2025 (Luminate)"
+          },
+          "cinema": {
+            "consommation_qc_assistance": 1036590.0,
+            "assistance_totale": 11470431.0,
+            "part_qc_assistance_pct": 9.04,
+            "source": "ISQ — Résultats d'exploitation des établissements cinématographiques par pays d'origine, données annuelles",
+            "note": "Assistance (spectateurs), mesure directe. Les recettes québécoises ne sont pas dérivables : la ventilation par pays d'origine porte sur l'assistance, pas sur les recettes."
+          }
+        },
+        "periode": "année civile 2025",
+        "provisional": false
+      }
     },
     "r4_angle_mort": {
-      "a": 0.667,
-      "cellules_couvertes": 8,
+      "a": 0.75,
+      "cellules_couvertes": 9,
       "total": 12,
       "matrice": {
         "economique": {
@@ -96,12 +181,12 @@
         },
         "social": {
           "creation_production": {
-            "etat": "absent",
-            "source": null
+            "etat": "partiel",
+            "source": "Statistiques des organismes soutenus par le CALQ (ISQ/OCCQ) — densité institutionnelle de la création subventionnée ; proxy assumé, périmètre limité aux organismes soutenus"
           },
           "diffusion_consommation": {
             "etat": "partiel",
-            "source": "Principaux indicateurs en culture par région (ISQ 4850) — proxy faible, ne couvre pas le capital social au sens strict"
+            "source": "Principaux indicateurs en culture par région (ISQ 4850) — proxy faible ; renforcé en v1.2.0 par les dépenses des ménages par quartile de revenu (ISQ EDM), qui documentent le gradient d'accès économique à la culture"
           },
           "preservation_transmission": {
             "etat": "absent",
@@ -111,13 +196,56 @@
       },
       "regle_comptage": "Binaire : `plein` OU `partiel` ⇒ couverte. La qualité de la couverture (✓ vs ⚠) est documentée dans la matrice mais n'influe pas sur le numérateur. Conformément à la limite déjà reconnue par le protocole : « qualité non incluse ».",
       "provisional": false,
-      "version_protocole": "1.1.0",
-      "date_gel": "2026-05-25"
+      "version_protocole": "1.2.0",
+      "date_gel": "2026-08-21"
     },
     "r5_volume_oeuvres": {
       "status": "en_chantier",
       "note": "Sources à identifier avant première mesure : ADISQ (musique), SODEC / Téléfilm Canada (cinéma), OCCQ / dépôt légal BAnQ (livre). La définition de « œuvre québécoise » sera alignée sur les conventions institutionnelles existantes (critères ADISQ ; grille SODEC de qualification du film québécois ; convention OCCQ de l'édition) plutôt qu'inventée pour le protocole.",
+      "couvertures_partielles": {
+        "arts_vivants_subventionnes": {
+          "productions": 293.0,
+          "periode": "2023-2024",
+          "source": "ISQ/OCCQ — organismes de théâtre et arts du cirque soutenus par le CALQ",
+          "limite": "Volume d'œuvres RÉEL mais périmètre étroit : arts vivants subventionnés seulement. Ne couvre aucune des trois familles visées par R5."
+        },
+        "catalogue_artistes_musique": {
+          "artistes": 9731,
+          "date_recolte": "2026-07-18",
+          "source": "MusicBrainz (CC0) — artistes rattachés au Québec",
+          "limite": "Compte des ARTISTES, pas des ŒUVRES. Ne se substitue pas au décompte d'albums parus visé par R5."
+        }
+      },
+      "note_v120": "Aucune des trois familles visées (albums, films, livres) n'est mesurée. Les couvertures partielles ci-dessus sont documentées pour borner le chantier, pas pour le clore. L'absence reste le résultat : la statistique publique québécoise ne compte pas les œuvres rendues publiques.",
       "provisional": null
+    },
+    "r6_vitalite_arts_vivants": {
+      "annee_reference": "2023-2024",
+      "nb_organismes_agrege": 214.0,
+      "nb_organismes_par_discipline": {
+        "theatre_cirque": 73.0,
+        "diffuseurs_pluridiscip": 67.0,
+        "arts_visuels_numeriques": 74.0
+      },
+      "nb_productions_theatre_cirque": 293.0,
+      "nb_representations_agrege": 13379.0,
+      "spectateurs_agrege_theatre_diffuseurs": 4190494.0,
+      "ratio_spectateurs_hors_qc_theatre_pct": 16.97,
+      "revenus_totaux_agreges": 350110296.0,
+      "aide_publique_agregee": 139715749.0,
+      "part_aide_publique_dans_revenus_pct": 39.91,
+      "repartition_aide_publique_pct": {
+        "quebec": 58.08,
+        "canada": 17.4,
+        "municipal": 24.33
+      },
+      "evolution_revenus_periode": "2017-2018 → 2023-2024",
+      "evolution_revenus_pct_nominal": 27.71,
+      "lecture_synthetique": "En 2023-2024, 214 organismes CALQ suivis dans ce périmètre ont généré 13379 représentations pour 4190494 spectateurs, avec 39.91% de leurs revenus provenant de l'aide publique (dont 58.08% du Québec, 17.4% du Canada, 24.33% du municipal).",
+      "note_limites": "Périmètre restreint à trois disciplines (théâtre/cirque, diffuseurs pluridisciplinaires, arts visuels/numériques/cinéma soutenus à la mission). Musique, danse et autres diffuseurs seront ajoutés dans une phase ultérieure (fichiers CALQ par région/genre/taille). Les ratios portent sur les organismes soutenus par le CALQ, pas sur l'ensemble du secteur (biais de sélection assumé). Dollars nominaux non corrigés de l'inflation.",
+      "provisional": false,
+      "version_protocole": "1.2.0",
+      "note_promotion": "Promu repère officiel en v1.2.0 (2026-08-21). Mesure la vitalité de l'écosystème culturel subventionné, versant non marchand que R1-R3 (marché) et R5 (volume d'œuvres) ne couvrent pas."
     }
   },
   "lentille_3_ameliorée": {

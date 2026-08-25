@@ -29,8 +29,8 @@ from typing import Any
 # repère, ou de la règle de comptage exige un bump de version ET la mise à jour
 # du journal des révisions dans Protocole_reperes_observatoire.md.
 
-PROTOCOLE_VERSION = "1.1.0"
-DATE_GEL_MATRICE = "2026-05-25"
+PROTOCOLE_VERSION = "1.2.0"
+DATE_GEL_MATRICE = "2026-08-21"   # recomptage v1.2.0 (gel initial : 2026-05-25)
 
 # === Matrice R4 — gelée 2026-05-25, annexée 2026-05-26 (protocole v1.1.0) ===
 # 4 capitaux UNESCO 2025 × 3 étapes de la chaîne culturelle.
@@ -92,11 +92,27 @@ MATRICE_R4: dict[str, dict[str, dict[str, Any]]] = {
         }
     },
     "social": {
-        "creation_production": {"etat": "absent", "source": None},
+        # RECLASSÉE en v1.2.0 (2026-08-21) : absent → partiel.
+        # Justification : les statistiques CALQ des organismes soutenus
+        # (théâtre et arts du cirque, diffuseurs pluridisciplinaires, arts
+        # visuels/numériques) documentent la densité institutionnelle et
+        # associative de la création — nombre d'organismes, productions,
+        # représentations, structure de financement. C'est un proxy assumé du
+        # capital social en création-production : il mesure l'infrastructure
+        # collective de la création, pas les liens de confiance ou la
+        # participation citoyenne au sens strict de l'UNESCO.
+        "creation_production": {
+            "etat": "partiel",
+            "source": ("Statistiques des organismes soutenus par le CALQ (ISQ/OCCQ) "
+                       "— densité institutionnelle de la création subventionnée ; "
+                       "proxy assumé, périmètre limité aux organismes soutenus")
+        },
         "diffusion_consommation": {
             "etat": "partiel",
             "source": ("Principaux indicateurs en culture par région (ISQ 4850) "
-                       "— proxy faible, ne couvre pas le capital social au sens strict")
+                       "— proxy faible ; renforcé en v1.2.0 par les dépenses des "
+                       "ménages par quartile de revenu (ISQ EDM), qui documentent "
+                       "le gradient d'accès économique à la culture")
         },
         "preservation_transmission": {"etat": "absent", "source": None}
     }
@@ -110,47 +126,130 @@ def _est_couverte(etat: str) -> bool:
 
 # === Dériveurs unitaires =====================================================
 
-def derive_r1(part_qc: dict) -> dict:
+def derive_r1(part_qc: dict, bilan: dict | None = None) -> dict:
     """R1 — Écart de découvrabilité.
 
-    Ratio R = p_alb / p_str ; écart absolu E = p_alb − p_str (points de %).
+    Ratio R = p_achat / p_flux ; écart absolu E = p_achat − p_flux (points de %).
+
+    v1.2.0 : deux lectures coexistent explicitement.
+      - `baseline_2025` (GELÉE) : source annuelle ISQ/OCCQ (bilan du 11 août
+        2026, données Luminate). Le canal d'achat y est « ensemble des albums »
+        (tous supports), seule ventilation publiée dans la source annuelle.
+      - `lecture_courante` : lecture hebdomadaire YTD du tableau 4153, où le
+        canal d'achat est « albums numériques ».
+    Les deux mesurent le même phénomène (part québécoise à l'achat vs au flux)
+    sur des dénominateurs différents ; ils ne se substituent pas l'un à l'autre.
     """
     p_str = part_qc['indicateurs']['streaming']['cumul_ytd_pct']
     p_alb = part_qc['indicateurs']['albums_numeriques']['cumul_ytd_pct']
-    ratio = round(p_alb / p_str, 2) if p_str else None
-    ecart = round(p_alb - p_str, 1)
-    return {
-        "ratio": ratio,
-        "ecart_pts": ecart,
-        "part_albums_numeriques_pct": p_alb,
-        "part_streaming_pct": p_str,
-        "source": "ISQ tableau 4153",
-        "periode": part_qc.get('periode'),
-        "provisional": True,
-        "note": ("Lecture YTD courante. Valeur 2025 à figer au 1ᵉʳ mars sur "
-                 "l'archive ISQ annuelle (tâche #26).")
+
+    out = {
+        "lecture_courante": {
+            "ratio": round(p_alb / p_str, 2) if p_str else None,
+            "ecart_pts": round(p_alb - p_str, 1),
+            "part_achat_pct": p_alb,
+            "canal_achat": "albums numériques",
+            "part_streaming_pct": p_str,
+            "source": "ISQ tableau 4153 (hebdomadaire, cumul YTD)",
+            "periode": part_qc.get('periode'),
+            "provisional": True,
+        },
     }
 
+    if bilan:
+        s = bilan.get('streaming', {})
+        v = bilan.get('ventes_supports', {})
+        p_str_a = s.get('part_interpretes_qc_pct')
+        p_alb_a = (v.get('part_qc_ventes_albums_pct') or {}).get('2025')
+        if p_str_a and p_alb_a:
+            out["baseline_2025"] = {
+                "ratio": round(p_alb_a / p_str_a, 2),
+                "ecart_pts": round(p_alb_a - p_str_a, 1),
+                "part_achat_pct": p_alb_a,
+                "canal_achat": "ensemble des albums (tous supports)",
+                "part_streaming_pct": p_str_a,
+                "source": ("ISQ/OCCQ — bilan annuel 2025 (communiqué du "
+                           "11 août 2026 ; données Luminate, compilation ADISQ)"),
+                "periode": "année civile 2025",
+                "provisional": False,
+            }
 
-def derive_r2(palmares: list) -> dict:
+    principal = out.get("baseline_2025") or out["lecture_courante"]
+    out.update({
+        "ratio": principal["ratio"],
+        "ecart_pts": principal["ecart_pts"],
+        "part_albums_numeriques_pct": out["lecture_courante"]["part_achat_pct"],
+        "part_streaming_pct": principal["part_streaming_pct"],
+        "source": principal["source"],
+        "periode": principal["periode"],
+        "provisional": principal["provisional"],
+        "note": ("v1.2.0 : baseline annuelle 2025 figée sur la source annuelle "
+                 "ISQ/OCCQ. La lecture hebdomadaire YTD est conservée en "
+                 "parallèle (canal d'achat différent : albums numériques)."),
+    })
+    return out
+
+
+def derive_r2(palmares: list, bilan: dict | None = None) -> dict:
     """R2 — Profondeur du catalogue (N₂₀).
 
-    Nombre d'interprètes québécois distincts dans le top 20 cumulatif annuel.
+    Nombre d'interprètes québécois distincts dans le top 20.
+
+    v1.2.0 : baseline annuelle 2025 figée (palmarès annuel des artistes les
+    plus écoutés) et EXTENSION de la définition à la courbe de profondeur
+    (N₂₀, N₅₀, N₁₀₀, N₂₀₀). N₂₀ reste le repère principal ; la courbe
+    documente à quelle profondeur du palmarès le répertoire québécois
+    apparaît, ce qu'un seuil unique ne peut pas montrer.
     """
     qc = [t for t in palmares if t.get('provenance') == 'Québec']
     interpretes = sorted(set(t['interprete'] for t in qc))
     rangs_qc = sorted(t['rang'] for t in qc)
-    return {
-        "n20": len(interpretes),
-        "interpretes": interpretes,
-        "rangs_quebecois": rangs_qc,
-        "source": "ISQ — Palmarès des enregistrements musicaux (cumulatif annuel)",
-        "provisional": True
+
+    out = {
+        "lecture_courante": {
+            "n20": len(interpretes),
+            "interpretes": interpretes,
+            "rangs_quebecois": rangs_qc,
+            "source": "ISQ — Palmarès des enregistrements musicaux (cumul YTD)",
+            "provisional": True,
+        },
     }
+
+    if bilan:
+        artistes = bilan.get('artistes_qc_top200') or []
+        courbe = bilan.get('courbe_profondeur') or []
+        if artistes and courbe:
+            top20 = [a for a in artistes if a['rang_general'] <= 20]
+            out["baseline_2025"] = {
+                "n20": len(top20),
+                "interpretes": [a['interprete'] for a in top20],
+                "rangs_quebecois": [a['rang_general'] for a in top20],
+                "courbe_profondeur": courbe,
+                "densite_moyenne_pct": round(
+                    sum(c['part_pct'] for c in courbe) / len(courbe), 1),
+                "source": ("ISQ/OCCQ — palmarès annuel des artistes les plus "
+                           "écoutés 2025 (communiqué du 11 août 2026)"),
+                "periode": "année civile 2025",
+                "provisional": False,
+            }
+
+    principal = out.get("baseline_2025") or out["lecture_courante"]
+    out.update({
+        "n20": principal["n20"],
+        "interpretes": principal["interpretes"],
+        "rangs_quebecois": principal["rangs_quebecois"],
+        "source": principal["source"],
+        "provisional": principal["provisional"],
+        "note": ("v1.2.0 : baseline 2025 figée ; définition étendue à la courbe "
+                 "de profondeur (N₂₀/N₅₀/N₁₀₀/N₂₀₀)."),
+    })
+    return out
 
 
 def derive_r3(volume_musique: dict, part_qc: dict,
-              cinema_pays: dict | None = None) -> dict:
+              cinema_pays: dict | None = None,
+              bilan: dict | None = None,
+              cinema_annuel: dict | None = None) -> dict:
     """R3 — Consommation québécoise absolue, canal par canal.
 
     Pondération multiplicative : C_c = volume_total × (part_QC / 100).
@@ -189,25 +288,71 @@ def derive_r3(volume_musique: dict, part_qc: dict,
                      " absente de l'extraction courante.")
         }
 
-    # Cinéma — part QC disponible en YTD ; recettes annuelles requises pour C_film
+    # Cinéma — v1.2.0 : branche complétée par la série annuelle par pays
+    # d'origine (assistance mesurée directement, pas estimée).
     if cinema_pays:
         try:
             qc = next(p for p in cinema_pays['pays'] if p['pays'] == 'Québec')
             canaux['cinema'] = {
                 "part_qc_box_office_pct": qc.get('pct_cumul_ytd'),
-                "consommation_absolue_recettes_qc": None,
-                "status": "donnees_annuelles_a_venir",
-                "note": ("Recettes totales annuelles requises pour C_film ; "
-                         "indicateurs_cinema est annuel mais cinema_pays est YTD — "
-                         "consolidation au 1ᵉʳ mars année+1.")
+                "provisional": True,
+                "note": "Lecture hebdomadaire YTD ; baseline annuelle ci-dessous.",
             }
         except (StopIteration, KeyError, TypeError):
             canaux['cinema'] = {"status": "donnees_indisponibles"}
 
-    return {
+    out = {
         "canaux": canaux,
-        "definition_operationnelle": "C_c = volume_total × part_QC (par canal)"
+        "definition_operationnelle": "C_c = volume_total × part_QC (par canal)",
     }
+
+    # === Baseline annuelle 2025 (v1.2.0) ===
+    baseline: dict[str, dict] = {}
+
+    if bilan:
+        s = bilan.get('streaming', {})
+        g = s.get('ecoutes_totales_milliards')
+        p = s.get('part_interpretes_qc_pct')
+        if g and p:
+            baseline['streaming_musique'] = {
+                "volume_total_k_ecoutes": round(g * 1_000_000, 1),
+                "part_qc_pct": p,
+                "consommation_qc_k_ecoutes": round(g * 1_000_000 * p / 100, 1),
+                "source": "ISQ/OCCQ — bilan annuel 2025 (Luminate)",
+            }
+
+    if cinema_annuel:
+        try:
+            par_pays = cinema_annuel['assistance_par_pays']
+            def _val(pays, annee):
+                return next((x['valeur'] for x in par_pays[pays]
+                             if x['annee'] == annee and x['valeur'] is not None), None)
+            a_qc = _val('Québec', 2025)
+            a_tot = _val('Total', 2025)
+            if a_qc and a_tot:
+                baseline['cinema'] = {
+                    # Mesure DIRECTE, pas une estimation par pondération :
+                    # l'assistance québécoise est publiée telle quelle.
+                    "consommation_qc_assistance": a_qc,
+                    "assistance_totale": a_tot,
+                    "part_qc_assistance_pct": round(a_qc / a_tot * 100, 2),
+                    "source": ("ISQ — Résultats d'exploitation des établissements "
+                               "cinématographiques par pays d'origine, données annuelles"),
+                    "note": ("Assistance (spectateurs), mesure directe. Les recettes "
+                             "québécoises ne sont pas dérivables : la ventilation par "
+                             "pays d'origine porte sur l'assistance, pas sur les recettes."),
+                }
+        except (KeyError, TypeError, StopIteration):
+            pass
+
+    if baseline:
+        out["baseline_2025"] = {
+            "canaux": baseline,
+            "periode": "année civile 2025",
+            "provisional": False,
+        }
+
+    return out
 
 
 def derive_r4() -> dict:
@@ -403,8 +548,47 @@ def derive_lentille_3_amelioree(emplois_eerh_annuel: list,
     }
 
 
-def derive_r5() -> dict:
-    """R5 — Volume d'œuvres québécoises rendues publiques. Chantier ouvert."""
+def derive_r5(calq_theatre: dict | None = None,
+              musicbrainz: dict | None = None) -> dict:
+    """R5 — Volume d'œuvres québécoises rendues publiques. Chantier ouvert.
+
+    v1.2.0 : le repère reste EN CHANTIER (aucune des trois familles visées —
+    albums, films, livres — n'a de source exploitable), mais les couvertures
+    partielles désormais disponibles sont documentées plutôt que passées sous
+    silence. Elles ne constituent pas une mesure de R5 : elles bornent ce qui
+    manque.
+    """
+    couverture = {}
+
+    if calq_theatre:
+        try:
+            ind = next(i for i in calq_theatre['indicateurs']
+                       if i['libelle'] == 'Nombre de productions')
+            annees = calq_theatre['annees']
+            val = ind['valeurs'][-1]
+            if val is not None:
+                couverture['arts_vivants_subventionnes'] = {
+                    "productions": val,
+                    "periode": annees[-1],
+                    "source": "ISQ/OCCQ — organismes de théâtre et arts du cirque soutenus par le CALQ",
+                    "limite": ("Volume d'œuvres RÉEL mais périmètre étroit : "
+                               "arts vivants subventionnés seulement. Ne couvre "
+                               "aucune des trois familles visées par R5."),
+                }
+        except (KeyError, StopIteration, TypeError, IndexError):
+            pass
+
+    if musicbrainz:
+        n = musicbrainz.get('nb_artistes')
+        if n:
+            couverture['catalogue_artistes_musique'] = {
+                "artistes": n,
+                "date_recolte": musicbrainz.get('date_recolte'),
+                "source": "MusicBrainz (CC0) — artistes rattachés au Québec",
+                "limite": ("Compte des ARTISTES, pas des ŒUVRES. Ne se substitue "
+                           "pas au décompte d'albums parus visé par R5."),
+            }
+
     return {
         "status": "en_chantier",
         "note": ("Sources à identifier avant première mesure : ADISQ (musique), "
@@ -413,6 +597,12 @@ def derive_r5() -> dict:
                  "les conventions institutionnelles existantes (critères ADISQ ; "
                  "grille SODEC de qualification du film québécois ; convention "
                  "OCCQ de l'édition) plutôt qu'inventée pour le protocole."),
+        "couvertures_partielles": couverture,
+        "note_v120": ("Aucune des trois familles visées (albums, films, livres) "
+                      "n'est mesurée. Les couvertures partielles ci-dessus sont "
+                      "documentées pour borner le chantier, pas pour le clore. "
+                      "L'absence reste le résultat : la statistique publique "
+                      "québécoise ne compte pas les œuvres rendues publiques."),
         "provisional": None
     }
 
@@ -723,8 +913,10 @@ def derive_all(combined: dict, annee: int = 2025) -> dict:
     """
     reperes: dict[str, dict] = {}
 
+    bilan = combined.get('isq_musique_bilan_2025')
+
     if 'part_qc' in combined:
-        reperes['r1_ecart_decouvrabilite'] = derive_r1(combined['part_qc'])
+        reperes['r1_ecart_decouvrabilite'] = derive_r1(combined['part_qc'], bilan)
     else:
         reperes['r1_ecart_decouvrabilite'] = {
             "status": "donnees_indisponibles",
@@ -732,7 +924,7 @@ def derive_all(combined: dict, annee: int = 2025) -> dict:
         }
 
     if 'palmares_top20' in combined:
-        reperes['r2_profondeur_catalogue'] = derive_r2(combined['palmares_top20'])
+        reperes['r2_profondeur_catalogue'] = derive_r2(combined['palmares_top20'], bilan)
     else:
         reperes['r2_profondeur_catalogue'] = {
             "status": "donnees_indisponibles",
@@ -743,7 +935,9 @@ def derive_all(combined: dict, annee: int = 2025) -> dict:
         reperes['r3_consommation_absolue'] = derive_r3(
             combined['volume_musique'],
             combined['part_qc'],
-            combined.get('cinema_pays')
+            combined.get('cinema_pays'),
+            bilan,
+            combined.get('cinema_pays_annuel')
         )
     else:
         reperes['r3_consommation_absolue'] = {
@@ -752,7 +946,32 @@ def derive_all(combined: dict, annee: int = 2025) -> dict:
         }
 
     reperes['r4_angle_mort'] = derive_r4()
-    reperes['r5_volume_oeuvres'] = derive_r5()
+    reperes['r5_volume_oeuvres'] = derive_r5(
+        combined.get('calq_theatre_cirque'),
+        combined.get('musicbrainz_artistes_qc')
+    )
+
+    # R6 — promu repère officiel en v1.2.0 (était auxiliaire depuis 2026-07-11)
+    if ('calq_theatre_cirque' in combined
+            and 'calq_diffuseurs_pluridiscip' in combined
+            and 'calq_arts_visuels' in combined):
+        reperes['r6_vitalite_arts_vivants'] = {
+            **derive_r6_vitalite_arts_vivants(
+                combined['calq_theatre_cirque'],
+                combined['calq_diffuseurs_pluridiscip'],
+                combined['calq_arts_visuels']),
+            'provisional': False,
+            'version_protocole': PROTOCOLE_VERSION,
+            'note_promotion': ("Promu repère officiel en v1.2.0 (2026-08-21). "
+                               "Mesure la vitalité de l'écosystème culturel "
+                               "subventionné, versant non marchand que R1-R3 "
+                               "(marché) et R5 (volume d'œuvres) ne couvrent pas."),
+        }
+    else:
+        reperes['r6_vitalite_arts_vivants'] = {
+            "status": "donnees_indisponibles",
+            "raison": "les trois sources CALQ sont requises"
+        }
 
     # Bloc auxiliaire — lentille 3 améliorée (hors protocole)
     lentille_3 = None

@@ -42,11 +42,36 @@ def combined(raw_dir):
         raw_dir,
         "Résultats d'exploitation des établissements*pays d'origine*hebdomadaires*.xlsx"
     )
+    # v1.2.0 : sources annuelles requises pour les baselines figées et R6
+    f_bilan = find_source_file(raw_dir, 'isq_musique_bilan_*.json')
+    f_cin_an = find_source_file(
+        raw_dir,
+        "Résultats d'exploitation des établissements*pays d'origine*annuelles*.xlsx"
+    )
+    f_calq_th = find_source_file(
+        raw_dir,
+        "Statistiques principales des organismes de production en théâtre et arts du cirque soutenus par le Conseil des arts et des lettres du Québec, Québec.xlsx"
+    )
+    f_calq_di = find_source_file(
+        raw_dir,
+        "Statistiques principales des diffuseurs pluridisciplinaires soutenus par le Conseil des arts et des lettres du Québec, Québec.xlsx"
+    )
+    f_calq_av = find_source_file(
+        raw_dir,
+        "Statistiques principales des organismes de diffusion et de production en arts visuels, arts numériques, cinéma et vidéo soutenus à la mission par le Conseil des arts et des lettres du Québec, Québec.xlsx"
+    )
+    f_mb = find_source_file(raw_dir, 'musicbrainz_artistes_qc_*.json')
     return {
         'part_qc': extract.extract_part_qc(f_part),
         'volume_musique': extract.extract_volume_musique(f_vol),
         'palmares_top20': extract.extract_palmares(f_pal),
         'cinema_pays': extract.extract_cinema_pays(f_cin),
+        'isq_musique_bilan_2025': extract.extract_isq_musique_bilan(f_bilan),
+        'cinema_pays_annuel': extract.extract_cinema_pays_annuel(f_cin_an),
+        'calq_theatre_cirque': extract.extract_calq_theatre_cirque(f_calq_th),
+        'calq_diffuseurs_pluridiscip': extract.extract_calq_diffuseurs_pluridiscip(f_calq_di),
+        'calq_arts_visuels': extract.extract_calq_arts_visuels(f_calq_av),
+        'musicbrainz_artistes_qc': extract.extract_musicbrainz_artistes_qc(f_mb),
     }
 
 
@@ -60,13 +85,28 @@ def test_r1_ratio_et_ecart(combined):
     (où R = 3,55 et E = 17,6 pts) — la part QC sur albums numériques a reculé
     de 0,4 pt pendant que le streaming est resté stable.
     """
+    # Sans bilan annuel : la lecture courante YTD fait foi
     r1 = derive.derive_r1(combined['part_qc'])
     assert r1['part_streaming_pct'] == 6.9
     assert r1['part_albums_numeriques_pct'] == 24.1
     assert r1['ratio'] == 3.49
     assert r1['ecart_pts'] == 17.2
     assert r1['provisional'] is True
-    assert r1['source'] == 'ISQ tableau 4153'
+    assert 'baseline_2025' not in r1
+
+    # v1.2.0 — avec le bilan annuel, la baseline 2025 devient le principal
+    r1b = derive.derive_r1(combined['part_qc'], combined['isq_musique_bilan_2025'])
+    b = r1b['baseline_2025']
+    assert b['part_streaming_pct'] == 7.1
+    assert b['part_achat_pct'] == 18
+    assert b['ratio'] == 2.54
+    assert b['ecart_pts'] == 10.9
+    assert b['canal_achat'] == 'ensemble des albums (tous supports)'
+    assert b['provisional'] is False
+    # Le principal reflète la baseline, la lecture YTD reste accessible
+    assert r1b['ratio'] == 2.54
+    assert r1b['provisional'] is False
+    assert r1b['lecture_courante']['ratio'] == 3.49
 
 
 # === R2 — Profondeur du catalogue (N₂₀) ======================================
@@ -113,31 +153,56 @@ def test_r3_cinema_metadata_seulement(combined):
     # Historique des lectures : 4,7 (22 mai) → 3,9 (9 juin) → 3,7 (22 juillet).
     # La part QC du box-office YTD s'érode de lecture en lecture.
     assert cinema['part_qc_box_office_pct'] == 3.7
-    assert cinema['status'] == 'donnees_annuelles_a_venir'
-    assert cinema['consommation_absolue_recettes_qc'] is None
+    assert cinema['provisional'] is True
+    # v1.2.0 : sans source annuelle, pas de baseline
+    assert 'baseline_2025' not in r3
+
+    # v1.2.0 — avec les sources annuelles, la branche cinéma se complète :
+    # l'assistance québécoise est MESURÉE (1 036 590 spectateurs en 2025),
+    # plus estimée par pondération.
+    r3b = derive.derive_r3(
+        combined['volume_musique'], combined['part_qc'], combined['cinema_pays'],
+        combined['isq_musique_bilan_2025'], combined['cinema_pays_annuel']
+    )
+    base = r3b['baseline_2025']['canaux']
+    assert base['cinema']['consommation_qc_assistance'] == 1036590.0
+    assert base['cinema']['part_qc_assistance_pct'] == 9.04
+    assert base['streaming_musique']['part_qc_pct'] == 7.1
+    assert base['streaming_musique']['consommation_qc_k_ecoutes'] == 2264900.0
 
 
 # === R4 — Indice d'angle mort ===============================================
 
-def test_r4_matrice_8_sur_12():
-    """R4 — matrice gelée 2026-05-25 : 8 cellules couvertes sur 12."""
+def test_r4_matrice_9_sur_12():
+    """R4 — recomptage v1.2.0 (2026-08-21) : 9 cellules couvertes sur 12.
+
+    Historique : 8/12 au gel initial (2026-05-25) → 9/12 en v1.2.0.
+    La cellule reclassée est Social × Création-Production (absent → partiel),
+    couverte par les statistiques CALQ des organismes soutenus.
+    """
     r4 = derive.derive_r4()
     assert r4['total'] == 12
-    assert r4['cellules_couvertes'] == 8
-    assert r4['a'] == round(8 / 12, 3)
+    assert r4['cellules_couvertes'] == 9
+    assert r4['a'] == round(9 / 12, 3)
     assert r4['provisional'] is False
-    assert r4['version_protocole'] == '1.1.0'
-    assert r4['date_gel'] == '2026-05-25'
+    assert r4['version_protocole'] == '1.2.0'
+    assert r4['date_gel'] == '2026-08-21'
 
 
 def test_r4_cellules_absentes_explicites():
-    """R4 — les 4 ✗ nommés par le protocole : Naturel (CP/DC), Social (CP/PT)."""
+    """R4 — les 3 ✗ restants en v1.2.0 : Naturel (CP/DC), Social (PT).
+
+    Social × Création-Production est passé à ⚠ (CALQ) au recomptage du
+    2026-08-21 ; les trois autres restent sans mesure publique connue.
+    """
     r4 = derive.derive_r4()
     m = r4['matrice']
     assert m['naturel']['creation_production']['etat'] == 'absent'
     assert m['naturel']['diffusion_consommation']['etat'] == 'absent'
-    assert m['social']['creation_production']['etat'] == 'absent'
     assert m['social']['preservation_transmission']['etat'] == 'absent'
+    # Reclassée en v1.2.0
+    assert m['social']['creation_production']['etat'] == 'partiel'
+    assert 'CALQ' in m['social']['creation_production']['source']
 
 
 def test_r4_cellule_pleine_unique():
@@ -167,14 +232,19 @@ def test_derive_all_structure(combined):
     """derive_all — structure complète, version protocole portée."""
     result = derive.derive_all(combined, annee=2025)
     assert result['annee'] == 2025
-    assert result['protocole_version'] == '1.1.0'
+    assert result['protocole_version'] == '1.2.0'
+    # v1.2.0 : R6 promu repère officiel (six repères)
     assert set(result['reperes'].keys()) == {
         'r1_ecart_decouvrabilite',
         'r2_profondeur_catalogue',
         'r3_consommation_absolue',
         'r4_angle_mort',
-        'r5_volume_oeuvres'
+        'r5_volume_oeuvres',
+        'r6_vitalite_arts_vivants'
     }
+    r6 = result['reperes']['r6_vitalite_arts_vivants']
+    assert r6['provisional'] is False
+    assert r6['nb_organismes_agrege'] == 214
 
 
 def test_derive_all_tolerant_aux_sources_manquantes():
@@ -184,8 +254,10 @@ def test_derive_all_tolerant_aux_sources_manquantes():
     assert result['reperes']['r2_profondeur_catalogue']['status'] == 'donnees_indisponibles'
     assert result['reperes']['r3_consommation_absolue']['status'] == 'donnees_indisponibles'
     # R4 et R5 restent calculables, indépendants des sources extraites
-    assert result['reperes']['r4_angle_mort']['cellules_couvertes'] == 8
+    assert result['reperes']['r4_angle_mort']['cellules_couvertes'] == 9
     assert result['reperes']['r5_volume_oeuvres']['status'] == 'en_chantier'
+    # R6 dépend des sources CALQ : absentes ici
+    assert result['reperes']['r6_vitalite_arts_vivants']['status'] == 'donnees_indisponibles'
 
 
 # === Intégration dériveur → payload du dashboard ============================
@@ -201,15 +273,16 @@ def test_payload_for_dashboard_inclut_reperes(combined):
     payload = _payload_for_dashboard(combined, reperes=reperes)
 
     assert 'reperes' in payload
-    assert payload['reperes']['protocole_version'] == '1.1.0'
-    # R4 — la matrice gelée doit voyager intacte jusqu'au template
+    assert payload['reperes']['protocole_version'] == '1.2.0'
+    # R4 — la matrice recomptée doit voyager intacte jusqu'au template
     r4 = payload['reperes']['reperes']['r4_angle_mort']
-    assert r4['cellules_couvertes'] == 8
+    assert r4['cellules_couvertes'] == 9
     assert r4['total'] == 12
-    # R1 — les valeurs YTD doivent être disponibles
+    # R1 — baseline 2025 figée et lecture YTD disponible côté template
     r1 = payload['reperes']['reperes']['r1_ecart_decouvrabilite']
-    assert r1['ratio'] == 3.49
-    assert r1['provisional'] is True
+    assert r1['ratio'] == 2.54
+    assert r1['provisional'] is False
+    assert r1['lecture_courante']['ratio'] == 3.49
 
 
 def test_lentille_3_amelioree_secteur_51_consolidation(raw_dir):
