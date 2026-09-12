@@ -113,22 +113,34 @@ def test_emplois_eerh_mensuel_ytd_2026(raw_dir):
     """Fichier mensuel EERH — l'ISQ a basculé en 2026 (le 10 juin 2026).
 
     Vérifie la tolérance à l'année partielle. Historique des mois
-    disponibles : 3 (juin) → 4 (22 juillet) → 5 (20 août, mai ajouté).
+    disponibles : 3 (juin) → 4 (22 juillet) → 5 (20 août, mai ajouté)
+    → 6 (12 septembre, juin ajouté).
+
+    Attention : la série est en moyennes mobiles de trois mois et l'ISQ
+    révise les mois déjà publiés. Mai valait n = 14 820 dans le fichier du
+    20 août et n = 14 734 dans celui du 12 septembre, ce qui fait passer la
+    variation Jan → Mai de +8,39 % à +7,76 %. Une variation rattachée à un
+    mois donné n'est donc pas stable d'un millésime à l'autre : toujours
+    reconstituer depuis le fichier courant plutôt que citer une valeur
+    antérieure.
     """
     f = find_source_file(raw_dir, 'Emplois salariés*données mensuelles*.xlsx')
     assert f is not None, "Fichier EERH mensuel manquant"
     data = extract.extract_emplois_eerh(f)
     rec = next(r for r in data if r['scian'] == '5121')
     assert rec['annee_reference'] == 2026
-    # Maj 20 août 2026 : mai ajouté (4 → 5 mois disponibles)
-    assert rec['mois_disponibles'] == 5
-    assert rec['mois_dernier'] == 'Mai'
-    # Variation Jan → Mai 2026 = +8,39 % (n=14 820 en mai). La reprise 5121
-    # s'accélère : +1,7 % (mars) → +4,0 % (avril) → +8,4 % (mai). À lire en
-    # contraste avec la part QC du box-office (3,7 % YTD, cumul -48,7 %) :
-    # le paradoxe cinéma se creuse par les deux bouts.
+    # Maj 12 septembre 2026 : juin ajouté (5 → 6 mois disponibles)
+    assert rec['mois_disponibles'] == 6
+    assert rec['mois_dernier'] == 'Juin'
+    # Variation Jan → Juin 2026 = +9,57 % (n = 13 673 en janvier, 14 981 en
+    # juin, vérifié au fichier source). La reprise 5121 s'accélère sans
+    # interruption depuis mars : +1,7 % (mars) → +4,0 % (avril) → +7,8 %
+    # (mai, révisé) → +9,6 % (juin). À lire en contraste avec la part QC du
+    # box-office (3,7 % YTD, cumul -48,7 %) : le paradoxe cinéma se creuse
+    # par les deux bouts — l'emploi de production monte pendant que la part
+    # de marché des films québécois en salle recule.
     assert rec['variation_pct'] is not None
-    assert 8.0 < rec['variation_pct'] < 8.8
+    assert 9.2 < rec['variation_pct'] < 9.9
 
 
 def test_emplois_eerh_annuel_5121_baseline_2025(raw_dir):

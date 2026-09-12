@@ -50,3 +50,10 @@ chroniques/
 
 # Nom de dossier en octets exacts (NFD macOS) :
 Données Québec/
+
+# --- Dossier privé de candidatures et de démarches ---
+# candidatures/ contient des lettres, notes de positionnement et plans de
+# travail personnels (APF, chaires, appels d'offres). Rien de tout cela ne
+# relève du dépôt public : ce sont des démarches professionnelles, pas de la
+# méthode ni de l'outil.
+candidatures/

@@ -1,5 +1,5 @@
 {
-  "build_iso": "2026-08-25T15:35:17.968901+00:00",
+  "build_iso": "2026-09-12T18:49:55.365801+00:00",
   "pipeline_version": "1.0.0",
   "sources_used": [
     {
@@ -48,11 +48,11 @@
       "label": "Évolution de statistiques clés de la culture et des communications"
     },
     {
-      "path": "/Users/joaoroque/Documents/Claude/Projects/Culture Québec en donnée/Données Québec/Emplois salariés dans certaines industries de la culture et des communications selon l'Enquête sur l'emploi, la rémunération et les heures de travail (EERH), données mensuelles désaisonnalisées en moyennes mobiles de trois mois_3.xlsx",
-      "name": "Emplois salariés dans certaines industries de la culture et des communications selon l'Enquête sur l'emploi, la rémunération et les heures de travail (EERH), données mensuelles désaisonnalisées en moyennes mobiles de trois mois_3.xlsx",
-      "sha256": "ec52cc6c6eb0b1a44278823f430b6c5219aa1f36a0fd49b52dc9d01c11853901",
-      "size_bytes": 13138,
-      "mtime_iso": "2026-08-20T15:14:27.933883+00:00",
+      "path": "/Users/joaoroque/Documents/Claude/Projects/Culture Québec en donnée/Données Québec/Emplois salariés dans certaines industries de la culture et des communications selon l'Enquête sur l'emploi, la rémunération et les heures de travail (EERH), données mensuelles désaisonnalisées en moyennes mobiles de trois mois_4.xlsx",
+      "name": "Emplois salariés dans certaines industries de la culture et des communications selon l'Enquête sur l'emploi, la rémunération et les heures de travail (EERH), données mensuelles désaisonnalisées en moyennes mobiles de trois mois_4.xlsx",
+      "sha256": "06b1f7e05399a018023d3277fe64debc43c8897d692be3967e8bcc2680deadd9",
+      "size_bytes": 13223,
+      "mtime_iso": "2026-09-12T13:23:06.838743+00:00",
       "source_key": "emplois_eerh",
       "label": "Emplois salariés dans certaines industries de la culture et des communications (EERH) — données mensuelles MM3"
     },
