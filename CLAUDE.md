@@ -66,6 +66,14 @@ top 20 » casse, c'est une bonne nouvelle à signaler au chroniqueur.
 - **Refs CANSIM dans les fichiers ISQ** : elles ressemblent à des numéros de
   fiche ISQ. Toujours valider par l'URL permanente.
 - **`round()` Python fait du banker's rounding** (round(1.325, 2) → 1.32).
+- **Séries révisées rétroactivement** : la série mensuelle EERH est en moyennes
+  mobiles de trois mois et l'ISQ révise les mois déjà publiés. Mai 2026 valait
+  n = 14 820 dans le fichier du 20 août et n = 14 734 dans celui du 12 septembre
+  (5121), ce qui déplace la variation Jan → Mai de +8,39 % à +7,76 % sans
+  qu'aucune donnée nouvelle n'intervienne. Conséquence : une variation
+  rattachée à un mois donné n'est pas stable d'un millésime à l'autre. Toujours
+  la reconstituer depuis le fichier courant plutôt que citer une valeur
+  antérieure, y compris une valeur publiée par nous.
 - **Séries terminées** : à conserver comme capsules historiques avec
   `statut_serie: terminee` (ex. tableau 2142, ventes top 200 de l'ère Nielsen).
 - **Millésimes** : ne jamais fusionner une lecture cumulative YTD en cours

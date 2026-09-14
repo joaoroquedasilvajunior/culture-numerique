@@ -1776,17 +1776,31 @@ a{color:inherit;text-decoration:none}
     <div class="grid">
       <div>
         <h5>Sources statistiques</h5>
-        <p>Institut de la statistique du Québec — Observatoire de la culture et des communications du Québec (OCCQ). Tableaux 2576 (emplois EERH), Évolution des statistiques clés, Part des interprètes, Consommation musicale, Cinéma par pays d'origine, Palmarès.</p>
-        <p><a href="https://statistique.quebec.ca/fr/recherche?sujet=culture-et-medias">statistique.quebec.ca</a></p>
+        <p><strong>Institut de la statistique du Québec, Observatoire de la culture et des communications (OCCQ).</strong>
+        Musique&nbsp;: part des interprètes du Québec (4153), consommation d'enregistrements (2140), palmarès (2620), part des 200 titres les plus vendus (2142, série terminée).
+        Cinéma&nbsp;: résultats d'exploitation selon le pays d'origine (3059, hebdomadaire et annuel), selon la langue de projection et selon le classement, indicateurs (2736), palmarès évolutif des films.
+        Livre&nbsp;: variations des ventes (2342), ventes par catégorie de points de vente (2341), ventes de livres numériques (3408).
+        Emploi&nbsp;: EERH mensuel et annuel (2576).
+        Transversal&nbsp;: évolution de statistiques clés (3171), établissements culturels (929), principaux indicateurs par région administrative, dépenses des ménages pour la culture et les médias.
+        Écosystème subventionné&nbsp;: trois séries du Conseil des arts et des lettres du Québec diffusées par l'OCCQ (théâtre et arts du cirque, diffuseurs pluridisciplinaires, arts visuels et numériques).</p>
+        <p><strong>Statistique Canada.</strong> CANSIM 14-10-0223 (rémunération EERH), CANSIM 14-10-0442 (postes vacants et salaires), Rapports économiques et sociaux de mars 2026 (indice d'exposition professionnelle à l'intelligence artificielle).</p>
+        <p><strong>Métadonnées ouvertes et plateformes.</strong> MusicBrainz (licence CC0), interface publique Deezer, flux marketing Apple Music (vitrine Canada).</p>
+        <p><strong>Anthropic Economic Index.</strong> Millésimes du 24 mars 2026 (Canada) et du 26 juin 2026 (Québec).</p>
+        <p><a href="https://statistique.quebec.ca/fr/recherche?sujet=culture-et-medias">statistique.quebec.ca</a> &middot; <a href="ledger.json">journal d'audit&nbsp;: liste complète des sources avec leur empreinte SHA-256</a></p>
       </div>
       <div>
         <h5>Sources politiques</h5>
-        <p>Loi 109 (chapitre 38 de 2025) — Loi affirmant la souveraineté culturelle du Québec.<br>Stratégie France-Québec 2025-2030.<br>Rapport du Comité-conseil sur la découvrabilité (Beaudoin, Duhaime, Guèvremont, Taillon, 2024).<br>Mission franco-québécoise sur la découvrabilité (2020).<br>Guide MCC : bonnes pratiques (2021).</p>
+        <p>Loi 109 (chapitre 38 de 2025), Loi affirmant la souveraineté culturelle du Québec.<br>
+        Décision CRTC 2026-95 (3 juin 2026), recul fédéral sur le seuil de contenu canadien.<br>
+        Stratégie France-Québec 2025-2030.<br>
+        Rapport du Comité-conseil sur la découvrabilité (Beaudoin, Duhaime, Guèvremont, Taillon, 2024).<br>
+        Mission franco-québécoise sur la découvrabilité (2020).<br>
+        Guide MCC&nbsp;: bonnes pratiques (2021).</p>
       </div>
       <div>
         <h5>Méthodologie</h5>
-        <p>Données hebdomadaires indicatives ; pour des analyses pluriannuelles, utiliser les séries annuelles. Les emplois EERH excluent les travailleurs autonomes.</p>
-        <p class="small">Le Carnet de données — souveraineté culturelle numérique est une démarche indépendante, sans affiliation à l'ISQ, au MCC ni au gouvernement du Québec. Réutilisation de données publiques de l'ISQ. Données extraites le 25 mai 2026 ; chaque tableau ISQ porte sa propre date de mise à jour (voir le journal d'audit ledger.json). Les interprétations n'engagent que leurs auteurs. Projet anciennement nommé « Observatoire de la souveraineté culturelle numérique » jusqu'au 2026-06-12.</p>
+        <p>Données hebdomadaires indicatives&nbsp;; pour des analyses pluriannuelles, utiliser les séries annuelles. Les emplois EERH excluent les travailleurs autonomes. La série mensuelle EERH est exprimée en moyennes mobiles de trois mois et l'ISQ révise les mois déjà publiés&nbsp;: une variation rattachée à un mois donné n'est pas stable d'un millésime à l'autre.</p>
+        <p class="small">Le Carnet de données, souveraineté culturelle numérique, est une démarche indépendante, sans affiliation à l'ISQ, au MCC, au CALQ, au CRTC ni à aucun gouvernement. Réutilisation de données publiques. Protocole des repères <span id="foot-protocole">v1.2.0</span>. Dernière extraction&nbsp;: <span id="foot-extraction">voir le journal d'audit</span>&nbsp;; chaque tableau porte sa propre date de mise à jour (voir <a href="ledger.json">ledger.json</a>). Les interprétations n'engagent que leurs auteurs. Projet anciennement nommé «&nbsp;Observatoire de la souveraineté culturelle numérique&nbsp;» jusqu'au 2026-06-12.</p>
       </div>
     </div>
   </footer>
@@ -1794,6 +1808,25 @@ a{color:inherit;text-decoration:none}
 
 <script>
 const D = __DASHBOARD_DATA__;
+
+// Pied de page : date d'extraction et version du protocole, lues dans le
+// payload plutot qu'ecrites en dur dans le gabarit (le gabarit a deja affiche
+// une date figee pendant quatre mois).
+(function(){
+  try {
+    var r = (D && D.reperes) || {};
+    var elP = document.getElementById('foot-protocole');
+    if (elP && r.protocole_version) elP.textContent = 'v' + r.protocole_version;
+    var elD = document.getElementById('foot-extraction');
+    if (elD && r.date_calcul) {
+      var d = new Date(r.date_calcul);
+      if (!isNaN(d.getTime())) {
+        elD.textContent = d.toLocaleDateString('fr-CA',
+          {year: 'numeric', month: 'long', day: 'numeric'});
+      }
+    }
+  } catch (e) { /* le pied de page garde son texte de repli */ }
+})();
 
 // Chart defaults
 Chart.defaults.font.family = 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';

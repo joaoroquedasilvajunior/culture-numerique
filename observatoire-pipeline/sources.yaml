@@ -17,6 +17,40 @@
 # Pour un setup self-contained classique, mettre simplement : raw_data_dir: "data/raw"
 raw_data_dir: "../Données Québec"
 
+# Fichiers présents dans le dossier brut mais volontairement NON intégrés au
+# pipeline. Sans cette liste, le capteur d'orphelins les signalait à chaque
+# build : 11 alertes dont 10 connues, ce qui noyait le signal et aurait laissé
+# passer une vraie surprise (c'est précisément ce qui était arrivé au fichier
+# EERH au nom tronqué, invisible de mai à août 2026).
+#
+# Un motif ajouté ici est une décision documentée, pas un silence : chaque
+# entrée porte sa raison. Retirer un motif suffit à remettre le fichier sous
+# surveillance.
+ignorer:
+  "Statistiques principales*selon la région administrative*.xlsx":
+    "Ventilation régionale des séries CALQ. Les globaux (sans « selon ») sont
+     seuls intégrés ; les coupes régionales attendent un repère territorial."
+  "Statistiques principales*selon la taille de leurs revenus*.xlsx":
+    "Ventilation CALQ par taille de revenus, non intégrée."
+  "Statistiques principales*selon le genre de musique*.xlsx":
+    "Ventilation CALQ par genre musical, non intégrée."
+  "Statistiques principales*en danse*.xlsx":
+    "Série CALQ danse, hors périmètre R6 (théâtre-cirque, diffuseurs
+     pluridisciplinaires, arts visuels) tel que gelé au protocole v1.2.0."
+  "Statistiques principales*diffuseurs spécialisés*.xlsx":
+    "Série CALQ des diffuseurs spécialisés, hors périmètre R6."
+  "1410022301-fra*.csv":
+    "CSV décompressés du zip CANSIM 14-10-0223. Le pipeline lit le .zip
+     directement ; ces fichiers sont des résidus de décompression manuelle."
+  "sonde_francophonie_*.json":
+    "Sonde de faisabilité sur 23 territoires francophones (août 2026).
+     Instrument de la collaboration avec la Chaire UNESCO, délibérément hors
+     Carnet : périmètre et définitions incompatibles avec le protocole."
+  "spotify_artistes_qc_*.json":
+    "Identités Spotify seules. Les métriques de popularité sont verrouillées
+     depuis février 2026 pour les apps en mode développement ; le fichier n'a
+     donc aucune valeur analytique. Conservé comme trace de la sonde."
+
 sources:
 
   part_qc:

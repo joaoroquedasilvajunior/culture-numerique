@@ -59,23 +59,40 @@ def _signaler_orphelins(raw_dir: Path, config: dict, verbose: bool) -> list[str]
     dossier de mai à août sans jamais alimenter le pipeline, chaque nouveau
     téléchargement écrasant silencieusement le précédent. Un orphelin n'est
     pas une erreur (le build continue), mais il doit être visible.
+
+    Recalibrage (2026-09-14) : les fichiers connus et volontairement non
+    intégrés (ventilations CALQ, sonde francophonie, résidus de
+    décompression) sont déclarés sous la clé `ignorer` de sources.yaml. Sans
+    eux, l'alerte comptait 11 entrées dont 10 attendues : un capteur qui crie
+    en permanence ne signale plus rien. Les fichiers ignorés restent comptés
+    et affichés en une ligne, de sorte que la décision demeure visible.
     """
     extensions = {'.xlsx', '.csv', '.json', '.zip'}
     patterns_nfc = [_nfc(meta['file_pattern']) for meta in config['sources'].values()]
+    ignores_nfc = [_nfc(motif) for motif in (config.get('ignorer') or {})]
     orphelins = []
+    nb_ignores = 0
     for p in sorted(raw_dir.iterdir()):
         if not p.is_file() or p.suffix.lower() not in extensions:
             continue
         nom_nfc = _nfc(p.name)
-        if not any(fnmatch.fnmatchcase(nom_nfc, pat) for pat in patterns_nfc):
-            orphelins.append(p.name)
-    if orphelins and verbose:
-        print(f"\n  [⚠] {len(orphelins)} fichier(s) orphelin(s) — aucun motif de "
-              f"sources.yaml ne les capte :")
-        for nom in orphelins:
-            print(f"      · {nom[:90]}")
-        print("      (nom tronqué au téléchargement ? nouvelle source à déclarer ? "
-              "fichier à renommer ou à retirer)")
+        if any(fnmatch.fnmatchcase(nom_nfc, pat) for pat in patterns_nfc):
+            continue
+        if any(fnmatch.fnmatchcase(nom_nfc, pat) for pat in ignores_nfc):
+            nb_ignores += 1
+            continue
+        orphelins.append(p.name)
+    if verbose:
+        if orphelins:
+            print(f"\n  [⚠] {len(orphelins)} fichier(s) orphelin(s) — aucun motif de "
+                  f"sources.yaml ne les capte :")
+            for nom in orphelins:
+                print(f"      · {nom[:90]}")
+            print("      (nom tronqué au téléchargement ? nouvelle source à déclarer ? "
+                  "fichier à renommer ou à retirer)")
+        if nb_ignores:
+            print(f"  [·] {nb_ignores} fichier(s) ignoré(s) volontairement "
+                  f"(clé « ignorer » de sources.yaml)")
     return orphelins
 
 
