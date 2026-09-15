@@ -1,5 +1,5 @@
 {
-  "build_iso": "2026-09-14T12:04:01.217627+00:00",
+  "build_iso": "2026-09-15T13:14:29.873660+00:00",
   "pipeline_version": "1.0.0",
   "sources_used": [
     {
@@ -21,11 +21,11 @@
       "label": "Consommation d'enregistrements musicaux selon le type de produit"
     },
     {
-      "path": "/Users/joaoroque/Documents/Claude/Projects/Culture Québec en donnée/Données Québec/Résultats d'exploitation des établissements cinématographiques selon le pays d'origine des films, données hebdomadaires_2.xlsx",
-      "name": "Résultats d'exploitation des établissements cinématographiques selon le pays d'origine des films, données hebdomadaires_2.xlsx",
-      "sha256": "45013daa7c8b3998ed732d179da89044b26144562bfad808348f0964c538d17e",
-      "size_bytes": 9243,
-      "mtime_iso": "2026-07-22T13:27:24.014028+00:00",
+      "path": "/Users/joaoroque/Documents/Claude/Projects/Culture Québec en donnée/Données Québec/Résultats d'exploitation des établissements cinématographiques selon le pays d'origine des films, données hebdomadaires_3.xlsx",
+      "name": "Résultats d'exploitation des établissements cinématographiques selon le pays d'origine des films, données hebdomadaires_3.xlsx",
+      "sha256": "220eeec84ecca57bc04758a220e8c0a9f2ddecd94f56c1e3177314841067cb6f",
+      "size_bytes": 9240,
+      "mtime_iso": "2026-09-15T13:09:56.197942+00:00",
       "source_key": "cinema_pays",
       "label": "Résultats d'exploitation des établissements cinématographiques selon le pays d'origine des films (hebdomadaire)"
     },
@@ -201,11 +201,11 @@
       "label": "Anthropic Economic Index — release Cadences (juin 2026), Québec et Canada"
     },
     {
-      "path": "/Users/joaoroque/Documents/Claude/Projects/Culture Québec en donnée/Données Québec/Palmarès évolutif des films présentés en programme simple, par région administrative et pour l’ensemble du Québec .xlsx",
-      "name": "Palmarès évolutif des films présentés en programme simple, par région administrative et pour l’ensemble du Québec .xlsx",
-      "sha256": "6ada0c3a34571aba8c6d26116c25d4a0528a84687950bbc3f674b1096f2459d6",
-      "size_bytes": 9549,
-      "mtime_iso": "2026-07-22T13:27:55.781265+00:00",
+      "path": "/Users/joaoroque/Documents/Claude/Projects/Culture Québec en donnée/Données Québec/Palmarès évolutif des films présentés en programme simple, par région administrative et pour l’ensemble du Québec_3.xlsx",
+      "name": "Palmarès évolutif des films présentés en programme simple, par région administrative et pour l’ensemble du Québec_3.xlsx",
+      "sha256": "58b248814634bf228058e098f76124ef33de36c42ba66b1ab2321d979d08b96d",
+      "size_bytes": 9559,
+      "mtime_iso": "2026-09-15T13:11:12.641309+00:00",
       "source_key": "palmares_films",
       "label": "Palmarès évolutif des films présentés en programme simple, ensemble du Québec"
     },
@@ -255,11 +255,11 @@
       "label": "Nombre d'établissements culturels de certains types"
     },
     {
-      "path": "/Users/joaoroque/Documents/Claude/Projects/Culture Québec en donnée/Données Québec/Indicateurs des résultats d'exploitation des établissements cinématographiques, Québec_2.xlsx",
-      "name": "Indicateurs des résultats d'exploitation des établissements cinématographiques, Québec_2.xlsx",
-      "sha256": "2a0202d736360b7a79b0fbdff395614e951c1d28cbc7114f878e1cbcdf0a7d5a",
-      "size_bytes": 21922,
-      "mtime_iso": "2026-06-09T13:28:11.404291+00:00",
+      "path": "/Users/joaoroque/Documents/Claude/Projects/Culture Québec en donnée/Données Québec/Indicateurs des résultats d'exploitation des établissements cinématographiques_2.xlsx",
+      "name": "Indicateurs des résultats d'exploitation des établissements cinématographiques_2.xlsx",
+      "sha256": "09f2dad9971243be7c7cd8e8dd121bc7692b65bc2d303482e72e19eac7a569f0",
+      "size_bytes": 21923,
+      "mtime_iso": "2026-09-15T13:10:41.241719+00:00",
       "source_key": "indicateurs_cinema",
       "label": "Indicateurs des résultats d'exploitation des établissements cinématographiques (depuis 1975)"
     },

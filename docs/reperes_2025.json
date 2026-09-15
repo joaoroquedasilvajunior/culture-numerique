@@ -1,6 +1,6 @@
 {
   "annee": 2025,
-  "date_calcul": "2026-09-14T08:04:01",
+  "date_calcul": "2026-09-15T09:14:29",
   "protocole_version": "1.2.0",
   "reperes": {
     "r1_ecart_decouvrabilite": {
@@ -106,7 +106,7 @@
           "provisional": true
         },
         "cinema": {
-          "part_qc_box_office_pct": 3.7,
+          "part_qc_box_office_pct": 3.2,
           "provisional": true,
           "note": "Lecture hebdomadaire YTD ; baseline annuelle ci-dessous."
         }

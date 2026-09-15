@@ -61,15 +61,24 @@ def test_volume_streaming(raw_dir):
 
 
 def test_cinema_quebec(raw_dir):
-    """Part QC box-office YTD = 3,9 %, var an−1 = −38,7 % (semaine 24-30 avril 2026).
+    """Part QC du box-office YTD = 3,2 %, var an−1 = −54,2 % (semaine du 26 juin
+    au 2 juillet 2026).
 
-    Source : ISQ, fichier hebdomadaire mis à jour le 9 juin 2026.
-    Le pattern inclut « hebdomadaires » pour ne pas matcher le nouveau
-    fichier annuel publié simultanément (cinema_pays_annuel).
+    Source : ISQ, fichier hebdomadaire mis à jour le 15 septembre 2026.
+    Le pattern inclut « hebdomadaires » pour ne pas matcher le fichier
+    annuel publié simultanément (cinema_pays_annuel).
 
-    ⚠ Révision ISQ entre les versions du 22 mai et du 9 juin (même semaine
-    de référence) : pct_cumul_ytd 4,7 → 3,9 % ; var_cumul 12,4 → 38,7 %.
-    À documenter dans le ledger / la chronique.
+    Historique des lectures : 4,7 % (22 mai) → 3,9 % (9 juin) → 3,7 %
+    (22 juillet) → 3,2 % (15 septembre). Recul cumulé sur un an : 12,4 %
+    → 38,7 % → 48,7 % → 54,2 %. Une partie de ces écarts vient de révisions
+    ISQ sur une même semaine de référence, le reste de l'avancée du cumul.
+
+    ⚠ Le contexte de marché inverse la lecture intuitive : au 2 juillet 2026,
+    le box-office québécois TOUS pays confondus progresse de 5,1 % sur un an,
+    et chaque autre origine monte (États-Unis 77,6 % de part, +8,2 % ; Grande-
+    Bretagne 8,1 %, +30,3 % ; France 6,0 %, +16,5 %). Le Québec est la seule
+    origine en recul. Ce n'est donc pas une crise de la fréquentation, c'est
+    un effacement québécois dans un marché en croissance.
     """
     f = find_source_file(
         raw_dir,
@@ -78,11 +87,15 @@ def test_cinema_quebec(raw_dir):
     assert f is not None, "Fichier cinéma pays d'origine (hebdomadaire) manquant"
     data = extract.extract_cinema_pays(f)
     qc = next(p for p in data['pays'] if p['pays'] == 'Québec')
-    # Maj 22 juillet 2026 : pct 3,9 → 3,7 % ; var cumul -38,7 → -48,7 %.
-    # La part QC du box-office continue de glisser ; le recul sur un an
-    # se creuse. Signalé au chroniqueur (donnée d'actualité).
-    assert qc['pct_cumul_ytd'] == 3.7
-    assert qc['var_cumul_an_prec_pct'] == -48.7
+    # Maj 15 septembre 2026 : pct 3,7 → 3,2 % ; var cumul -48,7 → -54,2 %.
+    # Quatrième lecture consécutive en baisse. Signalé au chroniqueur.
+    assert qc['pct_cumul_ytd'] == 3.2
+    assert qc['var_cumul_an_prec_pct'] == -54.2
+    # Sentinelle de contexte : le marché total progresse pendant que le
+    # Québec recule. Si cette assertion casse, le cadrage « effacement dans
+    # un marché en croissance » doit être revérifié avant toute publication.
+    total = next(p for p in data['pays'] if p['pays'] == 'Total')
+    assert total['var_cumul_an_prec_pct'] > 0
 
 
 def test_palmares_quebec_count(raw_dir):
@@ -136,9 +149,11 @@ def test_emplois_eerh_mensuel_ytd_2026(raw_dir):
     # juin, vérifié au fichier source). La reprise 5121 s'accélère sans
     # interruption depuis mars : +1,7 % (mars) → +4,0 % (avril) → +7,8 %
     # (mai, révisé) → +9,6 % (juin). À lire en contraste avec la part QC du
-    # box-office (3,7 % YTD, cumul -48,7 %) : le paradoxe cinéma se creuse
-    # par les deux bouts — l'emploi de production monte pendant que la part
-    # de marché des films québécois en salle recule.
+    # box-office (3,2 % YTD au 2 juillet, cumul -54,2 %, dans un marché total
+    # en hausse de 5,1 %) : le paradoxe cinéma se creuse par les deux bouts.
+    # L'emploi de production monte pendant que la part de marché des films
+    # québécois en salle s'effondre, sans que la fréquentation globale
+    # faiblisse. Produire davantage n'est pas être vu davantage.
     assert rec['variation_pct'] is not None
     assert 9.2 < rec['variation_pct'] < 9.9
 

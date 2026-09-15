@@ -150,9 +150,10 @@ def test_r3_cinema_metadata_seulement(combined):
         combined['volume_musique'], combined['part_qc'], combined['cinema_pays']
     )
     cinema = r3['canaux']['cinema']
-    # Historique des lectures : 4,7 (22 mai) → 3,9 (9 juin) → 3,7 (22 juillet).
-    # La part QC du box-office YTD s'érode de lecture en lecture.
-    assert cinema['part_qc_box_office_pct'] == 3.7
+    # Historique des lectures : 4,7 (22 mai) → 3,9 (9 juin) → 3,7 (22 juillet)
+    # → 3,2 (15 septembre). La part QC du box-office YTD s'érode de lecture
+    # en lecture, alors que le marché total progresse de 5,1 % sur un an.
+    assert cinema['part_qc_box_office_pct'] == 3.2
     assert cinema['provisional'] is True
     # v1.2.0 : sans source annuelle, pas de baseline
     assert 'baseline_2025' not in r3
