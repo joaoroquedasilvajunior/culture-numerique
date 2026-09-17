@@ -78,19 +78,26 @@ def combined(raw_dir):
 # === R1 — Écart de découvrabilité ============================================
 
 def test_r1_ratio_et_ecart(combined):
-    """R1 — p_alb=24,1 % / p_str=6,9 % → R≈3,49 ; E=17,2 pts.
+    """R1 — p_alb=23,9 % / p_str=7,1 % → R≈3,37 ; E=16,8 pts.
 
-    Cumul à la semaine du 22-28 mai 2026 (ISQ 4153, mise à jour 12 juin 2026).
-    L'écart se resserre légèrement par rapport à la lecture de fin avril
-    (où R = 3,55 et E = 17,6 pts) — la part QC sur albums numériques a reculé
-    de 0,4 pt pendant que le streaming est resté stable.
+    Cumul à la semaine du 24-30 juillet 2026 (ISQ 4153, mise à jour
+    17 septembre 2026).
+
+    Trajectoire du ratio : 3,55 (avril) → 3,49 (mai) → 3,37 (juillet).
+    L'écart se resserre, mais par les deux bouts et pour des raisons
+    opposées : la part québécoise du streaming gagne 0,2 pt tandis que celle
+    des albums numériques en perd 0,2. Un resserrement de R n'est donc pas
+    en soi une bonne nouvelle — il peut venir de l'érosion du canal où le
+    Québec réussit plutôt que du redressement de celui où il échoue. C'est
+    la raison pour laquelle le protocole conserve les deux parts en clair à
+    côté du ratio.
     """
     # Sans bilan annuel : la lecture courante YTD fait foi
     r1 = derive.derive_r1(combined['part_qc'])
-    assert r1['part_streaming_pct'] == 6.9
-    assert r1['part_albums_numeriques_pct'] == 24.1
-    assert r1['ratio'] == 3.49
-    assert r1['ecart_pts'] == 17.2
+    assert r1['part_streaming_pct'] == 7.1
+    assert r1['part_albums_numeriques_pct'] == 23.9
+    assert r1['ratio'] == 3.37
+    assert r1['ecart_pts'] == 16.8
     assert r1['provisional'] is True
     assert 'baseline_2025' not in r1
 
@@ -106,41 +113,50 @@ def test_r1_ratio_et_ecart(combined):
     # Le principal reflète la baseline, la lecture YTD reste accessible
     assert r1b['ratio'] == 2.54
     assert r1b['provisional'] is False
-    assert r1b['lecture_courante']['ratio'] == 3.49
+    assert r1b['lecture_courante']['ratio'] == 3.37
 
 
 # === R2 — Profondeur du catalogue (N₂₀) ======================================
 
 def test_r2_n20_cowboys_fringants(combined):
-    """R2 — Un seul interprète québécois distinct dans le top 20 (rang 14 à la maj du 23 juillet 2026).
+    """R2 — Un seul interprète québécois distinct dans le top 20 (rang 13 à la
+    maj du 17 septembre 2026).
 
-    Trajectoire : 15 (avril) → 17 (mai) → 14 (juillet). N₂₀ reste à 1.
+    Trajectoire : 15 (avril) → 17 (mai) → 14 (juillet) → 13 (septembre).
+    N₂₀ reste à 1 sur toute la série. La baseline annuelle 2025 le situait au
+    rang 12, avec une densité moyenne de 5,5 % sur la courbe de profondeur :
+    le rang bouge, la densité non.
     """
     r2 = derive.derive_r2(combined['palmares_top20'])
     assert r2['n20'] == 1
     assert r2['interpretes'] == ['Les Cowboys Fringants']
-    assert r2['rangs_quebecois'] == [14]
+    assert r2['rangs_quebecois'] == [13]
     assert r2['provisional'] is True
 
 
 # === R3 — Consommation québécoise absolue ===================================
 
 def test_r3_streaming_consommation_absolue(combined):
-    """R3 — C_streaming = 13 027 963,2 × 6,9 % ≈ 898 929,5 k écoutes québécoises.
+    """R3 — C_streaming = 18 929 520,2 × 7,1 % ≈ 1 343 995,9 k écoutes québécoises.
 
-    Source : ISQ 2140 × 4153, cumul YTD au 22-28 mai 2026 (mise à jour 12 juin 2026).
-    Le volume YTD a presque triplé depuis fin avril (4,83 G → 13,03 G k écoutes)
-    par avance temporelle du cumul ; la part QC restant à 6,9 %, la consommation
-    absolue suit la même croissance.
+    Source : ISQ 2140 × 4153, cumul YTD au 24-30 juillet 2026 (mise à jour
+    17 septembre 2026). Avance temporelle du cumul : 4,83 G (avril) → 13,03 G
+    (mai) → 18,93 G (juillet).
+
+    C'est ici que R3 gagne son utilité : la part québécoise stagne à 7,1 %,
+    mais la consommation québécoise absolue franchit le milliard d'écoutes
+    parce que le gâteau grossit. Une part stable dans un marché en croissance
+    n'est ni un gain ni une perte de terrain relative, et seule la mesure
+    absolue le montre.
     """
     r3 = derive.derive_r3(
         combined['volume_musique'], combined['part_qc'], combined['cinema_pays']
     )
     s = r3['canaux']['streaming_musique']
-    assert s['volume_total_k_ecoutes'] == 13027963.2
-    assert s['part_qc_pct'] == 6.9
-    # 13 027 963,2 × 0,069 = 898 929,4608 → arrondi 1 décimale
-    assert s['consommation_qc_k_ecoutes'] == pytest.approx(898929.5, abs=0.1)
+    assert s['volume_total_k_ecoutes'] == 18929520.2
+    assert s['part_qc_pct'] == 7.1
+    # 18 929 520,2 × 0,071 = 1 343 995,934 → arrondi 1 décimale
+    assert s['consommation_qc_k_ecoutes'] == pytest.approx(1343995.9, abs=0.1)
     assert s['provisional'] is True
 
 
@@ -283,7 +299,7 @@ def test_payload_for_dashboard_inclut_reperes(combined):
     r1 = payload['reperes']['reperes']['r1_ecart_decouvrabilite']
     assert r1['ratio'] == 2.54
     assert r1['provisional'] is False
-    assert r1['lecture_courante']['ratio'] == 3.49
+    assert r1['lecture_courante']['ratio'] == 3.37
 
 
 def test_lentille_3_amelioree_secteur_51_consolidation(raw_dir):

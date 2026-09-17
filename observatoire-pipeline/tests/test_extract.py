@@ -29,35 +29,49 @@ def raw_dir():
 
 
 def test_part_qc_streaming(raw_dir):
-    """Part QC streaming YTD — semaine du 24 au 30 avril 2026 = 6,9 %."""
+    """Part QC streaming YTD = 7,1 % — semaine du 24 au 30 juillet 2026.
+
+    Source : ISQ tableau 4153, mise à jour 17 septembre 2026.
+    Trajectoire : 6,9 % (avril à mai) → 7,1 % (juillet). La lecture YTD 2026
+    rejoint exactement la baseline annuelle 2025 (7,1 %), ce qui suggère une
+    stabilisation plutôt qu'un redressement : à surveiller sur la prochaine
+    lecture avant d'en tirer quoi que ce soit.
+    """
     f = find_source_file(raw_dir, 'Part des interprètes*.xlsx')
     assert f is not None, "Fichier Part des interprètes manquant dans data/raw/"
     data = extract.extract_part_qc(f)
-    assert data['indicateurs']['streaming']['cumul_ytd_pct'] == 6.9
+    assert data['indicateurs']['streaming']['cumul_ytd_pct'] == 7.1
 
 
 def test_part_qc_albums_numeriques(raw_dir):
-    """Part QC albums numériques YTD — semaine du 22 au 28 mai 2026 = 24,1 %.
+    """Part QC albums numériques YTD = 23,9 % — semaine du 24 au 30 juillet 2026.
 
-    Source : ISQ tableau 4153, mise à jour 12 juin 2026.
-    La part QC a légèrement reculé sur 4 semaines (24,5 → 24,1 %) mais reste
-    la plus élevée des canaux numériques.
+    Source : ISQ tableau 4153, mise à jour 17 septembre 2026.
+    Érosion lente et régulière : 24,5 % (avril) → 24,1 % (mai) → 23,9 %
+    (juillet). Reste le canal où la part québécoise est la plus élevée, très
+    loin devant le streaming (7,1 %) : c'est tout l'objet du repère R1.
     """
     f = find_source_file(raw_dir, 'Part des interprètes*.xlsx')
     data = extract.extract_part_qc(f)
-    assert data['indicateurs']['albums_numeriques']['cumul_ytd_pct'] == 24.1
+    assert data['indicateurs']['albums_numeriques']['cumul_ytd_pct'] == 23.9
 
 
 def test_volume_streaming(raw_dir):
-    """Streaming cumulatif YTD = 13 027 963,2 milliers d'écoutes (semaine du 22-28 mai 2026).
+    """Streaming cumulatif YTD = 18 929 520,2 milliers d'écoutes (semaine du
+    24 au 30 juillet 2026).
 
-    Source : ISQ tableau 2140, mise à jour 12 juin 2026.
-    Volume YTD passé de 4,83 G (cumul à fin avril) à 13,03 G (cumul à fin mai) —
-    avance temporelle attendue du cumul, pas une révision rétroactive.
+    Source : ISQ tableau 2140, mise à jour 17 septembre 2026.
+    Avance temporelle attendue du cumul, pas une révision rétroactive :
+    4,83 G (fin avril) → 13,03 G (fin mai) → 18,93 G (fin juillet).
+
+    Repère d'ordre de grandeur : l'année 2025 complète totalisait 31,9 G.
+    Au prorata de sept mois, 2026 serait à 18,6 G ; la lecture est donc
+    légèrement au-dessus du rythme de 2025. Le marché du streaming croît
+    pendant que la part québécoise stagne à 7,1 %.
     """
     f = find_source_file(raw_dir, "Consommation d'enregistrements musicaux*.xlsx")
     data = extract.extract_volume_musique(f)
-    assert data['indicateurs']['streaming']['cumul_ytd'] == 13027963.2
+    assert data['indicateurs']['streaming']['cumul_ytd'] == 18929520.2
 
 
 def test_cinema_quebec(raw_dir):
@@ -99,18 +113,23 @@ def test_cinema_quebec(raw_dir):
 
 
 def test_palmares_quebec_count(raw_dir):
-    """Un seul interprète québécois dans le top 20 — Les Cowboys Fringants au rang 14.
+    """Un seul interprète québécois dans le top 20 — Les Cowboys Fringants au rang 13.
 
-    Trajectoire du rang : 15 (avril) → 17 (mai) → 14 (maj du 23 juillet 2026).
-    La remontée peut refléter la saison estivale (festivals, Saint-Jean).
-    La diversité reste à 1 dans tous les cas.
+    Trajectoire du rang : 15 (avril) → 17 (mai) → 14 (juillet) → 13 (maj du
+    17 septembre 2026). Le rang s'améliore lentement, mais c'est la seconde
+    assertion qui porte le constat : la diversité reste à 1 depuis le début
+    de la série. Un seul interprète québécois occupe le top 20, quel que
+    soit son rang.
+
+    ⚠ Alerte inversée : si `len(qc) == 1` casse par le haut, c'est une bonne
+    nouvelle à signaler au chroniqueur, pas un bogue.
     """
     f = find_source_file(raw_dir, 'Palmarès des enregistrements*.xlsx')
     data = extract.extract_palmares(f)
     qc = [t for t in data if t['provenance'] == 'Québec']
     assert len(qc) == 1
     assert qc[0]['interprete'] == 'Les Cowboys Fringants'
-    assert qc[0]['rang'] == 14
+    assert qc[0]['rang'] == 13
 
 
 def test_evolution_streaming_2024(raw_dir):
