@@ -1,7 +1,7 @@
 # Carnet de données — souveraineté culturelle numérique
 
 Instructions de projet pour Claude. Ce fichier est canonique et remplace
-`INSTRUCTIONS_PROJET.md` (conservé pour l'historique). Mis à jour le 2026-08-17.
+`INSTRUCTIONS_PROJET.md` (conservé pour l'historique). Mis à jour le 2026-10-02.
 
 ## Identité et posture
 
@@ -34,7 +34,7 @@ gouvernement. Les analyses n'engagent que leurs auteurs.
 ## Architecture du pipeline
 
 `observatoire-pipeline/` : sources.yaml (manifeste) → src/extract.py
-(29 extracteurs, registre EXTRACTORS) → src/derive.py (repères R1-R6 +
+(32 sources, registre EXTRACTORS) → src/derive.py (repères R1-R6 +
 lentilles auxiliaires) → templates/dashboard.html.tmpl (payload JSON inline
 `const D = {...}`) → outputs/dashboard.html → copié vers docs/ (GitHub Pages).
 
@@ -44,7 +44,7 @@ lentilles auxiliaires) → templates/dashboard.html.tmpl (payload JSON inline
 2. `./maj_dashboard.sh` depuis la racine (archive, build, tests, copie docs/, commit).
 3. `git push` — Pages se régénère.
 
-**Tests = sentinelles.** 69 tests d'intégrité épinglent les valeurs-clés. Un
+**Tests = sentinelles.** 74 tests d'intégrité épinglent les valeurs-clés. Un
 test qui casse après une mise à jour ISQ est le signal voulu : vérifier la
 révision dans le fichier source, mettre à jour la valeur attendue en
 documentant l'historique dans la docstring (ex. « 15 (avril) → 17 (mai) →
@@ -130,11 +130,13 @@ dans `Données Québec/`.
 
 ## Cadres analytiques
 
-- **Protocole des repères** (`Protocole_reperes_observatoire.md`, v1.1.0,
-  gelé) : R1 écart de découvrabilité, R2 profondeur du catalogue, R3
-  consommation absolue, R4 indice d'angle mort, R5 volume d'œuvres (en
-  chantier — sources ADISQ/SODEC/OCCQ à identifier). R6 (vitalité des arts
-  vivants subventionnés, CALQ) est auxiliaire, à formaliser en v1.2.0.
+- **Protocole des repères** (`Protocole_reperes_observatoire.md`, v1.2.0) :
+  R1 écart de découvrabilité, R2 profondeur du catalogue, R3 consommation
+  absolue, R4 indice d'angle mort (9/12, A = 0,750), R5 volume d'œuvres (en
+  chantier, sources ADISQ/SODEC/OCCQ à identifier ; couvertures partielles
+  documentées), R6 vitalité des arts vivants et arts visuels subventionnés
+  (CALQ), officialisé en v1.2.0. Baseline annuelle 2025 figée pour R1 à R3,
+  avec la lecture hebdomadaire YTD conservée en parallèle.
 - **Grille AI-exposure à trois lentilles** (skill
   `ai-exposure-creative-sector`) : 1a demande experte (C-AIOE), 1b demande
   marché (postes vacants), 2 usage révélé (AEI). L'écart entre lentilles est
@@ -146,23 +148,67 @@ dans `Données Québec/`.
   = 75,8 %), la courbe de profondeur (densité QC ~5 % à toutes les
   profondeurs du palmarès), la bascule d'ère (ventes 58,9 % → streaming
   7,1 %), l'asymétrie d'accès aux données de plateformes, rendre visible ≠
-  redistribuer.
+  redistribuer, **le gâteau grossit et la tranche reste** (septembre 2026 :
+  le box-office québécois toutes origines progresse de 5,1 % sur un an
+  pendant que la part des films québécois tombe à 3,2 % ; le volume de
+  streaming dépasse le rythme de 2025 pendant que la part québécoise stagne
+  à 7,1 %. Une part stable dans un marché en croissance n'est pas une
+  position tenue, et seule la mesure absolue de R3 le montre).
+
+## Surface d'exécution
+
+Le projet se pilote depuis **Claude Code**, à la racine du dépôt. Les tâches
+planifiées de l'application de bureau ont été dépréciées le **2026-10-02** ;
+les deux agents du Carnet qui en dépendaient sont devenus des **skills du
+dépôt**, invoqués à la demande. Rien n'est perdu : la méthode complète vit
+désormais dans des fichiers versionnés plutôt que dans la configuration d'un
+planificateur.
+
+Conséquence méthodologique à assumer : **sans planificateur, les fenêtres
+temporelles ne sont plus garanties.** Un agent conçu pour couvrir sept jours
+peut en couvrir vingt. Chaque skill concerné doit établir l'intervalle réel
+depuis la dernière exécution plutôt que présumer sa cadence nominale. Une
+fenêtre élargie annoncée comme telle vaut mieux qu'une fenêtre nominale fausse.
+
+- `.claude/skills/` : skills du projet, versionnés, chargés automatiquement
+  par Claude Code quand le dépôt est le dossier de travail. Frontmatter
+  minimal : `name` et `description`. La `description` est le seul texte vu
+  avant chargement, donc elle doit dire ce que fait le skill ET quand le
+  déclencher.
+- `CLAUDE.md` (ce fichier) : déjà la convention Claude Code, chargé à chaque
+  session. Aucune migration nécessaire.
+- Pas de planification automatique pour l'instant. Si le besoin revient, les
+  pistes sont launchd sur le Mac (attention aux problèmes connus
+  d'authentification quand le processus part de launchd) ou GitHub Actions
+  (mais les données brutes sont gitignorées, donc seules les sorties publiées
+  dans `docs/` y seraient lisibles). À vérifier contre la documentation
+  courante avant de s'y engager.
 
 ## Agents du Carnet
 
-- **Chroniqueur** (skill `chroniqueur-carnet` + tâche `chroniqueur-hebdo-carnet`,
-  vendredi 9 h) : données → angle → revue médiatique QC (la présence ET
-  l'absence sont des faits ; deux requêtes minimum avant de conclure au
-  silence, requêtes listées) → brouillon dans `chroniques/` (privé, gitignoré).
-  L'agent propose, Joao publie. Réviser les brouillons en éditeur : vérifier
-  chiffres aux sources ET références médiatiques externes avant publication.
-- **Veille MCCQ + CRTC** (tâche `veille-mccq-crtc`, lundi 8 h) : digest
-  réglementaire hebdo, focus Loi 109/découvrabilité, avec protocole de
-  vérification des restrictions d'accès aux sources (voir le prompt de la
-  tâche).
+Les deux agents sont des skills de `.claude/skills/`. Ils proposent, Joao
+décide. Aucun des deux ne publie ni ne pousse quoi que ce soit.
+
+- **Chroniqueur** (`chroniqueur-carnet`, cadence recommandée : vendredi) :
+  données → angle → revue médiatique QC (la présence ET l'absence sont des
+  faits ; deux requêtes minimum avant de conclure au silence, requêtes
+  listées) → brouillon dans `chroniques/` (privé, gitignoré). Réviser les
+  brouillons en éditeur : vérifier les chiffres aux sources ET les références
+  médiatiques externes avant publication.
+- **Veille MCCQ + CRTC** (`veille-mccq-crtc`, cadence recommandée : lundi) :
+  digest réglementaire, focus Loi 109 et découvrabilité, avec protocole de
+  vérification des restrictions d'accès aux sources. Distinction cardinale :
+  « la source n'a rien publié » (vérifié) n'est pas « la source n'a pas pu
+  être vérifiée » (vide ou bloquée). La seconde ne se présente jamais comme
+  la première.
+
+L'ordre compte : la veille du lundi alimente le chroniqueur en pistes
+réglementaires avant qu'il ne choisisse son angle.
 
 ## Repères du dépôt
 
+- `.claude/skills/` — les deux agents du Carnet (`chroniqueur-carnet`,
+  `veille-mccq-crtc`), versionnés avec leurs références.
 - `observatoire-pipeline/` — le pipeline (README.md pour les détails).
 - `Données Québec/` — données brutes (xlsx ISQ, zips CANSIM, JSON récoltés) ;
   `_archives/` par date.
