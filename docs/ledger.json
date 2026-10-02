@@ -1,5 +1,5 @@
 {
-  "build_iso": "2026-09-17T19:07:02.281594+00:00",
+  "build_iso": "2026-10-02T12:07:30.833729+00:00",
   "pipeline_version": "1.0.0",
   "sources_used": [
     {
@@ -201,11 +201,11 @@
       "label": "Anthropic Economic Index — release Cadences (juin 2026), Québec et Canada"
     },
     {
-      "path": "/Users/joaoroque/Documents/Claude/Projects/Culture Québec en donnée/Données Québec/Palmarès évolutif des films présentés en programme simple, par région administrative et pour l’ensemble du Québec_3.xlsx",
-      "name": "Palmarès évolutif des films présentés en programme simple, par région administrative et pour l’ensemble du Québec_3.xlsx",
-      "sha256": "58b248814634bf228058e098f76124ef33de36c42ba66b1ab2321d979d08b96d",
-      "size_bytes": 9559,
-      "mtime_iso": "2026-09-15T13:11:12.641309+00:00",
+      "path": "/Users/joaoroque/Documents/Claude/Projects/Culture Québec en donnée/Données Québec/Palmarès évolutif des films présentés en programme simple, par région administrative et pour l’ensemble du Québec_4.xlsx",
+      "name": "Palmarès évolutif des films présentés en programme simple, par région administrative et pour l’ensemble du Québec_4.xlsx",
+      "sha256": "24733eb952aa39b5dbf8da6dabbec4000388f26b5a90e1a2008d1ed99ba3f806",
+      "size_bytes": 9564,
+      "mtime_iso": "2026-10-02T10:35:40.522228+00:00",
       "source_key": "palmares_films",
       "label": "Palmarès évolutif des films présentés en programme simple, ensemble du Québec"
     },
@@ -264,11 +264,11 @@
       "label": "Indicateurs des résultats d'exploitation des établissements cinématographiques (depuis 1975)"
     },
     {
-      "path": "/Users/joaoroque/Documents/Claude/Projects/Culture Québec en donnée/Données Québec/Résultats d'exploitation des établissements cinématographiques selon le pays d'origine des films, données annuelles, Québec_2.xlsx",
-      "name": "Résultats d'exploitation des établissements cinématographiques selon le pays d'origine des films, données annuelles, Québec_2.xlsx",
-      "sha256": "33e3ee337ba08da36a8ec101b1a4109edc98151c44eb8b012984821d40370d41",
-      "size_bytes": 18143,
-      "mtime_iso": "2026-06-09T13:29:32.740945+00:00",
+      "path": "/Users/joaoroque/Documents/Claude/Projects/Culture Québec en donnée/Données Québec/Résultats d'exploitation des établissements cinématographiques selon le pays d'origine des films, données annuelles, Québec_4.xlsx",
+      "name": "Résultats d'exploitation des établissements cinématographiques selon le pays d'origine des films, données annuelles, Québec_4.xlsx",
+      "sha256": "44d7e8a7b11cac8cfefa75dd992f62990d4d7b0b941151ecfec4d0e76439cbe4",
+      "size_bytes": 18142,
+      "mtime_iso": "2026-10-02T10:34:18.832938+00:00",
       "source_key": "cinema_pays_annuel",
       "label": "Résultats d'exploitation des établissements cinématographiques selon le pays d'origine des films — assistance annuelle"
     },

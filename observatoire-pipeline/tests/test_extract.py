@@ -923,20 +923,37 @@ def test_palmares_films_perimetre(raw_dir):
 
 
 def test_palmares_films_absence_quebec(raw_dir):
-    """Constat structurant à l'intégration (juillet 2026) : aucun film
-    québécois dans le top 20 d'assistance. Le pendant cinéma du R2
-    musical (1 seul interprète QC au top 20 musique).
+    """Présence québécoise au top 20 d'assistance — l'alerte inversée a sonné.
 
-    Si ce test casse un jour parce qu'un film QC entre au top 20,
-    c'est une bonne nouvelle : mettre à jour le test ET le signaler
-    comme fait d'actualité au chroniqueur.
+    Histoire de ce test. De son intégration (juillet 2026) au 17 septembre
+    2026, il épinglait un ZÉRO : aucun film québécois dans le top 20
+    d'assistance, pendant cinéma du R2 musical (un seul interprète québécois
+    au top 20 musique). Il était écrit comme alerte inversée, avec la consigne
+    de traiter sa rupture comme une bonne nouvelle plutôt que comme un bogue.
+
+    Il a cassé le 2 octobre 2026, dans le bon sens. « 125, rue des Malaises »
+    (Québec, 2026) entre au rang 16 avec 146 533 spectateurs cumulés. Vérifié
+    au matcher et par inspection visuelle du palmarès complet, comme l'exige
+    la convention du Carnet pour tout zéro publié ou retiré.
+
+    Le test devient donc une sentinelle de suivi plutôt qu'une alarme : il
+    pince la présence observée. La répartition reste écrasante (18 films
+    américains sur 20), et un film à un rang moyen ne renverse rien : à lire
+    avec la part québécoise du box-office, qui était à 3,2 % en recul de
+    54,2 % sur un an à la lecture du 15 septembre. Entrer au palmarès et peser
+    sur le marché sont deux choses distinctes, et c'est exactement la
+    distinction « rendre visible n'est pas redistribuer ».
     """
     from src import extract
     f = find_source_file(raw_dir, "Palmarès évolutif des films*.xlsx")
     d = extract.extract_palmares_films(f)
-    assert d['n_quebec'] == 0
-    assert d['films_quebec'] == []
-    # Domination américaine
+    # Bascule du 2 octobre 2026 : 0 → 1 film québécois au top 20.
+    assert d['n_quebec'] == 1
+    qc = d['films_quebec'][0]
+    assert qc['titre'] == '125, rue des Malaises'
+    assert qc['rang'] == 16
+    assert qc['assistance_cumul'] == 146533.0
+    # La domination américaine n'a pas bougé pour autant.
     assert d['repartition_pays'].get('États-Unis', 0) >= 15
 
 
