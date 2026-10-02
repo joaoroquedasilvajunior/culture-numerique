@@ -1210,3 +1210,98 @@ def test_indicateurs_part_films_qc_serie_longue(raw_dir):
     # Le sommet historique est bien 2005
     vals = {a: v for a, v in serie.items() if v is not None}
     assert max(vals, key=vals.get) == 2005
+
+
+# === Arts de la scène — tableau ISQ 4949 (multi-fichiers) ===================
+
+def test_arts_scene_coupes_detectees(raw_dir):
+    """L'extracteur multi-fichiers identifie chaque coupe par son contenu.
+
+    Le tableau 4949 ne met PAS la coupe dans le nom du fichier : année,
+    géographie et provenance se lisent en L3, L4 et L7 du classeur. Ce test
+    vérifie que trois fichiers téléchargés le 2 octobre 2026 produisent trois
+    coupes correctement étiquetées, sans dépendre du nom.
+
+    Si ce test casse par le HAUT (plus de trois coupes), c'est qu'une coupe a
+    été ajoutée dans Données Québec/ : vérifier laquelle, puis mettre à jour la
+    valeur attendue. Aucun code à modifier, c'est tout l'intérêt du mode
+    multi-fichiers.
+    """
+    from src import extract
+    from src.pipeline import find_source_files
+    fs = find_source_files(raw_dir, "Statistiques des représentations payantes*.xlsx")
+    assert fs, "Aucun fichier du tableau 4949 trouvé"
+    d = extract.extract_arts_scene_provenance(fs)
+    assert d['tableau_isq'] == '4949'
+    assert d['n_coupes'] == 3
+    etiquettes = {(c['annee'], c['dimensions']['provenance']) for c in d['coupes']}
+    assert (2024, 'Spectacles provenant du Québec') in etiquettes
+    assert (2025, 'Spectacles provenant du Québec') in etiquettes
+    assert (2025, 'Total (ensemble des provenances)') in etiquettes
+    # Toutes les coupes portent sur l'ensemble du Québec à ce stade
+    assert {c['dimensions']['geographie'] for c in d['coupes']} == {'Ensemble du Québec'}
+
+
+def test_arts_scene_valeurs_t1_2025(raw_dir):
+    """Valeurs du T1 2025, vérifiées au classeur source.
+
+    Coupe québécoise : 4 861 représentations, 1 761 574 entrées,
+    57 319 092 $ de billetterie. Coupe totale : 5 533 / 2 300 158 / 83 942 749 $.
+    Ces six nombres portent le repère R7, donc ils sont épinglés ici.
+    """
+    from src import extract
+    from src.pipeline import find_source_files
+    d = extract.extract_arts_scene_provenance(
+        find_source_files(raw_dir, "Statistiques des représentations payantes*.xlsx"))
+    par_cle = {(c['annee'], c['dimensions']['provenance']): c for c in d['coupes']}
+    t1 = '1ᵉʳ trimestre'
+
+    qc = par_cle[(2025, 'Spectacles provenant du Québec')]['trimestres'][t1]
+    assert qc['representations'] == 4861.0
+    assert qc['assistance_totale'] == 1761574.0
+    assert qc['revenus_billetterie'] == 57319092.0
+
+    tot = par_cle[(2025, 'Total (ensemble des provenances)')]['trimestres'][t1]
+    assert tot['representations'] == 5533.0
+    assert tot['assistance_totale'] == 2300158.0
+    assert tot['revenus_billetterie'] == 83942749.0
+
+
+def test_arts_scene_marqueurs_confidentiels(raw_dir):
+    """Les cellules confidentielles restent vides et sont consignées.
+
+    Aux T3 et T4 2024, l'ISQ supprime l'assistance et les revenus de la coupe
+    québécoise (marqueur `x`) tout en publiant le total annuel. L'extracteur
+    doit rendre None ET conserver la raison. Ne JAMAIS reconstituer ces
+    cellules par soustraction du total annuel : ce serait défaire la
+    confidentialité que l'ISQ a posée.
+    """
+    from src import extract
+    from src.pipeline import find_source_files
+    d = extract.extract_arts_scene_provenance(
+        find_source_files(raw_dir, "Statistiques des représentations payantes*.xlsx"))
+    qc24 = next(c for c in d['coupes']
+                if c['annee'] == 2024
+                and c['dimensions']['provenance'] == 'Spectacles provenant du Québec')
+    t3 = qc24['trimestres']['3ᵉ trimestre']
+    assert t3['assistance_totale'] is None
+    assert qc24['marqueurs']['3ᵉ trimestre']['assistance_totale'] == 'confidentiel'
+    # Le total annuel, lui, est publié et exploitable
+    assert qc24['total_annuel']['representations'] == 18168.0
+    assert qc24['total_annuel']['revenus_billetterie'] == 256614013.0
+
+
+def test_arts_scene_rupture_serie_documentee(raw_dir):
+    """La rupture de série 2024 est transportée dans l'extraction.
+
+    L'ISQ déclare les données 2024+ non comparables avec 2004-2023. Ce caveat
+    doit voyager avec les données jusqu'au tableau de bord, pas rester dans une
+    note de bas de classeur que personne ne relit.
+    """
+    from src import extract
+    from src.pipeline import find_source_files
+    d = extract.extract_arts_scene_provenance(
+        find_source_files(raw_dir, "Statistiques des représentations payantes*.xlsx"))
+    assert '2024' in d['rupture_serie']
+    assert 'comparables' in d['rupture_serie']
+    assert 'subventionn' in d['perimetre']  # distinction avec le périmètre CALQ de R6

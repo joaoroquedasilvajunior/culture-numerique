@@ -22,7 +22,7 @@ sys.path.insert(0, str(REPO_ROOT))
 import yaml
 
 from src import extract, derive
-from src.pipeline import find_source_file, _resolve_raw_dir
+from src.pipeline import find_source_file, find_source_files, _resolve_raw_dir
 
 
 @pytest.fixture
@@ -61,6 +61,8 @@ def combined(raw_dir):
         "Statistiques principales des organismes de diffusion et de production en arts visuels, arts numériques, cinéma et vidéo soutenus à la mission par le Conseil des arts et des lettres du Québec, Québec.xlsx"
     )
     f_mb = find_source_file(raw_dir, 'musicbrainz_artistes_qc_*.json')
+    # v1.3.0 : source MULTI-FICHIERS pour R7 (toutes les coupes du tableau 4949)
+    fs_scene = find_source_files(raw_dir, "Statistiques des représentations payantes*.xlsx")
     return {
         'part_qc': extract.extract_part_qc(f_part),
         'volume_musique': extract.extract_volume_musique(f_vol),
@@ -72,6 +74,7 @@ def combined(raw_dir):
         'calq_diffuseurs_pluridiscip': extract.extract_calq_diffuseurs_pluridiscip(f_calq_di),
         'calq_arts_visuels': extract.extract_calq_arts_visuels(f_calq_av),
         'musicbrainz_artistes_qc': extract.extract_musicbrainz_artistes_qc(f_mb),
+        'arts_scene_provenance': extract.extract_arts_scene_provenance(fs_scene),
     }
 
 
@@ -202,7 +205,7 @@ def test_r4_matrice_9_sur_12():
     assert r4['cellules_couvertes'] == 9
     assert r4['a'] == round(9 / 12, 3)
     assert r4['provisional'] is False
-    assert r4['version_protocole'] == '1.2.0'
+    assert r4['version_protocole'] == '1.3.0'
     assert r4['date_gel'] == '2026-08-21'
 
 
@@ -249,7 +252,7 @@ def test_derive_all_structure(combined):
     """derive_all — structure complète, version protocole portée."""
     result = derive.derive_all(combined, annee=2025)
     assert result['annee'] == 2025
-    assert result['protocole_version'] == '1.2.0'
+    assert result['protocole_version'] == '1.3.0'
     # v1.2.0 : R6 promu repère officiel (six repères)
     assert set(result['reperes'].keys()) == {
         'r1_ecart_decouvrabilite',
@@ -257,7 +260,10 @@ def test_derive_all_structure(combined):
         'r3_consommation_absolue',
         'r4_angle_mort',
         'r5_volume_oeuvres',
-        'r6_vitalite_arts_vivants'
+        'r6_vitalite_arts_vivants',
+        # v1.3.0 (2026-10-02) : nouveau repère, captation de valeur dans le
+        # spectacle vivant payant (ISQ 4949).
+        'r7_captation_valeur'
     }
     r6 = result['reperes']['r6_vitalite_arts_vivants']
     assert r6['provisional'] is False
@@ -275,6 +281,8 @@ def test_derive_all_tolerant_aux_sources_manquantes():
     assert result['reperes']['r5_volume_oeuvres']['status'] == 'en_chantier'
     # R6 dépend des sources CALQ : absentes ici
     assert result['reperes']['r6_vitalite_arts_vivants']['status'] == 'donnees_indisponibles'
+    # R7 dépend du tableau 4949 : absent ici
+    assert result['reperes']['r7_captation_valeur']['status'] == 'donnees_indisponibles'
 
 
 # === Intégration dériveur → payload du dashboard ============================
@@ -290,7 +298,7 @@ def test_payload_for_dashboard_inclut_reperes(combined):
     payload = _payload_for_dashboard(combined, reperes=reperes)
 
     assert 'reperes' in payload
-    assert payload['reperes']['protocole_version'] == '1.2.0'
+    assert payload['reperes']['protocole_version'] == '1.3.0'
     # R4 — la matrice recomptée doit voyager intacte jusqu'au template
     r4 = payload['reperes']['reperes']['r4_angle_mort']
     assert r4['cellules_couvertes'] == 9
@@ -373,3 +381,62 @@ def test_payload_for_dashboard_sans_reperes(combined):
     assert 'reperes' not in payload
     # Les clés existantes doivent rester intactes
     assert 'part_qc_musique' in payload
+
+
+# === R7 — Captation de valeur dans le spectacle vivant payant ===============
+
+def test_r7_gradient_t1_2025(combined):
+    """R7 — le gradient offre moins recette vaut 19,6 points au T1 2025.
+
+    Part québécoise : 87,9 % des représentations, 76,6 % de l'assistance,
+    68,3 % des revenus de billetterie. La part décroît à chaque étape de la
+    chaîne, et c'est le constat que le repère isole.
+
+    Lecture. Les 672 représentations non québécoises, soit 12,1 % de l'offre,
+    captent 31,7 % de la recette. Un spectacle non québécois attire 2,21 fois
+    plus de monde et rapporte 3,36 fois plus par représentation.
+
+    Pourquoi ce repère est l'inverse des autres. R1 à R3 mesurent des marchés
+    où le Québec est minoritaire partout (streaming 7,1 %, box-office 3,2 %).
+    Ici la souveraineté de production est acquise et la question devient celle
+    du partage de la recette. Ne pas confondre les deux situations : « occuper
+    la scène » et « capter la valeur » se mesurent séparément.
+    """
+    r7 = derive.derive_r7_captation_valeur(combined.get('arts_scene_provenance'))
+    assert r7['provisional'] is True, "R7 reste provisoire tant qu'une seule période est mesurée"
+    assert r7['n_lectures'] == 1
+    l = r7['lectures'][0]
+    assert (l['annee'], l['periode']) == (2025, '1ᵉʳ trimestre')
+    assert l['part_offre_pct'] == 87.9
+    assert l['part_assistance_pct'] == 76.6
+    assert l['part_recette_pct'] == 68.3
+    assert l['gradient_offre_recette_pts'] == 19.6
+    # Le gradient est monotone décroissant : offre > assistance > recette
+    assert l['part_offre_pct'] > l['part_assistance_pct'] > l['part_recette_pct']
+    i = l['intensites']
+    assert i['rapport_assistance'] == 2.21
+    assert i['rapport_revenu'] == 3.36
+
+
+def test_r7_signale_la_coupe_manquante(combined):
+    """R7 déclare ce qu'il ne peut pas calculer plutôt que de le combler.
+
+    L'année 2024 est complète côté québécois (18 168 représentations,
+    256 614 013 $) mais la coupe « toutes provenances » n'a pas été
+    téléchargée. Sans dénominateur, aucune part n'est calculable. Le repère
+    doit le dire explicitement : c'est la règle de l'absence documentée.
+
+    Quand la coupe 2024 totale arrivera, ce test cassera et n_lectures passera
+    à au moins 2 — ce sera le moment de retirer `provisional`.
+    """
+    r7 = derive.derive_r7_captation_valeur(combined.get('arts_scene_provenance'))
+    assert len(r7['non_calculables']) == 1
+    nc = r7['non_calculables'][0]
+    assert nc['annee'] == 2024
+    assert nc['coupe_manquante'] == 'Total (ensemble des provenances)'
+
+
+def test_r7_absence_de_source(combined):
+    """Sans la source, R7 se déclare indisponible sans faire tomber le build."""
+    r7 = derive.derive_r7_captation_valeur(None)
+    assert r7['status'] == 'donnees_indisponibles'

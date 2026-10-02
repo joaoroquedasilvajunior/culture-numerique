@@ -21,6 +21,7 @@ import csv
 import io
 import json
 import re
+import unicodedata
 import zipfile
 from collections import defaultdict
 from pathlib import Path
@@ -2199,3 +2200,184 @@ EXTRACTORS = {
     'extract_depenses_menages_quartiles': extract_depenses_menages_quartiles,
     'extract_indicateurs_culture_ensemble': extract_indicateurs_culture_ensemble,
 }
+
+
+# =============================================================================
+# Arts de la scène — tableau ISQ 4949 (représentations payantes, trimestriel)
+# =============================================================================
+
+# Correspondance libellé ISQ → clé normalisée. Le matching se fait sur le
+# libellé (normalisé, espaces insécables retirés) et non sur le numéro de
+# ligne : la position varie d'un fichier à l'autre selon la coupe retenue.
+_ARTS_SCENE_INDICATEURS = {
+    'representations':        'Représentations',
+    'billets_disponibles':    'Billets disponibles',
+    'assistance_totale':      'Assistance totale',
+    'assistance_payante':     'Assistance payante',
+    'assistance_faveur':      'Assistance avec billet de faveur',
+    'taux_faveur_pct':        "Taux d’assistance avec billet de faveur",
+    'assistance_moy_repr':    'Assistance moyenne par représentation',
+    'taux_occupation_pct':    "Taux d’occupation",
+    'salles_utilisees':       'Salles utilisées',
+    'revenus_billetterie':    'Revenus de billetterie excluant les taxes',
+    'prix_moyen_billet':      'Prix moyen du billet',
+    'revenu_moy_repr':        'Revenu moyen de billetterie par représentation',
+}
+
+# Marqueurs ISQ rencontrés dans ce tableau. Jamais convertis en nombre, jamais
+# reconstitués par soustraction : une cellule confidentielle reste None et la
+# raison est consignée.
+_ARTS_SCENE_MARQUEURS = {
+    'x': 'confidentiel',
+    '..': 'non disponible',
+    '...': "n'a pas lieu de figurer",
+    'n/a': 'non applicable',
+}
+
+
+def _arts_scene_norm(s) -> str:
+    """Normalise un libellé de ligne : NFC, espaces insécables et apostrophes."""
+    if s is None:
+        return ''
+    t = unicodedata.normalize('NFC', str(s))
+    t = t.replace('\xa0', ' ').replace('’', '’').replace("'", '’')
+    return ' '.join(t.split())
+
+
+def _arts_scene_valeur(brut):
+    """Retourne (valeur, marqueur). La valeur est None dès qu'un marqueur ISQ
+    occupe la cellule, et le marqueur est conservé pour la traçabilité."""
+    if brut is None:
+        return None, None
+    if isinstance(brut, (int, float)):
+        return float(brut), None
+    s = str(brut).strip()
+    if s == '':
+        return None, None
+    cle = s.lower()
+    if cle in _ARTS_SCENE_MARQUEURS:
+        return None, _ARTS_SCENE_MARQUEURS[cle]
+    try:
+        return float(s.replace(' ', '').replace('\xa0', '').replace(',', '.')), None
+    except ValueError:
+        return None, f'illisible: {s[:20]}'
+
+
+def extract_arts_scene_provenance(fichiers):
+    """Tableau ISQ 4949 — représentations payantes en arts de la scène.
+
+    Extracteur MULTI-FICHIERS (`multi_fichiers: true` dans sources.yaml).
+
+    Pourquoi : les coupes du tableau 4949 (année, région administrative, public
+    cible, discipline, provenance, langue d'interprétation, taille de salle) se
+    choisissent à l'interface de téléchargement et n'apparaissent PAS dans le
+    nom du fichier. La coupe retenue n'est lisible qu'à l'intérieur du classeur,
+    en L3 (année), L4 (géographie) et L5 à L9 (les cinq autres dimensions). Un
+    motif de nom ne peut donc pas distinguer deux coupes du même tableau. Cet
+    extracteur lit tous les fichiers présents et indexe chaque coupe par ce
+    qu'elle déclare, pas par son nom.
+
+    Rupture de série déclarée par l'ISQ : à partir de 2024, les modifications de
+    l'Enquête sur la fréquentation des spectacles au Québec rendent les données
+    NON COMPARABLES avec 2004-2023 (périodicité passée de bimestrielle à
+    trimestrielle, population de diffuseurs revue, questionnaire refait).
+    Ne jamais raccorder une série 2024+ à une série antérieure.
+
+    Retourne un dict avec la liste `coupes`, chacune portant son année, ses
+    dimensions, ses trimestres et son total annuel quand il est publié.
+    """
+    from openpyxl import load_workbook
+
+    coupes = []
+    cible = {_arts_scene_norm(v): k for k, v in _ARTS_SCENE_INDICATEURS.items()}
+
+    for chemin in fichiers:
+        ws = load_workbook(chemin, data_only=True).active
+
+        annee_brute = ws.cell(3, 1).value
+        try:
+            annee = int(str(annee_brute).strip())
+        except (TypeError, ValueError):
+            continue  # pas une coupe du 4949 exploitable
+
+        dimensions = {
+            'geographie':  _arts_scene_norm(ws.cell(4, 1).value),
+            'public_cible': _arts_scene_norm(ws.cell(5, 1).value),
+            'discipline':  _arts_scene_norm(ws.cell(6, 1).value),
+            'provenance':  _arts_scene_norm(ws.cell(7, 1).value),
+            'langue':      _arts_scene_norm(ws.cell(8, 1).value),
+            'taille_salle': _arts_scene_norm(ws.cell(9, 1).value),
+        }
+
+        # Repérer la ligne d'en-têtes de périodes, puis les colonnes publiées.
+        ligne_entetes = None
+        for r in range(9, 16):
+            libelles = [_arts_scene_norm(ws.cell(r, c).value)
+                        for c in range(2, min(ws.max_column, 14) + 1)]
+            if any('trimestre' in l.lower() for l in libelles):
+                ligne_entetes = r
+                break
+        if ligne_entetes is None:
+            continue
+
+        periodes = []
+        for c in range(3, ws.max_column + 1):
+            lib = _arts_scene_norm(ws.cell(ligne_entetes, c).value)
+            if not lib:
+                continue
+            a_venir = 'à venir' in lib.lower()
+            nom = lib.replace('(À venir)', '').replace('(à venir)', '').strip()
+            periodes.append({'col': c, 'periode': nom, 'a_venir': a_venir})
+
+        # Lire les indicateurs par libellé.
+        valeurs = {p['periode']: {} for p in periodes}
+        marqueurs = {}
+        unites = {}
+        for r in range(ligne_entetes + 1, min(ws.max_row, ligne_entetes + 22) + 1):
+            cle = cible.get(_arts_scene_norm(ws.cell(r, 1).value))
+            if not cle:
+                continue
+            unites[cle] = _arts_scene_norm(ws.cell(r, 2).value)
+            for p in periodes:
+                v, m = _arts_scene_valeur(ws.cell(r, p['col']).value)
+                valeurs[p['periode']][cle] = v
+                if m:
+                    marqueurs.setdefault(p['periode'], {})[cle] = m
+
+        trimestres = {p['periode']: valeurs[p['periode']]
+                      for p in periodes if not p['a_venir'] and 'annuel' not in p['periode'].lower()}
+        total_annuel = next((valeurs[p['periode']] for p in periodes
+                             if 'annuel' in p['periode'].lower() and not p['a_venir']), None)
+        a_venir = [p['periode'] for p in periodes if p['a_venir']]
+
+        coupes.append({
+            'annee': annee,
+            'dimensions': dimensions,
+            'trimestres': trimestres,
+            'total_annuel': total_annuel,
+            'periodes_a_venir': a_venir,
+            'marqueurs': marqueurs,
+            'unites': unites,
+            'fichier': unicodedata.normalize('NFC', Path(chemin).name),
+        })
+
+    coupes.sort(key=lambda c: (c['annee'], c['dimensions']['provenance']))
+    return {
+        'tableau_isq': '4949',
+        'enquete': 'Enquête sur la fréquentation des spectacles au Québec',
+        'rupture_serie': ('À partir de 2024, les données ne sont PAS comparables '
+                          'avec 2004-2023 : périodicité passée de bimestrielle à '
+                          'trimestrielle, population de diffuseurs revue, '
+                          'questionnaire refait.'),
+        'perimetre': ('Toutes les représentations payantes en arts de la scène au '
+                      'Québec, et non les seuls organismes subventionnés. Exclut '
+                      'les représentations privées, les spectacles amateurs, le '
+                      'scolaire en locaux d\'école et les événements à passeport '
+                      'ou macaron. Inclut les spectacles en bar avec droit '
+                      'd\'entrée. Périmètre distinct de celui du CALQ (R6).'),
+        'coupes': coupes,
+        'n_coupes': len(coupes),
+    }
+
+
+EXTRACTORS['extract_arts_scene_provenance'] = extract_arts_scene_provenance

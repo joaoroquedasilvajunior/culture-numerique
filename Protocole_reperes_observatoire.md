@@ -1,6 +1,6 @@
 # Protocole des repères suivis — Carnet de données — souveraineté culturelle numérique
 
-**Version 1.2.0** — révisée le 2026-08-21 (gel initial : 2026-05-25)
+**Version 1.3.0** — révisée le 2026-10-02 (gel initial : 2026-05-25)
 **Cadre :** pluralisme méthodologique + Cadre UNESCO 2025 pour les statistiques culturelles
 **Posture éditoriale :** voir *Manifeste du Carnet de données — souveraineté culturelle numérique*
 
@@ -329,6 +329,85 @@ fragilisation des revenus autonomes — le repère ne tranche pas, il expose.
 
 ---
 
+## Repère 7 — Captation de valeur dans le spectacle vivant payant
+
+**Statut.** Provisoire (v1.3.0, 2026-10-02). Une seule période mesurée.
+
+**Question.** Quand la souveraineté de production est acquise, qui capte la recette ?
+
+**Pourquoi un repère distinct.** R1 à R3 mesurent des marchés où le répertoire
+québécois est minoritaire partout : 7,1 % de l'écoute en continu, 3,2 % du
+box-office. R6 mesure la vitalité de l'écosystème subventionné. Aucun repère ne
+couvrait le cas inverse, celui d'un domaine où le Québec occupe l'essentiel de
+l'offre et où la question se déplace vers le partage de la valeur. Le spectacle
+vivant payant est ce cas, et il est le seul du corpus.
+
+**Définition opérationnelle.** Pour une même période et une même géographie, on
+compare la part québécoise de trois grandeurs successives de la chaîne :
+
+| Grandeur | Mesure ISQ |
+|----------|------------|
+| Offre | représentations |
+| Assistance | assistance totale (entrées) |
+| Recette | revenus de billetterie, taxes exclues |
+
+Le repère est le **gradient** :
+
+> *G* = part québécoise de l'offre − part québécoise de la recette (points de %)
+
+Un gradient positif signifie que le répertoire québécois occupe la scène
+davantage qu'il ne capte l'argent. Les trois parts sont conservées en clair à
+côté du gradient : un gradient seul ne dit pas si l'écart vient d'un déficit
+d'assistance ou d'un déficit de prix.
+
+**Source.** ISQ, tableau 4949, *Statistiques des représentations payantes en arts
+de la scène*, données trimestrielles, Enquête sur la fréquentation des spectacles
+au Québec.
+
+**Première mesure (T1 2025, ensemble du Québec).**
+
+| Grandeur | Québec | Toutes provenances | Part QC |
+|----------|--------|--------------------|---------|
+| Représentations | 4 861 | 5 533 | 87,9 % |
+| Assistance totale | 1 761 574 | 2 300 158 | 76,6 % |
+| Revenus de billetterie | 57 319 092 $ | 83 942 749 $ | 68,3 % |
+
+**Gradient = +19,6 points.** La part décroît à chaque étape de la chaîne. Par
+soustraction des agrégats publiés, les 672 représentations non québécoises, soit
+12,1 % de l'offre, captent 23,4 % des entrées et 31,7 % de la recette. Un
+spectacle non québécois attire 2,21 fois plus de monde par représentation et
+rapporte 3,36 fois plus, le billet se vendant environ 1,5 fois plus cher.
+
+**Caveats, tous structurants.**
+
+- **Rupture de série en 2024**, déclarée par l'ISQ : les données ne sont pas
+  comparables avec 2004-2023. La périodicité est passée de bimestrielle à
+  trimestrielle, la population de diffuseurs couverte a été revue et le
+  questionnaire refait. Aucun raccord avec la série antérieure n'est licite.
+- **Délai de publication long.** Au 23 septembre 2026, seul le premier trimestre
+  de 2025 était publié. Un gradient calculé sur un seul trimestre ne distingue
+  pas un effet structurel d'une saisonnalité, et le premier trimestre est celui
+  des grandes tournées d'hiver. C'est la raison principale du statut provisoire.
+- **Le gradient exige les deux coupes.** La part n'est calculable que si la coupe
+  québécoise et la coupe « toutes provenances » existent pour la même période.
+  Une coupe manquante rend la période non calculable, ce qui est signalé sous la
+  clé `non_calculables` plutôt que comblé. L'année 2024 est dans ce cas : la
+  coupe québécoise est complète, la coupe totale n'a pas été récoltée.
+- **Périmètre distinct de R6.** Le tableau 4949 couvre toutes les représentations
+  payantes, pas seulement les organismes subventionnés. Il exclut le privé,
+  l'amateur, le scolaire en locaux d'école et les événements à passeport ou
+  macaron ; il inclut les spectacles en bar avec droit d'entrée. Les populations
+  et les unités diffèrent de celles du CALQ : ne jamais agréger R6 et R7.
+- **Confidentialité respectée.** Les cellules portant le marqueur `x` restent
+  vides et ne sont jamais reconstituées, y compris lorsque le total annuel
+  publié permettrait de les retrouver par soustraction.
+
+**Conditions de sortie du statut provisoire.** Au moins deux périodes
+comparables, idéalement deux années complètes, afin de distinguer le gradient
+structurel de la saisonnalité.
+
+---
+
 ## Annexe 5b — Chantier de recherche : indicateur dual EERH ↔ noyau créatif
 
 **Statut.** En chantier de recherche. Pas encore opérationnel.
@@ -408,6 +487,8 @@ la matrice doit s'accompagner d'une mise à jour synchrone du dériveur et de
 | 1.1.0   | 2026-05-26 | Révision mineure. R4 : règle de comptage binaire explicitée (✓ et ⚠ couvrent, ✗ ne couvre pas) ; matrice initiale figée en *Annexe R4* (8/12, dont 1 ✓ et 7 ⚠) ; intégration des sources MCC (Registre du patrimoine culturel) et MCC/BAnQ (bibliothèques publiques) au périmètre du recensement, ce qui reclasse Naturel × Préservation-Transmission et Humain × Préservation-Transmission en ⚠. R5 : alignement explicite des définitions « œuvre québécoise » sur les conventions institutionnelles externes (ADISQ, SODEC, OCCQ/BAnQ) plutôt que définition maison. Dériveur des repères implémenté (`src/derive.py`, `tests/test_derive_reperes.py`). |
 
 | 1.2.0   | 2026-08-21 | Révision mineure. **Baseline annuelle 2025 figée** pour R1, R2 et R3 sur les sources annuelles (bilan ISQ/OCCQ du 11 août 2026, données Luminate ; séries annuelles cinéma) ; les lectures hebdomadaires YTD sont conservées en parallèle sous la clé `lecture_courante`. **R1** : la baseline annuelle compare le streaming (7,1 %) à l'*ensemble des albums* (18 %), seule ventilation d'achat publiée dans la source annuelle — R = 2,54 ; E = 10,9 pts — alors que la lecture YTD compare au sous-ensemble *albums numériques* ; les deux dénominateurs sont explicités et ne se substituent pas. **R2** : définition étendue à la *courbe de profondeur* (N₂₀ / N₅₀ / N₁₀₀ / N₂₀₀ = 1 / 3 / 6 / 10 en 2025, densité moyenne 5,5 %), N₂₀ demeurant le repère principal. **R3** : branche cinéma complétée — l'assistance québécoise 2025 (1 036 590 spectateurs, 9,04 % du total) est désormais *mesurée* par la série annuelle par pays d'origine et non plus estimée par pondération ; les recettes québécoises restent non dérivables (la ventilation par pays porte sur l'assistance). **R4** : recomptage — *Social × Création-Production* reclassée ✗ → ⚠ (statistiques CALQ des organismes soutenus) ; compte porté de 8/12 à **9/12** (*A* = 0,750). **R5** : demeure *en chantier* (aucune des trois familles visées n'est mesurée) mais les couvertures partielles sont désormais documentées pour borner le chantier (productions théâtre/cirque CALQ ; catalogue d'artistes MusicBrainz), avec leurs limites explicites. **R6** (vitalité des arts vivants et arts visuels subventionnés, CALQ) : **promu du statut auxiliaire au statut de repère officiel**, portant le protocole de cinq à six repères. |
+
+| 1.3.0   | 2026-10-02 | Révision mineure. **Nouveau repère R7 — Captation de valeur dans le spectacle vivant payant**, portant le protocole de six à sept repères. Motivation : R1 à R3 mesurent des marchés où le Québec est minoritaire partout (streaming 7,1 %, box-office 3,2 %) et R6 mesure l'écosystème subventionné ; aucun repère ne couvrait le cas inverse d'un domaine où la souveraineté de production est acquise et où la question devient celle du partage de la recette. Définition : *G* = part québécoise des représentations − part québécoise des revenus de billetterie. Première mesure (T1 2025, ensemble du Québec) : offre 87,9 %, assistance 76,6 %, recette 68,3 %, soit **G = +19,6 points** ; les 12,1 % de représentations non québécoises captent 31,7 % de la recette, avec une assistance par représentation 2,21 fois supérieure et un revenu par représentation 3,36 fois supérieur. Source : ISQ tableau 4949 (Enquête sur la fréquentation des spectacles au Québec), 33e source du pipeline. **Statut provisoire** : une seule période mesurée, l'ISQ déclarant par ailleurs une rupture de série en 2024 sans raccord possible avec 2004-2023, et le délai de publication étant long. Conséquence technique : le pipeline accepte désormais des sources **multi-fichiers** (clé `multi_fichiers` dans `sources.yaml`), parce que les coupes du tableau 4949 se choisissent à l'interface de téléchargement et ne sont lisibles qu'à l'intérieur du classeur, ce qui rend un motif de nom incapable de les distinguer ; le ledger enregistre une empreinte SHA-256 par fichier consommé. |
 
 ---
 

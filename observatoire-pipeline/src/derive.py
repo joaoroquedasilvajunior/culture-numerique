@@ -29,7 +29,7 @@ from typing import Any
 # repère, ou de la règle de comptage exige un bump de version ET la mise à jour
 # du journal des révisions dans Protocole_reperes_observatoire.md.
 
-PROTOCOLE_VERSION = "1.2.0"
+PROTOCOLE_VERSION = "1.3.0"
 DATE_GEL_MATRICE = "2026-08-21"   # recomptage v1.2.0 (gel initial : 2026-05-25)
 
 # === Matrice R4 — gelée 2026-05-25, annexée 2026-05-26 (protocole v1.1.0) ===
@@ -905,6 +905,170 @@ def derive_r6_vitalite_arts_vivants(theatre: dict, diffuseurs: dict, arts_visuel
     }
 
 
+PROVENANCE_QC = 'Spectacles provenant du Québec'
+PROVENANCE_TOTALE = 'Total (ensemble des provenances)'
+
+
+def derive_r7_captation_valeur(arts_scene: dict | None) -> dict:
+    """R7 — Captation de valeur dans le spectacle vivant payant.
+
+    Définition opérationnelle. Pour une même période et une même géographie, on
+    compare la part québécoise de TROIS grandeurs successives de la chaîne :
+
+        offre        = représentations
+        assistance   = assistance totale (entrées)
+        recette      = revenus de billetterie, taxes exclues
+
+    Le repère est le **gradient** : part de l'offre moins part de la recette, en
+    points de pourcentage. Un gradient positif signifie que le répertoire
+    québécois occupe la scène davantage qu'il ne capte l'argent.
+
+    Pourquoi un repère distinct. R1 à R3 mesurent la découvrabilité et la
+    consommation sur des marchés où le Québec est minoritaire (streaming 7,1 %,
+    box-office 3,2 %). R6 mesure la vitalité de l'écosystème subventionné. Aucun
+    ne mesure le cas inverse : un domaine où la souveraineté de production est
+    acquise et où la question devient celle du partage de la recette. Le
+    spectacle vivant payant est ce cas.
+
+    Périmètre. Tableau ISQ 4949, toutes les représentations payantes en arts de
+    la scène, pas seulement les organismes subventionnés. À ne pas confondre
+    avec le périmètre CALQ de R6 : populations et unités différentes.
+
+    Caveats structurels, à porter dans toute lecture :
+      - Rupture de série en 2024 déclarée par l'ISQ, pas de raccord avec
+        2004-2023.
+      - Délai de publication long (au 23 septembre 2026, seul le T1 2025 était
+        publié). Un gradient calculé sur un seul trimestre ne distingue pas le
+        structurel du saisonnier.
+      - Le gradient exige les DEUX coupes (québécoise et totale) pour la même
+        période. Une coupe manquante rend la période non calculable, ce qui est
+        signalé plutôt que comblé.
+      - Les cellules confidentielles (marqueur `x`) restent vides et ne sont
+        jamais reconstituées par soustraction.
+    """
+    if not arts_scene or not arts_scene.get('coupes'):
+        return {"status": "donnees_indisponibles",
+                "raison": "source arts_scene_provenance absente du dataset"}
+
+    # Indexer les coupes par (année, géographie, provenance).
+    index: dict[tuple, dict] = {}
+    for c in arts_scene['coupes']:
+        d = c['dimensions']
+        index[(c['annee'], d['geographie'], d['provenance'])] = c
+
+    geos = sorted({c['dimensions']['geographie'] for c in arts_scene['coupes']})
+    annees = sorted({c['annee'] for c in arts_scene['coupes']})
+
+    lectures = []
+    non_calculables = []
+
+    for annee in annees:
+        for geo in geos:
+            qc = index.get((annee, geo, PROVENANCE_QC))
+            tot = index.get((annee, geo, PROVENANCE_TOTALE))
+            if qc is None or tot is None:
+                manquante = PROVENANCE_TOTALE if qc is not None else PROVENANCE_QC
+                if qc is not None or tot is not None:
+                    non_calculables.append({
+                        "annee": annee, "geographie": geo,
+                        "coupe_manquante": manquante,
+                        "raison": ("le gradient exige les deux coupes pour la "
+                                   "même période ; télécharger la coupe "
+                                   f"« {manquante} » pour {annee}"),
+                    })
+                continue
+
+            # Périodes communes aux deux coupes, trimestres puis total annuel.
+            periodes = [(p, qc['trimestres'][p], tot['trimestres'][p])
+                        for p in qc['trimestres'] if p in tot['trimestres']]
+            if qc.get('total_annuel') and tot.get('total_annuel'):
+                periodes.append(('Total annuel', qc['total_annuel'], tot['total_annuel']))
+
+            for nom, vq, vt in periodes:
+                def part(cle):
+                    a, b = vq.get(cle), vt.get(cle)
+                    if a is None or b in (None, 0):
+                        return None
+                    return round(a / b * 100, 1)
+
+                p_offre = part('representations')
+                p_assist = part('assistance_totale')
+                p_recette = part('revenus_billetterie')
+                gradient = (None if p_offre is None or p_recette is None
+                            else round(p_offre - p_recette, 1))
+
+                # Intensités hors Québec, par soustraction des agrégats publiés.
+                # Licite : on soustrait deux totaux publiés, on ne reconstitue
+                # aucune cellule confidentielle.
+                hors = {}
+                for cle in ('representations', 'assistance_totale', 'revenus_billetterie'):
+                    a, b = vq.get(cle), vt.get(cle)
+                    hors[cle] = None if a is None or b is None else b - a
+                intensites = {}
+                if hors['representations']:
+                    if hors['assistance_totale'] is not None:
+                        intensites['assistance_moy_repr_hors_qc'] = round(
+                            hors['assistance_totale'] / hors['representations'], 1)
+                    if hors['revenus_billetterie'] is not None:
+                        intensites['revenu_moy_repr_hors_qc'] = round(
+                            hors['revenus_billetterie'] / hors['representations'], 2)
+                if vq.get('representations'):
+                    if vq.get('assistance_totale') is not None:
+                        intensites['assistance_moy_repr_qc'] = round(
+                            vq['assistance_totale'] / vq['representations'], 1)
+                    if vq.get('revenus_billetterie') is not None:
+                        intensites['revenu_moy_repr_qc'] = round(
+                            vq['revenus_billetterie'] / vq['representations'], 2)
+                for a_, b_ in (('assistance_moy_repr', 'assistance'),
+                               ('revenu_moy_repr', 'revenu')):
+                    q, h = intensites.get(f'{a_}_qc'), intensites.get(f'{a_}_hors_qc')
+                    if q and h:
+                        intensites[f'rapport_{b_}'] = round(h / q, 2)
+
+                lectures.append({
+                    "annee": annee,
+                    "geographie": geo,
+                    "periode": nom,
+                    "part_offre_pct": p_offre,
+                    "part_assistance_pct": p_assist,
+                    "part_recette_pct": p_recette,
+                    "gradient_offre_recette_pts": gradient,
+                    "volumes_qc": {k: vq.get(k) for k in
+                                   ('representations', 'assistance_totale', 'revenus_billetterie')},
+                    "volumes_totaux": {k: vt.get(k) for k in
+                                       ('representations', 'assistance_totale', 'revenus_billetterie')},
+                    "volumes_hors_qc": hors,
+                    "intensites": intensites,
+                })
+
+    lectures.sort(key=lambda l: (l['annee'], l['periode']))
+    gradients = [l['gradient_offre_recette_pts'] for l in lectures
+                 if l['gradient_offre_recette_pts'] is not None]
+
+    return {
+        "libelle": "Captation de valeur dans le spectacle vivant payant",
+        "definition_operationnelle": ("gradient = part québécoise des "
+                                      "représentations − part québécoise des "
+                                      "revenus de billetterie (points de %)"),
+        "source": ("ISQ tableau 4949 — Statistiques des représentations payantes "
+                   "en arts de la scène, données trimestrielles"),
+        "perimetre": arts_scene.get('perimetre'),
+        "rupture_serie": arts_scene.get('rupture_serie'),
+        "lectures": lectures,
+        "n_lectures": len(lectures),
+        "gradient_min_pts": min(gradients) if gradients else None,
+        "gradient_max_pts": max(gradients) if gradients else None,
+        "non_calculables": non_calculables,
+        "provisional": True,
+        "note_provisoire": ("R7 reste provisoire jusqu'à disposer d'au moins deux "
+                            "périodes comparables. Un gradient mesuré sur un seul "
+                            "trimestre ne distingue pas un effet structurel d'une "
+                            "saisonnalité, et le premier trimestre est celui des "
+                            "grandes tournées d'hiver."),
+        "version_protocole": PROTOCOLE_VERSION,
+    }
+
+
 def derive_all(combined: dict, annee: int = 2025) -> dict:
     """Calcule les cinq repères à partir du dict combiné produit par le pipeline.
 
@@ -972,6 +1136,10 @@ def derive_all(combined: dict, annee: int = 2025) -> dict:
             "status": "donnees_indisponibles",
             "raison": "les trois sources CALQ sont requises"
         }
+
+    # R7 — Captation de valeur dans le spectacle vivant payant (v1.3.0)
+    reperes['r7_captation_valeur'] = derive_r7_captation_valeur(
+        combined.get('arts_scene_provenance'))
 
     # Bloc auxiliaire — lentille 3 améliorée (hors protocole)
     lentille_3 = None

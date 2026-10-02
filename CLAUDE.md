@@ -34,7 +34,7 @@ gouvernement. Les analyses n'engagent que leurs auteurs.
 ## Architecture du pipeline
 
 `observatoire-pipeline/` : sources.yaml (manifeste) → src/extract.py
-(32 sources, registre EXTRACTORS) → src/derive.py (repères R1-R6 +
+(33 sources, registre EXTRACTORS) → src/derive.py (repères R1-R7 +
 lentilles auxiliaires) → templates/dashboard.html.tmpl (payload JSON inline
 `const D = {...}`) → outputs/dashboard.html → copié vers docs/ (GitHub Pages).
 
@@ -44,7 +44,7 @@ lentilles auxiliaires) → templates/dashboard.html.tmpl (payload JSON inline
 2. `./maj_dashboard.sh` depuis la racine (archive, build, tests, copie docs/, commit).
 3. `git push` — Pages se régénère.
 
-**Tests = sentinelles.** 74 tests d'intégrité épinglent les valeurs-clés. Un
+**Tests = sentinelles.** 81 tests d'intégrité épinglent les valeurs-clés. Un
 test qui casse après une mise à jour ISQ est le signal voulu : vérifier la
 révision dans le fichier source, mettre à jour la valeur attendue en
 documentant l'historique dans la docstring (ex. « 15 (avril) → 17 (mai) →
@@ -79,6 +79,20 @@ top 20 » casse, c'est une bonne nouvelle à signaler au chroniqueur.
 - **Millésimes** : ne jamais fusionner une lecture cumulative YTD en cours
   (ex. top 20 2026) avec un bilan annuel clos (ex. palmarès artistes 2025).
   Chaque carte du dashboard porte son millésime.
+- **Coupes invisibles dans le nom de fichier** : certains tableaux ISQ
+  (ex. 4949, arts de la scène) exposent leurs dimensions à l'interface de
+  téléchargement — année, région, discipline, provenance, langue, taille de
+  salle — sans les inscrire dans le nom. La coupe retenue n'est lisible qu'en
+  L3 à L9 du classeur. Un `file_pattern` ne peut donc pas distinguer deux
+  coupes du même tableau. Déclarer alors `multi_fichiers: true` dans
+  sources.yaml : l'extracteur reçoit la liste complète des fichiers et indexe
+  chaque coupe par ce qu'elle déclare. Le ledger empreinte chaque fichier
+  consommé, et « Sources OK » compte les sources, pas les fichiers.
+- **Ruptures de série déclarées** : l'ISQ annonce parfois une
+  non-comparabilité (ex. tableau 4949, les données 2024+ ne se raccordent pas
+  à 2004-2023 : périodicité, population d'enquête et questionnaire changés).
+  Transporter le caveat jusqu'au tableau de bord plutôt que le laisser en note
+  de bas de classeur, et ne jamais raccorder les deux segments.
 
 ## Périmètres à ne pas confondre
 
@@ -130,13 +144,22 @@ dans `Données Québec/`.
 
 ## Cadres analytiques
 
-- **Protocole des repères** (`Protocole_reperes_observatoire.md`, v1.2.0) :
+- **Protocole des repères** (`Protocole_reperes_observatoire.md`, v1.3.0) :
   R1 écart de découvrabilité, R2 profondeur du catalogue, R3 consommation
   absolue, R4 indice d'angle mort (9/12, A = 0,750), R5 volume d'œuvres (en
   chantier, sources ADISQ/SODEC/OCCQ à identifier ; couvertures partielles
   documentées), R6 vitalité des arts vivants et arts visuels subventionnés
-  (CALQ), officialisé en v1.2.0. Baseline annuelle 2025 figée pour R1 à R3,
-  avec la lecture hebdomadaire YTD conservée en parallèle.
+  (CALQ), officialisé en v1.2.0, R7 captation de valeur dans le spectacle
+  vivant payant (ISQ 4949), créé en v1.3.0 et provisoire. Baseline annuelle
+  2025 figée pour R1 à R3, avec la lecture hebdomadaire YTD conservée en
+  parallèle.
+  **R7 est le miroir des autres repères** : là où R1 à R3 mesurent des marchés
+  où le Québec est minoritaire partout, R7 mesure un domaine où la
+  souveraineté de production est acquise (87,9 % des représentations) et où la
+  question devient le partage de la recette (68,3 % des revenus), soit un
+  gradient de +19,6 points au T1 2025. Périmètre à ne pas confondre avec celui
+  du CALQ qui porte R6 : toutes les représentations payantes contre les seuls
+  organismes subventionnés.
 - **Grille AI-exposure à trois lentilles** (skill
   `ai-exposure-creative-sector`) : 1a demande experte (C-AIOE), 1b demande
   marché (postes vacants), 2 usage révélé (AEI). L'écart entre lentilles est

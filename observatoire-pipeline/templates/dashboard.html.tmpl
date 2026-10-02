@@ -893,10 +893,29 @@ a{color:inherit;text-decoration:none}
           <div class="repere-source">CALQ 2023-2024 · protocole §6</div>
         </div>
 
+        <!-- R7 — Captation de valeur dans le spectacle vivant payant (v1.3.0) -->
+        <div class="repere">
+          <div class="repere-head">
+            <span class="repere-tag">R7</span>
+            <span class="repere-status status-provisional">Provisoire · v1.3.0</span>
+          </div>
+          <h3 class="repere-name">Captation de valeur, spectacle vivant payant</h3>
+          <div class="repere-values">
+            <div class="repere-value-main"><span id="r7-gradient">—</span></div>
+            <div class="repere-value-sub">points d'écart entre offre et recette</div>
+          </div>
+          <div class="repere-context">Part québécoise&nbsp;: <span id="r7-offre">—</span> de l'offre · <span id="r7-assist">—</span> de l'assistance · <span id="r7-recette">—</span> de la recette</div>
+          <div class="repere-source" id="r7-periode">ISQ 4949 · protocole §7</div>
+        </div>
+
+      </div>
+
+      <div class="reperes-note" style="margin-bottom:14px">
+        <strong>R7, nouveau repère (v1.3.0, 2 octobre 2026).</strong> Le spectacle vivant payant est le seul domaine du Carnet où la souveraineté de production est acquise&nbsp;: le répertoire québécois occupe l'essentiel de la scène. La question y devient celle du partage de la recette. R7 mesure le <em>gradient</em>, soit la part québécoise des représentations moins sa part des revenus de billetterie. Un gradient positif signifie que le répertoire québécois occupe la scène davantage qu'il ne capte l'argent. C'est l'image inverse de R1 à R3, où le Québec est minoritaire partout. Trois réserves tiennent le repère en provisoire&nbsp;: l'ISQ déclare une <strong>rupture de série en 2024</strong>, sans raccord possible avec 2004-2023&nbsp;; le délai de publication est long, de sorte qu'une seule période est mesurée à ce jour, ce qui ne permet pas de distinguer le structurel du saisonnier&nbsp;; et le périmètre, qui couvre <em>toutes</em> les représentations payantes, ne doit pas être confondu avec celui du CALQ qui porte R6.
       </div>
 
       <div class="reperes-note">
-        <strong>Baseline figée (v1.2.0, 21 août 2026).</strong> R1, R2 et R3 affichent désormais la <em>baseline annuelle 2025</em>, figée sur les sources annuelles (bilan ISQ/OCCQ du 11 août 2026, données Luminate&nbsp;; séries annuelles cinéma). Les lectures hebdomadaires en cours d'année restent calculées et exposées sous la clé <code>lecture_courante</code>. Deux précisions de lecture&nbsp;: R1 compare, en annuel, le streaming à l'<em>ensemble des albums</em> (seule ventilation d'achat publiée dans la source annuelle), alors que la lecture hebdomadaire compare aux <em>albums numériques</em> — les dénominateurs diffèrent&nbsp;; R3 mesure désormais l'assistance québécoise au cinéma directement, sans l'estimer par pondération. R4 a été recompté (8/12 → 9/12) et R6 promu repère officiel. R5 demeure en chantier&nbsp;: aucune des trois familles visées n'est mesurée par la statistique publique. Méthodologie complète&nbsp;: <a href="https://github.com/joaoroquedasilvajunior/culture-numerique/blob/main/Protocole_reperes_observatoire.md" target="_blank" rel="noopener">Protocole v1.2.0</a>&nbsp;; donnée auditable&nbsp;: <a href="reperes_2025.json" target="_blank" rel="noopener">reperes_2025.json</a>.
+        <strong>Baseline figée (v1.2.0, 21 août 2026).</strong> R1, R2 et R3 affichent désormais la <em>baseline annuelle 2025</em>, figée sur les sources annuelles (bilan ISQ/OCCQ du 11 août 2026, données Luminate&nbsp;; séries annuelles cinéma). Les lectures hebdomadaires en cours d'année restent calculées et exposées sous la clé <code>lecture_courante</code>. Deux précisions de lecture&nbsp;: R1 compare, en annuel, le streaming à l'<em>ensemble des albums</em> (seule ventilation d'achat publiée dans la source annuelle), alors que la lecture hebdomadaire compare aux <em>albums numériques</em> — les dénominateurs diffèrent&nbsp;; R3 mesure désormais l'assistance québécoise au cinéma directement, sans l'estimer par pondération. R4 a été recompté (8/12 → 9/12) et R6 promu repère officiel. R5 demeure en chantier&nbsp;: aucune des trois familles visées n'est mesurée par la statistique publique. Méthodologie complète&nbsp;: <a href="https://github.com/joaoroquedasilvajunior/culture-numerique/blob/main/Protocole_reperes_observatoire.md" target="_blank" rel="noopener">Protocole v1.3.0</a>&nbsp;; donnée auditable&nbsp;: <a href="reperes_2025.json" target="_blank" rel="noopener">reperes_2025.json</a>.
       </div>
     </section>
 
@@ -1943,6 +1962,21 @@ const C = {
     setText('r6-orgs', fmtInt(r6.nb_organismes_agrege));
     setText('r6-aide', fmt(r6.part_aide_publique_dans_revenus_pct, 1) + ' %');
     setText('r6-hors', fmt(r6.ratio_spectateurs_hors_qc_theatre_pct, 1) + ' %');
+
+    // R7 — captation de valeur (v1.3.0). Lecture la plus récente disponible.
+    const r7 = (R.reperes && R.reperes.r7_captation_valeur) || {};
+    const l7 = (r7.lectures && r7.lectures.length)
+      ? r7.lectures[r7.lectures.length - 1] : null;
+    if (l7) {
+      setText('r7-gradient', (l7.gradient_offre_recette_pts > 0 ? '+' : '')
+        + fmt(l7.gradient_offre_recette_pts, 1));
+      setText('r7-offre',   fmt(l7.part_offre_pct, 1) + ' %');
+      setText('r7-assist',  fmt(l7.part_assistance_pct, 1) + ' %');
+      setText('r7-recette', fmt(l7.part_recette_pct, 1) + ' %');
+      setText('r7-periode', 'ISQ 4949 · ' + l7.periode + ' ' + l7.annee + ' · protocole §7');
+    } else {
+      setText('r7-periode', 'ISQ 4949 · en attente d\u2019une période calculable · protocole §7');
+    }
   }
 
   // Badge d'extraction — date réelle du build

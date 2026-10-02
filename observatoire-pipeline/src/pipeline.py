@@ -50,6 +50,25 @@ def find_source_file(raw_dir: Path, pattern: str) -> Path | None:
     return candidates[0] if candidates else None
 
 
+def find_source_files(raw_dir: Path, pattern: str) -> list[Path]:
+    """Retourne TOUS les fichiers qui matchent le motif, du plus récent au plus
+    ancien, en tenant compte de la normalisation Unicode NFC/NFD.
+
+    Motivation (2026-10-02) : le tableau ISQ 4949 (arts de la scène) expose ses
+    coupes (année, région, provenance, discipline, langue, taille de salle) par
+    l'interface de téléchargement, PAS dans le nom du fichier. La coupe retenue
+    n'est lisible qu'à l'intérieur du classeur. Un motif de nom ne peut donc pas
+    distinguer deux coupes du même tableau, et la convention « un fichier par
+    source » ne tient pas. Les sources déclarées `multi_fichiers: true` reçoivent
+    la liste complète et se chargent elles-mêmes d'identifier chaque coupe.
+    """
+    pattern_nfc = _nfc(pattern)
+    candidates = [p for p in raw_dir.iterdir()
+                  if p.is_file() and fnmatch.fnmatchcase(_nfc(p.name), pattern_nfc)]
+    candidates.sort(key=lambda p: p.stat().st_mtime, reverse=True)
+    return candidates
+
+
 def _signaler_orphelins(raw_dir: Path, config: dict, verbose: bool) -> list[str]:
     """Signale les fichiers de données du dossier brut qui ne matchent AUCUN
     motif de sources.yaml.
@@ -138,7 +157,14 @@ def run(repo_root: Path | str = '.', verbose: bool = True) -> dict:
             errors.append({'source': source_key, 'error': f"Extracteur inconnu : {extractor_name}"})
             continue
 
-        src_file = find_source_file(raw_dir, pattern)
+        multi = bool(meta.get('multi_fichiers'))
+        if multi:
+            src_files = find_source_files(raw_dir, pattern)
+            src_file = src_files[0] if src_files else None
+        else:
+            src_files = []
+            src_file = find_source_file(raw_dir, pattern)
+
         if src_file is None:
             errors.append({'source': source_key,
                            'error': f"Fichier introuvable pour le motif `{pattern}` dans data/raw/"})
@@ -147,10 +173,14 @@ def run(repo_root: Path | str = '.', verbose: bool = True) -> dict:
             continue
 
         if verbose:
-            print(f"  [+] {source_key:20s} : {src_file.name}")
+            if multi:
+                print(f"  [+] {source_key:20s} : {len(src_files)} fichier(s), "
+                      f"plus récent {src_file.name[:52]}")
+            else:
+                print(f"  [+] {source_key:20s} : {src_file.name}")
 
         try:
-            data = extractor_fn(src_file)
+            data = extractor_fn(src_files) if multi else extractor_fn(src_file)
         except Exception as e:
             errors.append({'source': source_key, 'error': str(e)})
             if verbose:
@@ -173,10 +203,12 @@ def run(repo_root: Path | str = '.', verbose: bool = True) -> dict:
         # Add to combined dashboard payload
         combined[source_key] = data
 
-        # Record in ledger
-        sources_used.append({**file_fingerprint(src_file),
-                             'source_key': source_key,
-                             'label': meta['label']})
+        # Record in ledger. En mode multi-fichiers, une empreinte par fichier
+        # consommé : la traçabilité porte sur tout ce qui a nourri la source.
+        for f in (src_files if multi else [src_file]):
+            sources_used.append({**file_fingerprint(f),
+                                 'source_key': source_key,
+                                 'label': meta['label']})
 
     # Garde anti-orphelins : fichiers de données non captés par les motifs
     orphelins = _signaler_orphelins(raw_dir, config, verbose)
@@ -237,7 +269,13 @@ def run(repo_root: Path | str = '.', verbose: bool = True) -> dict:
     write_ledger(record, outputs_dir)
 
     if verbose:
-        print(f"\n  Sources OK  : {len(sources_used)}")
+        # Compter les SOURCES, pas les entrées de ledger : une source
+        # multi-fichiers en produit plusieurs (cf. arts_scene_provenance).
+        n_sources = len({s['source_key'] for s in sources_used})
+        n_fichiers = len(sources_used)
+        suffixe = (f"  ({n_fichiers} fichiers empreintés)"
+                   if n_fichiers != n_sources else "")
+        print(f"\n  Sources OK  : {n_sources}{suffixe}")
         print(f"  Erreurs     : {len(errors)}")
         if errors:
             for e in errors:

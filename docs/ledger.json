@@ -1,5 +1,5 @@
 {
-  "build_iso": "2026-10-02T12:07:30.833729+00:00",
+  "build_iso": "2026-10-02T12:17:44.580098+00:00",
   "pipeline_version": "1.0.0",
   "sources_used": [
     {
@@ -289,6 +289,33 @@
       "mtime_iso": "2026-06-09T13:28:46.008155+00:00",
       "source_key": "cinema_classement",
       "label": "Résultats d'exploitation des établissements cinématographiques selon la catégorie de classement des films"
+    },
+    {
+      "path": "/Users/joaoroque/Documents/Claude/Projects/Culture Québec en donnée/Données Québec/Statistiques des représentations payantes en arts de la scène, données trimestrielles, régions administratives et ensemble du Québec_2025.xlsx",
+      "name": "Statistiques des représentations payantes en arts de la scène, données trimestrielles, régions administratives et ensemble du Québec_2025.xlsx",
+      "sha256": "c305c730c36eb1b65c28b376650b39faa6268e231f378784236c80d87fa556f7",
+      "size_bytes": 10584,
+      "mtime_iso": "2026-10-02T12:06:36.565213+00:00",
+      "source_key": "arts_scene_provenance",
+      "label": "Représentations payantes en arts de la scène (ISQ 4949) — coupes par provenance, trimestriel"
+    },
+    {
+      "path": "/Users/joaoroque/Documents/Claude/Projects/Culture Québec en donnée/Données Québec/Statistiques des représentations payantes en arts de la scène, données trimestrielles, régions administratives et ensemble du Québec_2024.xlsx",
+      "name": "Statistiques des représentations payantes en arts de la scène, données trimestrielles, régions administratives et ensemble du Québec_2024.xlsx",
+      "sha256": "14eebd4d51fb4cbff710a20118ad18f3f7e2b8da19f9b191c24becafd3d593a9",
+      "size_bytes": 10815,
+      "mtime_iso": "2026-10-02T12:06:18.935073+00:00",
+      "source_key": "arts_scene_provenance",
+      "label": "Représentations payantes en arts de la scène (ISQ 4949) — coupes par provenance, trimestriel"
+    },
+    {
+      "path": "/Users/joaoroque/Documents/Claude/Projects/Culture Québec en donnée/Données Québec/Statistiques des représentations payantes en arts de la scène, données trimestrielles, régions administratives et ensemble du Québec_3.xlsx",
+      "name": "Statistiques des représentations payantes en arts de la scène, données trimestrielles, régions administratives et ensemble du Québec_3.xlsx",
+      "sha256": "bf363659364fed24b41cb90f8a69ee90db8b39e66eefcf2241e1dfc8a5a8fcfd",
+      "size_bytes": 10574,
+      "mtime_iso": "2026-09-25T15:32:44.150625+00:00",
+      "source_key": "arts_scene_provenance",
+      "label": "Représentations payantes en arts de la scène (ISQ 4949) — coupes par provenance, trimestriel"
     }
   ],
   "outputs_produced": [

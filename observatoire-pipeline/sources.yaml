@@ -354,6 +354,33 @@ sources:
     notes: "Projections par classement RCQ (Visa général, 13+, 16+, 18+), série annuelle 1985-."
 
 # Configuration du tableau de bord
+  arts_scene_provenance:
+    label: "Représentations payantes en arts de la scène (ISQ 4949) — coupes par provenance, trimestriel"
+    isq_table_id: "4949"
+    # ATTENTION, cette source est MULTI-FICHIERS. Les coupes du tableau 4949
+    # (année, région administrative, public cible, discipline, provenance,
+    # langue d'interprétation, taille de salle) se choisissent à l'interface de
+    # téléchargement et n'apparaissent PAS dans le nom du fichier : la coupe
+    # retenue n'est lisible qu'en L3 à L9 du classeur. Un motif de nom ne peut
+    # donc pas distinguer deux coupes du même tableau. L'extracteur lit tous les
+    # fichiers présents et indexe chaque coupe par ce qu'elle déclare.
+    # Pour ajouter une coupe : la télécharger dans Données Québec/, rien à coder.
+    multi_fichiers: true
+    file_pattern: "Statistiques des représentations payantes*.xlsx"
+    isq_url: "https://statistique.quebec.ca/fr/produit/tableau/4949"
+    classification: "ISQ/OCCQ — Enquête sur la fréquentation des spectacles au Québec ; trimestriel ; RUPTURE DE SÉRIE en 2024 (non comparable avec 2004-2023)"
+    extractor: extract_arts_scene_provenance
+    axe_tdb: ["consommation", "ecosysteme"]
+    notes: >-
+      Alimente le repère R7 (captation de valeur dans le spectacle vivant
+      payant). Périmètre distinct de celui du CALQ qui porte R6 : toutes les
+      représentations payantes, pas seulement les organismes subventionnés.
+      Exclut le privé, l'amateur, le scolaire en locaux d'école et les
+      événements à passeport ou macaron ; inclut les bars avec droit d'entrée.
+      Délai de publication long : au 23 septembre 2026, seul le T1 2025 était
+      publié. Les cellules confidentielles portent le marqueur `x` et ne sont
+      jamais reconstituées.
+
 dashboard:
   title: "Souveraineté culturelle numérique au Québec"
   subtitle: "Tableau de bord empirique au regard de la Loi 109"
