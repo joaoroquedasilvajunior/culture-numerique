@@ -1,5 +1,5 @@
 {
-  "build_iso": "2026-10-02T12:17:44.580098+00:00",
+  "build_iso": "2026-10-31T17:20:02.244380+00:00",
   "pipeline_version": "1.0.0",
   "sources_used": [
     {
@@ -12,11 +12,11 @@
       "label": "Part des interprètes du Québec dans la consommation d'enregistrements musicaux"
     },
     {
-      "path": "/Users/joaoroque/Documents/Claude/Projects/Culture Québec en donnée/Données Québec/Consommation d'enregistrements musicaux selon le type de produit, données hebdomadaires, Québec_4.xlsx",
-      "name": "Consommation d'enregistrements musicaux selon le type de produit, données hebdomadaires, Québec_4.xlsx",
-      "sha256": "470e071edb83c8bb5fa7afca22e21f553485bee86018b01db4dd631ae35018f9",
-      "size_bytes": 8075,
-      "mtime_iso": "2026-09-17T18:57:56.660917+00:00",
+      "path": "/Users/joaoroque/Documents/Claude/Projects/Culture Québec en donnée/Données Québec/Consommation d'enregistrements musicaux selon le type de produit, données hebdomadaires, Québec_5.xlsx",
+      "name": "Consommation d'enregistrements musicaux selon le type de produit, données hebdomadaires, Québec_5.xlsx",
+      "sha256": "c55d9c790515bf91963f39b716e826a3452270b0b12294820049ad0b28c8c7a5",
+      "size_bytes": 8063,
+      "mtime_iso": "2026-10-31T17:08:49.156058+00:00",
       "source_key": "volume_musique",
       "label": "Consommation d'enregistrements musicaux selon le type de produit"
     },
@@ -48,11 +48,11 @@
       "label": "Évolution de statistiques clés de la culture et des communications"
     },
     {
-      "path": "/Users/joaoroque/Documents/Claude/Projects/Culture Québec en donnée/Données Québec/Emplois salariés dans certaines industries de la culture et des communications selon l'Enquête sur l'emploi, la rémunération et les heures de travail (EERH), données mensuelles désaisonnalisées en moyennes mobiles de trois mois_4.xlsx",
-      "name": "Emplois salariés dans certaines industries de la culture et des communications selon l'Enquête sur l'emploi, la rémunération et les heures de travail (EERH), données mensuelles désaisonnalisées en moyennes mobiles de trois mois_4.xlsx",
-      "sha256": "06b1f7e05399a018023d3277fe64debc43c8897d692be3967e8bcc2680deadd9",
-      "size_bytes": 13223,
-      "mtime_iso": "2026-09-12T13:23:06.838743+00:00",
+      "path": "/Users/joaoroque/Documents/Claude/Projects/Culture Québec en donnée/Données Québec/Emplois salariés dans certaines industries de la culture et des communications selon l'Enquête sur l'emploi, la rémunération et les heures de travail (EERH), données mensuelles désaisonnalisées.xlsx",
+      "name": "Emplois salariés dans certaines industries de la culture et des communications selon l'Enquête sur l'emploi, la rémunération et les heures de travail (EERH), données mensuelles désaisonnalisées.xlsx",
+      "sha256": "70697a312d1e6ec85614644c5faadb7d7fbb0795e8476d991f5ebbafad3b8b89",
+      "size_bytes": 13297,
+      "mtime_iso": "2026-10-31T17:10:14.950077+00:00",
       "source_key": "emplois_eerh",
       "label": "Emplois salariés dans certaines industries de la culture et des communications (EERH) — données mensuelles MM3"
     },

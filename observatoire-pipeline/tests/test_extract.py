@@ -57,21 +57,23 @@ def test_part_qc_albums_numeriques(raw_dir):
 
 
 def test_volume_streaming(raw_dir):
-    """Streaming cumulatif YTD = 18 929 520,2 milliers d'écoutes (semaine du
-    24 au 30 juillet 2026).
+    """Streaming cumulatif YTD = 24 675 683 milliers d'écoutes (semaine du
+    25 septembre au 1er octobre 2026).
 
-    Source : ISQ tableau 2140, mise à jour 17 septembre 2026.
+    Source : ISQ tableau 2140, mise à jour 31 octobre 2026.
     Avance temporelle attendue du cumul, pas une révision rétroactive :
-    4,83 G (fin avril) → 13,03 G (fin mai) → 18,93 G (fin juillet).
+    4,83 G (fin avril) → 13,03 G (fin mai) → 18,93 G (fin juillet)
+    → 24,68 G (début octobre).
 
     Repère d'ordre de grandeur : l'année 2025 complète totalisait 31,9 G.
-    Au prorata de sept mois, 2026 serait à 18,6 G ; la lecture est donc
+    Au prorata de neuf mois, 2026 serait à 23,9 G ; la lecture reste donc
     légèrement au-dessus du rythme de 2025. Le marché du streaming croît
-    pendant que la part québécoise stagne à 7,1 %.
+    pendant que la part québécoise stagne à 7,1 %, ce qui est le motif
+    « le gâteau grossit et la tranche reste ».
     """
     f = find_source_file(raw_dir, "Consommation d'enregistrements musicaux*.xlsx")
     data = extract.extract_volume_musique(f)
-    assert data['indicateurs']['streaming']['cumul_ytd'] == 18929520.2
+    assert data['indicateurs']['streaming']['cumul_ytd'] == 24675683.0
 
 
 def test_cinema_quebec(raw_dir):
@@ -146,35 +148,44 @@ def test_emplois_eerh_mensuel_ytd_2026(raw_dir):
 
     Vérifie la tolérance à l'année partielle. Historique des mois
     disponibles : 3 (juin) → 4 (22 juillet) → 5 (20 août, mai ajouté)
-    → 6 (12 septembre, juin ajouté).
+    → 6 (12 septembre, juin ajouté) → 7 (31 octobre, juillet ajouté).
 
     Attention : la série est en moyennes mobiles de trois mois et l'ISQ
-    révise les mois déjà publiés. Mai valait n = 14 820 dans le fichier du
-    20 août et n = 14 734 dans celui du 12 septembre, ce qui fait passer la
-    variation Jan → Mai de +8,39 % à +7,76 %. Une variation rattachée à un
-    mois donné n'est donc pas stable d'un millésime à l'autre : toujours
-    reconstituer depuis le fichier courant plutôt que citer une valeur
-    antérieure.
+    révise les mois déjà publiés. DEUX occurrences mesurées sur cette même
+    série : mai est passé de n = 14 820 (fichier du 20 août) à n = 14 734
+    (12 septembre), et juin de n = 14 981 (12 septembre) à n = 14 974
+    (31 octobre). Une variation rattachée à un mois donné n'est donc pas
+    stable d'un millésime à l'autre : toujours la reconstituer depuis le
+    fichier courant plutôt que citer une valeur antérieure, y compris une
+    valeur publiée par nous.
+
+    Piège de nom rencontré le 31 octobre 2026 : le fichier a été téléchargé
+    sous un nom tronqué, « ...données mensuelles désaisonnalisées.xlsx »,
+    sans « en moyennes mobiles de trois mois ». Le titre À L'INTÉRIEUR du
+    classeur confirme qu'il s'agit bien du même tableau. Vérifier le titre
+    interne avant de conclure qu'un nouveau tableau est apparu.
     """
     f = find_source_file(raw_dir, 'Emplois salariés*données mensuelles*.xlsx')
     assert f is not None, "Fichier EERH mensuel manquant"
     data = extract.extract_emplois_eerh(f)
     rec = next(r for r in data if r['scian'] == '5121')
     assert rec['annee_reference'] == 2026
-    # Maj 12 septembre 2026 : juin ajouté (5 → 6 mois disponibles)
-    assert rec['mois_disponibles'] == 6
-    assert rec['mois_dernier'] == 'Juin'
-    # Variation Jan → Juin 2026 = +9,57 % (n = 13 673 en janvier, 14 981 en
-    # juin, vérifié au fichier source). La reprise 5121 s'accélère sans
-    # interruption depuis mars : +1,7 % (mars) → +4,0 % (avril) → +7,8 %
-    # (mai, révisé) → +9,6 % (juin). À lire en contraste avec la part QC du
-    # box-office (3,2 % YTD au 2 juillet, cumul -54,2 %, dans un marché total
-    # en hausse de 5,1 %) : le paradoxe cinéma se creuse par les deux bouts.
-    # L'emploi de production monte pendant que la part de marché des films
-    # québécois en salle s'effondre, sans que la fréquentation globale
-    # faiblisse. Produire davantage n'est pas être vu davantage.
+    # Maj 31 octobre 2026 : juillet ajouté (6 → 7 mois disponibles)
+    assert rec['mois_disponibles'] == 7
+    assert rec['mois_dernier'] == 'Juillet'
+    # Variation Jan → Juillet 2026 = +11,07 % (n = 13 673 en janvier, 15 187
+    # en juillet, vérifié au fichier source sur la ligne 5121 et non sur le
+    # parent 512, qui donne +10,45 %). La reprise s'accélère sans interruption
+    # depuis février : +0,11 % → +1,85 % (mars) → +4,17 % (avril) → +7,76 %
+    # (mai) → +9,52 % (juin, révisé) → +11,07 % (juillet). Six mois de suite.
+    # À lire en contraste avec la part QC du box-office (3,2 % YTD au
+    # 2 juillet, cumul -54,2 %, dans un marché total en hausse de 5,1 %) : le
+    # paradoxe cinéma se creuse par les deux bouts. L'emploi de production
+    # monte pendant que la part de marché des films québécois en salle
+    # s'effondre, sans que la fréquentation globale faiblisse. Produire
+    # davantage n'est pas être vu davantage.
     assert rec['variation_pct'] is not None
-    assert 9.2 < rec['variation_pct'] < 9.9
+    assert 10.7 < rec['variation_pct'] < 11.5
 
 
 def test_emplois_eerh_annuel_5121_baseline_2025(raw_dir):

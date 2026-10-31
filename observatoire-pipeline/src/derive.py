@@ -255,8 +255,39 @@ def derive_r3(volume_musique: dict, part_qc: dict,
     Pondération multiplicative : C_c = volume_total × (part_QC / 100).
     Lecture canal par canal — la somme inter-canaux n'a pas de sens (unités
     hétérogènes : écoutes, unités, recettes).
+
+    GARDE-FOU DE CONCORDANCE DES MILLÉSIMES (ajouté le 2026-10-31). Les canaux
+    musicaux multiplient deux sources ISQ distinctes : le volume vient du
+    tableau 2140, la part québécoise du tableau 4153. Rien ne garantit qu'elles
+    soient arrêtées à la même semaine, puisque chaque fichier est téléchargé
+    séparément. Le 31 octobre 2026, le volume était cumulé au 1er octobre et la
+    part au 30 juillet : le produit aurait mélangé deux millésimes, ce que la
+    règle des millésimes du CLAUDE.md interdit. Le dériveur compare donc les
+    deux périodes et, si elles diffèrent, expose la consommation absolue en la
+    marquant `millesimes_alignes: false` avec les deux périodes en clair. Le
+    chiffre reste calculé parce qu'il garde une valeur d'ordre de grandeur,
+    mais il ne doit pas être cité tel quel dans une chronique.
     """
     canaux: dict[str, dict] = {}
+
+    # Concordance des périodes entre les deux sources musicales.
+    per_vol = volume_musique.get('periode') if isinstance(volume_musique, dict) else None
+    per_part = part_qc.get('periode') if isinstance(part_qc, dict) else None
+    alignes = bool(per_vol) and bool(per_part) and per_vol == per_part
+    concordance = {
+        "periode_volume": per_vol,
+        "periode_part_qc": per_part,
+        "millesimes_alignes": alignes,
+    }
+    if not alignes:
+        concordance["avertissement"] = (
+            "Les deux sources ne sont pas arrêtées à la même semaine : le "
+            f"volume est cumulé au « {per_vol} » (ISQ 2140) et la part "
+            f"québécoise au « {per_part} » (ISQ 4153). La consommation absolue "
+            "est calculée pour conserver un ordre de grandeur, mais elle "
+            "mélange deux millésimes et ne doit pas être citée telle quelle. "
+            "Résolution : retélécharger le tableau manquant."
+        )
 
     # Streaming musical (k écoutes)
     try:
@@ -266,7 +297,8 @@ def derive_r3(volume_musique: dict, part_qc: dict,
             "volume_total_k_ecoutes": v_str,
             "part_qc_pct": p_str,
             "consommation_qc_k_ecoutes": round(v_str * p_str / 100, 1),
-            "provisional": True
+            "provisional": True,
+            **concordance,
         }
     except (KeyError, TypeError):
         canaux['streaming_musique'] = {"status": "donnees_indisponibles"}
@@ -279,7 +311,8 @@ def derive_r3(volume_musique: dict, part_qc: dict,
             "volume_total_unites": v_alb,
             "part_qc_pct": p_alb,
             "consommation_qc_unites": round(v_alb * p_alb / 100, 0),
-            "provisional": True
+            "provisional": True,
+            **concordance,
         }
     except (KeyError, TypeError):
         canaux['albums_numeriques'] = {

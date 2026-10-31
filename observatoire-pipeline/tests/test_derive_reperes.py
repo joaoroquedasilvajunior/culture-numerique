@@ -140,27 +140,39 @@ def test_r2_n20_cowboys_fringants(combined):
 # === R3 — Consommation québécoise absolue ===================================
 
 def test_r3_streaming_consommation_absolue(combined):
-    """R3 — C_streaming = 18 929 520,2 × 7,1 % ≈ 1 343 995,9 k écoutes québécoises.
+    """R3 — C_streaming = 24 675 683 × 7,1 % ≈ 1 751 973,5 k écoutes québécoises.
 
-    Source : ISQ 2140 × 4153, cumul YTD au 24-30 juillet 2026 (mise à jour
-    17 septembre 2026). Avance temporelle du cumul : 4,83 G (avril) → 13,03 G
-    (mai) → 18,93 G (juillet).
+    Volume : ISQ 2140, cumul au 25 septembre-1er octobre 2026.
+    Part : ISQ 4153, cumul au 24-30 juillet 2026.
+
+    ⚠ MILLÉSIMES NON ALIGNÉS à cette lecture. Les deux tableaux sont
+    téléchargés séparément et ne sont pas arrêtés à la même semaine. Le
+    produit conserve une valeur d'ordre de grandeur mais mélange deux dates :
+    il ne doit pas être cité tel quel. Le garde-fou ajouté le 2026-10-31
+    expose les deux périodes et marque `millesimes_alignes: false`.
+
+    Ce test cassera quand le tableau 4153 sera retéléchargé à la semaine
+    courante. Ce sera la bonne nouvelle : mettre alors à jour les trois
+    valeurs ET vérifier que `millesimes_alignes` est repassé à True.
 
     C'est ici que R3 gagne son utilité : la part québécoise stagne à 7,1 %,
-    mais la consommation québécoise absolue franchit le milliard d'écoutes
-    parce que le gâteau grossit. Une part stable dans un marché en croissance
-    n'est ni un gain ni une perte de terrain relative, et seule la mesure
-    absolue le montre.
+    mais la consommation québécoise absolue progresse parce que le gâteau
+    grossit. Une part stable dans un marché en croissance n'est ni un gain ni
+    une perte de terrain relative, et seule la mesure absolue le montre.
     """
     r3 = derive.derive_r3(
         combined['volume_musique'], combined['part_qc'], combined['cinema_pays']
     )
     s = r3['canaux']['streaming_musique']
-    assert s['volume_total_k_ecoutes'] == 18929520.2
+    assert s['volume_total_k_ecoutes'] == 24675683.0
     assert s['part_qc_pct'] == 7.1
-    # 18 929 520,2 × 0,071 = 1 343 995,934 → arrondi 1 décimale
-    assert s['consommation_qc_k_ecoutes'] == pytest.approx(1343995.9, abs=0.1)
+    # 24 675 683 × 0,071 = 1 751 973,493 → arrondi 1 décimale
+    assert s['consommation_qc_k_ecoutes'] == pytest.approx(1751973.5, abs=0.1)
     assert s['provisional'] is True
+    # Sentinelle de concordance : tant que les deux sources divergent, le
+    # drapeau doit rester baissé et l'avertissement présent.
+    assert s['millesimes_alignes'] is False
+    assert 'avertissement' in s
 
 
 def test_r3_cinema_metadata_seulement(combined):
@@ -440,3 +452,61 @@ def test_r7_absence_de_source(combined):
     """Sans la source, R7 se déclare indisponible sans faire tomber le build."""
     r7 = derive.derive_r7_captation_valeur(None)
     assert r7['status'] == 'donnees_indisponibles'
+
+
+# === Garde-fou de concordance des millésimes (R3) ===========================
+
+def _faux_volume(periode, streaming=1000.0):
+    return {'periode': periode,
+            'indicateurs': {'streaming': {'cumul_ytd': streaming}}}
+
+
+def _fausse_part(periode, pct=10.0):
+    return {'periode': periode,
+            'indicateurs': {'streaming': {'cumul_ytd_pct': pct}}}
+
+
+def test_r3_garde_fou_millesimes_alignes():
+    """Quand les deux sources portent la même période, le drapeau est levé.
+
+    Test sur données synthétiques : il reste valide quels que soient les
+    fichiers ISQ présents, contrairement aux sentinelles de valeurs.
+    """
+    r3 = derive.derive_r3(_faux_volume('semaine X'), _fausse_part('semaine X'))
+    s = r3['canaux']['streaming_musique']
+    assert s['millesimes_alignes'] is True
+    assert 'avertissement' not in s
+    assert s['consommation_qc_k_ecoutes'] == 100.0
+
+
+def test_r3_garde_fou_millesimes_divergents():
+    """Quand les périodes diffèrent, le produit est marqué et les deux dates
+    sont exposées en clair.
+
+    Motivation (2026-10-31) : volume_musique était cumulé au 1er octobre et
+    part_qc au 30 juillet. Sans ce garde-fou, R3 publiait un produit mêlant
+    deux millésimes sans que rien ne le signale, ce que la règle des
+    millésimes du CLAUDE.md interdit. Le chiffre reste calculé parce qu'il
+    garde une valeur d'ordre de grandeur, mais il est explicitement disqualifié
+    pour la citation.
+    """
+    r3 = derive.derive_r3(_faux_volume('semaine X'), _fausse_part('semaine Y'))
+    s = r3['canaux']['streaming_musique']
+    assert s['millesimes_alignes'] is False
+    assert s['periode_volume'] == 'semaine X'
+    assert s['periode_part_qc'] == 'semaine Y'
+    assert 'avertissement' in s
+    assert '2140' in s['avertissement'] and '4153' in s['avertissement']
+    # Le calcul n'est pas supprimé, seulement qualifié
+    assert s['consommation_qc_k_ecoutes'] == 100.0
+
+
+def test_r3_garde_fou_periode_absente():
+    """Une période manquante compte comme non alignée, pas comme alignée.
+
+    Prudence volontaire : l'absence d'information ne doit jamais se lire
+    comme une confirmation.
+    """
+    r3 = derive.derive_r3(_faux_volume(None), _fausse_part('semaine Y'))
+    s = r3['canaux']['streaming_musique']
+    assert s['millesimes_alignes'] is False

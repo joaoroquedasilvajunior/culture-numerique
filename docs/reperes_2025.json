@@ -1,6 +1,6 @@
 {
   "annee": 2025,
-  "date_calcul": "2026-10-02T08:17:44",
+  "date_calcul": "2026-10-31T13:20:02",
   "protocole_version": "1.3.0",
   "reperes": {
     "r1_ecart_decouvrabilite": {
@@ -94,16 +94,24 @@
     "r3_consommation_absolue": {
       "canaux": {
         "streaming_musique": {
-          "volume_total_k_ecoutes": 18929520.2,
+          "volume_total_k_ecoutes": 24675683.0,
           "part_qc_pct": 7.1,
-          "consommation_qc_k_ecoutes": 1343995.9,
-          "provisional": true
+          "consommation_qc_k_ecoutes": 1751973.5,
+          "provisional": true,
+          "periode_volume": "25 au 1 octobre 2026",
+          "periode_part_qc": "24 au 30 juillet 2026",
+          "millesimes_alignes": false,
+          "avertissement": "Les deux sources ne sont pas arrêtées à la même semaine : le volume est cumulé au « 25 au 1 octobre 2026 » (ISQ 2140) et la part québécoise au « 24 au 30 juillet 2026 » (ISQ 4153). La consommation absolue est calculée pour conserver un ordre de grandeur, mais elle mélange deux millésimes et ne doit pas être citée telle quelle. Résolution : retélécharger le tableau manquant."
         },
         "albums_numeriques": {
-          "volume_total_unites": 149.4,
+          "volume_total_unites": 192.1,
           "part_qc_pct": 23.9,
-          "consommation_qc_unites": 36.0,
-          "provisional": true
+          "consommation_qc_unites": 46.0,
+          "provisional": true,
+          "periode_volume": "25 au 1 octobre 2026",
+          "periode_part_qc": "24 au 30 juillet 2026",
+          "millesimes_alignes": false,
+          "avertissement": "Les deux sources ne sont pas arrêtées à la même semaine : le volume est cumulé au « 25 au 1 octobre 2026 » (ISQ 2140) et la part québécoise au « 24 au 30 juillet 2026 » (ISQ 4153). La consommation absolue est calculée pour conserver un ordre de grandeur, mais elle mélange deux millésimes et ne doit pas être citée telle quelle. Résolution : retélécharger le tableau manquant."
         },
         "cinema": {
           "part_qc_box_office_pct": 3.2,

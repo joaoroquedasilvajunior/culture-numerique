@@ -44,7 +44,7 @@ lentilles auxiliaires) → templates/dashboard.html.tmpl (payload JSON inline
 2. `./maj_dashboard.sh` depuis la racine (archive, build, tests, copie docs/, commit).
 3. `git push` — Pages se régénère.
 
-**Tests = sentinelles.** 81 tests d'intégrité épinglent les valeurs-clés. Un
+**Tests = sentinelles.** 84 tests d'intégrité épinglent les valeurs-clés. Un
 test qui casse après une mise à jour ISQ est le signal voulu : vérifier la
 révision dans le fichier source, mettre à jour la valeur attendue en
 documentant l'historique dans la docstring (ex. « 15 (avril) → 17 (mai) →
@@ -70,15 +70,26 @@ top 20 » casse, c'est une bonne nouvelle à signaler au chroniqueur.
   mobiles de trois mois et l'ISQ révise les mois déjà publiés. Mai 2026 valait
   n = 14 820 dans le fichier du 20 août et n = 14 734 dans celui du 12 septembre
   (5121), ce qui déplace la variation Jan → Mai de +8,39 % à +7,76 % sans
-  qu'aucune donnée nouvelle n'intervienne. Conséquence : une variation
-  rattachée à un mois donné n'est pas stable d'un millésime à l'autre. Toujours
-  la reconstituer depuis le fichier courant plutôt que citer une valeur
-  antérieure, y compris une valeur publiée par nous.
+  qu'aucune donnée nouvelle n'intervienne. Deuxième occurrence le 31 octobre :
+  juin passe de 14 981 à 14 974, et la variation Jan → Juin de +9,57 % à
+  +9,52 %. Conséquence : une variation rattachée à un mois donné n'est pas
+  stable d'un millésime à l'autre. Toujours la reconstituer depuis le fichier
+  courant plutôt que citer une valeur antérieure, y compris une valeur
+  publiée par nous.
 - **Séries terminées** : à conserver comme capsules historiques avec
   `statut_serie: terminee` (ex. tableau 2142, ventes top 200 de l'ère Nielsen).
 - **Millésimes** : ne jamais fusionner une lecture cumulative YTD en cours
   (ex. top 20 2026) avec un bilan annuel clos (ex. palmarès artistes 2025).
   Chaque carte du dashboard porte son millésime.
+- **Concordance des millésimes entre sources croisées** : quand un repère
+  multiplie deux tableaux téléchargés séparément, rien ne garantit qu'ils
+  soient arrêtés à la même date. R3 croise le volume (ISQ 2140) et la part
+  québécoise (ISQ 4153) ; le 31 octobre 2026, le volume était cumulé au
+  1er octobre et la part au 30 juillet. `derive_r3` porte depuis un garde-fou
+  qui compare les deux périodes, les expose en clair et marque le résultat
+  `millesimes_alignes: false`. Le chiffre reste calculé pour son ordre de
+  grandeur mais ne doit pas être cité. Appliquer le même contrôle à tout
+  nouveau croisement de sources.
 - **Coupes invisibles dans le nom de fichier** : certains tableaux ISQ
   (ex. 4949, arts de la scène) exposent leurs dimensions à l'interface de
   téléchargement — année, région, discipline, provenance, langue, taille de
